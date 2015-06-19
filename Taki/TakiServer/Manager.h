@@ -27,10 +27,8 @@ class Manager
 public:
 	Manager();
 	~Manager();
-	bool register_user(const User &user, const string &password);
-	void login_user(const User &user);
-	bool is_exist(const User &user) const;
-	//User tryLogin(const string &user_name, const string &user_password);
+	User *register_user(const string &username, const string &password, const SOCKET& sock);
+	User *login_user(const string &username, const string &password, const SOCKET& sock);
 	void client_requests_thread(const SOCKET& sock);
 
 private:

@@ -17,28 +17,34 @@ Manager::Manager()
 
 Manager::~Manager()
 {
+	_user_map.clear();
+	_room_vector.clear();
 	sqlite3_close(_db);
 }
 
-bool Manager::register_user(const User &user, const string &password)
+User *Manager::register_user(const string &username, const string &password, const SOCKET& sock)
 {
-	return true;
+	//check if username already taken
+	//add username to data base
+	User *user = new User(username, nullptr, false, sock);
+	_user_map.insert(pair<SOCKET, User>(sock, *user));
+	return user;
 }
 
-void Manager::login_user(const User &user)
+User *Manager::login_user(const string &username, const string &password, const SOCKET& sock)
 {
-	;
-}
-
-bool Manager::is_exist(const User& user) const
-{
-	return true;
+	//check if username and password match
+	User *user = new User(username, nullptr, false, sock);
+	_user_map.insert(pair<SOCKET, User>(sock, *user));
+	return user;
 }
 
 void Manager::client_requests_thread(const SOCKET& sock)
 {
 	vector<string> argv;
 	string arg, msg;
+	User *user;
+	Room *room;
 	int code;
 	char buf[BUF_LEN];
 	bool communicate = true;
@@ -66,22 +72,51 @@ void Manager::client_requests_thread(const SOCKET& sock)
 				case EN_REGISTER:
 					if (argv.size() == 2)
 					{
-						;
+						user = login_user(argv[1], argv[2], sock);
+						if (user == nullptr)
+						{
+							closesocket(sock);
+							return;
+						}
 					}
 					else
 					{
-						msg = "@" + to_string(PGM_ERR_REGISTERR_INFO) = "|invalid number of arguments||";
+						msg = "@" + to_string(PGM_ERR_REGISTER_INFO) = "|invalid number of arguments||";
 						if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 						{
-							//TODO: delete user from runtime server data
 							closesocket(sock);
 							return;
 						}
 					}
 					break;
 				case EN_LOGIN:
+					if (argv.size() == 2)
+					{
+						user = register_user(argv[1], argv[2], sock);
+						if (user == nullptr)
+						{
+							closesocket(sock);
+							return;
+						}
+					}
+					else
+					{
+						msg = "@" + to_string(PGM_ERR_LOGIN) = "|invalid number of arguments||";
+						if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+						{
+							closesocket(sock);
+							return;
+						}
+					}
 					break;
 				case EN_LOGOUT:
+					if ((room = user->getRoom()) != nullptr)
+					{
+						delete room;
+						_room_vector.erase(find(_room_vector.begin(), _room_vector.end(), *room));
+					}
+					delete user;
+					_user_map.erase(sock);
 					break;
 				}
 			}

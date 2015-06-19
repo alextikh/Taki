@@ -154,6 +154,7 @@ void Room::init_bank()
 	}
 
 }
+
 bool Room::add_user(User &user)
 {
 	int i = 0;
@@ -266,6 +267,7 @@ bool Room::is_order_legal(vector<Card>& moves)
 	}
 	else return true;
 }
+
 int Room::is_turn_legal(vector<Card>& moves)
 {
 	if (play_turn(moves))
@@ -326,4 +328,9 @@ vector<vector<Card>> Room::shuffle_cards_start_game(int num_of_players)
 		}
 	}
 	return game_cards;
+}
+
+bool Room::operator==(const Room &other)
+{
+	return _room_name == other._room_name;
 }

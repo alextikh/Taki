@@ -33,6 +33,7 @@ public:
 	vector<Card> shuffle_cards(int num_of_cards);
 	vector<vector<Card>> shuffle_cards_start_game(int num_of_players);
 	void Room::init_bank();
+	bool operator==(const Room &other);
 
 private: 
 	vector<Card> bank;
