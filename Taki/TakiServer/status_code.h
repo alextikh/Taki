@@ -74,4 +74,7 @@
 #define COLOR_YELLOW 'y'
 #define COLOR_BLUE 'b'
 
+#define ROOM_OPEN 1
+#define ROOM_CLOSED 0
+
 #endif

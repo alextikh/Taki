@@ -13,11 +13,17 @@ using std::vector;
 using std::string;
 class User;
 
+#define MAX_PLAYERS 4
+
 class Room
 {
 public:
-	Room();
+	Room(const string &room_name, const User * const admin);
 	~Room();
+	vector<User> get_players() const;
+	User *get_admin() const;
+	string get_room_name() const;
+	int get_num_players() const;
 	bool add_user(User &user);
 	void delete_user(User &user);
 	bool is_open() const;
@@ -39,7 +45,7 @@ private:
 	vector<Card> bank;
 	string _room_name;
 	User* _admin;
-	User* _players[4];
+	User* _players[MAX_PLAYERS];
 	bool _in_game;
 	int _current_player;
 	int _turn_modifier;

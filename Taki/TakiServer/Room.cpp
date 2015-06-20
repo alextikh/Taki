@@ -1,8 +1,10 @@
 #include "Room.h"
 
 
-Room::Room()
+Room::Room(const string &room_name, const User * const admin)
+	: _room_name(room_name), _admin((User *)admin)
 {
+	_players[0] = (User*)admin;
 	this->bank = vector<Card>(NUM_CARDS_IN_BANK);
 }
 
@@ -185,7 +187,7 @@ void Room::delete_user(User &user)
 
 bool Room::is_open() const
 {
-	return _in_game;
+	return !_in_game;
 }
 
 void Room::close()
@@ -333,4 +335,40 @@ vector<vector<Card>> Room::shuffle_cards_start_game(int num_of_players)
 bool Room::operator==(const Room &other)
 {
 	return _room_name == other._room_name;
+}
+
+User *Room::get_admin() const
+{
+	return _admin;
+}
+
+string Room::get_room_name() const
+{
+	return _room_name;
+}
+
+int Room::get_num_players() const
+{
+	int num_players = 0;
+	for (int i = 0; i < MAX_PLAYERS; ++i)
+	{
+		if (_players[i] != nullptr)
+		{
+			++num_players;
+		}
+	}
+	return num_players;
+}
+
+vector<User> Room::get_players() const
+{
+	vector<User> players;
+	for (int i = 0; i < MAX_PLAYERS; ++i)
+	{
+		if (_players[i] != nullptr)
+		{
+			players.push_back(*_players[i]);
+		}
+	}
+	return players;
 }
