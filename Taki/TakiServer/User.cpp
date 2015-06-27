@@ -6,7 +6,6 @@ User::User(const string &user_name, const Room *room, const bool &is_admin, cons
 User::~User()
 {
 	delete _room;
-	closesocket(_user_socket);
 }
 
 string User::getUserName() const

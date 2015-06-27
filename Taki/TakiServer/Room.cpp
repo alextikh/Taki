@@ -2,9 +2,13 @@
 
 
 Room::Room(const string &room_name, const User * const admin)
-	: _room_name(room_name), _admin((User *)admin)
+	: _room_name(room_name), _admin((User *)admin), _in_game(false)
 {
 	_players[0] = (User*)admin;
+	for (int i = 1; i < MAX_PLAYERS; ++i)
+	{
+		_players[i] = nullptr;
+	}
 	this->bank = vector<Card>(NUM_CARDS_IN_BANK);
 }
 
@@ -160,12 +164,12 @@ void Room::init_bank()
 bool Room::add_user(User &user)
 {
 	int i = 0;
-	while (_players[i] == NULL)
+	while (_players[i] == nullptr)
 	{
 		i++;
 	}
 	_players[i] = new User(user);
-	if (_players[i] != NULL) return true;
+	if (_players[i] != nullptr) return true;
 	else return false;
 }
 
@@ -180,14 +184,14 @@ void Room::delete_user(User &user)
 	{
 		if (_players[i] == &user)
 		{
-			_players[i] = NULL;
+			_players[i] = nullptr;
 		}
 	}
 }
 
 bool Room::is_open() const
 {
-	return !_in_game;
+	return get_num_players() != MAX_PLAYERS && !_in_game;
 }
 
 void Room::close()
@@ -199,7 +203,7 @@ bool Room::is_in_room(const User &user) const
 {
 	for (int i = 0; i < 4; i++)
 	{
-		if (_players[i] != NULL)
+		if (_players[i] != nullptr)
 		{
 			if (_players[i] == &user) return true;
 		}
