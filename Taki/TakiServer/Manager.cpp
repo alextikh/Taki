@@ -26,18 +26,21 @@ User *Manager::register_user(const string &username, const string &password, con
 {
 	int rc;
 	User *user;
-	/*char sql_command[SQL_COMMAND_LEN] = "INSERT INTO users(username, password_hash) VALUES(\"";
+	/*
+	char sql_command[SQL_COMMAND_LEN] = "INSERT INTO users(username, password_hash) VALUES('";
 	char *err = NULL;
-	const char * const unique_err = "Error: UNIQUE constraint failed: users.username";
+	const char * const unique_err = "UNIQUE constraint failed: users.username";
 	strcat(sql_command, username.c_str());
-	strcat(sql_command, "\", \"");
+	strcat(sql_command, "', '");
 	strcat(sql_command, password.c_str());
-	strcat(sql_command, "\");");
-	if ((rc = sqlite3_exec(_db, sql_command, NULL, NULL, &err)) != SQLITE_OK &&
-		strcmp(err, unique_err) == 0)
+	strcat(sql_command, "');");
+	rc = sqlite3_exec(_db, sql_command, NULL, NULL, &err);
+	if (rc != SQLITE_OK && strcmp(err, unique_err) == 0)
 	{
+		std::cout << err;
 		return nullptr;
-	}*/
+	}
+	*/
 	user = new User(username, nullptr, false, sock);
 	_user_map.insert(pair<SOCKET, User>(sock, *user));
 	return user;
@@ -47,16 +50,13 @@ User *Manager::login_user(const string &username, const string &password, const 
 {
 	int rc;
 	User *user;
-	char sql_command[SQL_COMMAND_LEN] = "SELECT username, password_hash FROM users WHERE username = '";
+	/*
+	char sql_command[SQL_COMMAND_LEN] = "SELECT COUNT(*) FROM users WHERE username = '";
 	strcat(sql_command, username.c_str());
-	strcat(sql_command, "' AND password_hash = ')");
+	strcat(sql_command, "' AND password_hash = '");
 	strcat(sql_command, password.c_str());
 	strcat(sql_command, "';");
-	sqlite3_exec(_db, sql_command, NULL, NULL, NULL);
-	if (sqlite3_changes(_db) == 0)
-	{
-		return nullptr;
-	}
+	*/
 	user = new User(username, nullptr, false, sock);
 	_user_map.insert(pair<SOCKET, User>(sock, *user));
 	return user;
@@ -110,17 +110,8 @@ void Manager::client_requests_thread(const SOCKET& sock)
 							if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 							{
 								closesocket(sock);
-								return;
+								terminate;
 							}
-						}
-					}
-						else
-					{
-						msg = "@" + to_string(PGM_ERR_REGISTER_INFO) = "|args|invalid number of arguments||";
-						if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-						{
-							closesocket(sock);
-							return;
 						}
 					}
 					break;
@@ -129,33 +120,23 @@ void Manager::client_requests_thread(const SOCKET& sock)
 				case EN_LOGIN:
 					if (argv.size() == 3)
 					{
-						user = login_user(argv[1], argv[2], sock);
-						if (user != nullptr)
+						if ((user = login_user(argv[1], argv[2], sock)) != nullptr)
 						{
 							msg = "@" + to_string(PGM_SCC_LOGIN) + "|" + createRoomList() + "|";
 							if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 							{
 								closesocket(sock);
-								return;
+								terminate;
 							}
 						}
 						else
 						{
-							msg = "@" + to_string(PGM_ERR_LOGIN) = "|invalid username or password||";
+							msg = "@" + to_string(PGM_ERR_LOGIN) + "|";
 							if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 							{
 								closesocket(sock);
-								return;
+								terminate;
 							}
-						}
-					}
-					else
-					{
-						msg = "@" + to_string(PGM_ERR_LOGIN) = "|invalid number of arguments||";
-						if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-						{
-							closesocket(sock);
-							return;
 						}
 					}
 					break;
@@ -164,17 +145,25 @@ void Manager::client_requests_thread(const SOCKET& sock)
 				case EN_LOGOUT:
 					if (argv.size() == 1)
 					{
-						Room *room_ptr;
-						if ((room_ptr = user->getRoom()) != nullptr)
+
+						if (user->isAdmin())
 						{
+							Room *room_ptr = user->getRoom();
+							string roomClosedMsg = "@" + to_string(PGM_CTR_ROOM_CLOSED) + "||";
+							vector<User> players = room_ptr->get_players();
+							for (vector<User>::iterator it = players.begin(); it != players.end(); ++it)
+							{
+								send(it->getUserSocket(), roomClosedMsg.c_str(), roomClosedMsg.length(), 0);
+								room_ptr->delete_user(*it);
+							}
 							delete room_ptr;
 							_room_vector.erase(find(_room_vector.begin(), _room_vector.end(), *room_ptr));
-							msg = "@" + to_string(PGM_ERR_LOGIN) = "|invalid username or password||";
-							if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-							{
-								closesocket(sock);
-								return;
-							}
+						}
+						msg = "@" + to_string(PGM_ERR_LOGIN) = "|invalid username or password||";
+						if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+						{
+							closesocket(sock);
+							terminate;
 						}
 						delete user;
 						_user_map.erase(sock);
@@ -203,16 +192,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 						if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 						{
 							closesocket(sock);
-							return;
-						}
-					}
-					else
-					{
-						msg = "@" + to_string(PGM_ERR_GAME_CREATED) = "|invalid number of arguments||";
-						if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-						{
-							closesocket(sock);
-							return;
+							terminate;
 						}
 					}
 					break;
@@ -229,11 +209,14 @@ void Manager::client_requests_thread(const SOCKET& sock)
 							{
 								msg = "@" + to_string(PGM_SCC_GAME_JOIN) + "|";
 								vector<User> players = it->get_players();
+								string userAddedMsg = "@" + to_string(PGM_CTR_NEW_USER) + "|" + user->getUserName() + "||";
 								for (vector<User>::iterator it2 = players.begin(); it2 != players.end(); ++it2)
 								{
 									msg += it2->getUserName() + "|";
+									send(it2->getUserSocket(), userAddedMsg.c_str(), userAddedMsg.length(), 0);
 								}
 								msg += "|";
+								it->add_user(*user);
 								if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 								{
 									closesocket(sock);

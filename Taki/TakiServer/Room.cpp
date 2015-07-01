@@ -2,9 +2,9 @@
 
 
 Room::Room(const string &room_name, const User * const admin)
-	: _room_name(room_name), _admin((User *)admin), _in_game(false)
+	: _room_name(room_name), _admin(new User(*admin)), _in_game(false)
 {
-	_players[0] = (User*)admin;
+	_players[0] = _admin;
 	for (int i = 1; i < MAX_PLAYERS; ++i)
 	{
 		_players[i] = nullptr;
@@ -15,6 +15,14 @@ Room::Room(const string &room_name, const User * const admin)
 
 Room::~Room()
 {
+	delete _admin;
+	for (int i = 0; i < MAX_PLAYERS; ++i)
+	{
+		if (_players[i] != nullptr)
+		{
+			delete _players[i];
+		}
+	}
 }
 
 void Room::init_bank()
@@ -164,7 +172,7 @@ void Room::init_bank()
 bool Room::add_user(User &user)
 {
 	int i = 0;
-	while (_players[i] == nullptr)
+	while (_players[i] != nullptr)
 	{
 		i++;
 	}
@@ -180,11 +188,13 @@ Card Room::get_random_card()
 
 void Room::delete_user(User &user)
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
-		if (_players[i] == &user)
+		if (*_players[i] == user)
 		{
+			delete _players[i];
 			_players[i] = nullptr;
+			break;
 		}
 	}
 }

@@ -38,3 +38,8 @@ SOCKET User::getUserSocket() const
 {
 	return _user_socket;
 }
+
+bool User::operator==(const User &other)
+{
+	return _user_name == other._user_name;
+}
