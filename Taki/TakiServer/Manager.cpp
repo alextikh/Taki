@@ -1,5 +1,5 @@
 #include "Manager.h"
-
+#include <iostream>
 Manager::Manager()
 {
 	int rc;
@@ -26,7 +26,7 @@ User *Manager::register_user(const string &username, const string &password, con
 {
 	int rc;
 	User *user;
-	char sql_command[SQL_COMMAND_LEN] = "INSERT INTO users(username, password_hash) VALUES(\"";
+	/*char sql_command[SQL_COMMAND_LEN] = "INSERT INTO users(username, password_hash) VALUES(\"";
 	char *err = NULL;
 	const char * const unique_err = "Error: UNIQUE constraint failed: users.username";
 	strcat(sql_command, username.c_str());
@@ -37,7 +37,7 @@ User *Manager::register_user(const string &username, const string &password, con
 		strcmp(err, unique_err) == 0)
 	{
 		return nullptr;
-	}
+	}*/
 	user = new User(username, nullptr, false, sock);
 	_user_map.insert(pair<SOCKET, User>(sock, *user));
 	return user;
@@ -84,7 +84,6 @@ void Manager::client_requests_thread(const SOCKET& sock)
 			if (argv.size() >= 0)
 			{
 				arg = argv.front();
-				argv.erase(argv.begin());
 				if (all_of(arg.begin(), arg.end(), [](char ch){ return isdigit(ch); }))
 				{
 					code = stoi(arg);
@@ -92,16 +91,17 @@ void Manager::client_requests_thread(const SOCKET& sock)
 				switch (code)
 				{
 				case EN_REGISTER:
-					if (argv.size() == 2)
+					if (argv.size() == 3)
 					{
-						user = login_user(argv[1], argv[2], sock);
+						user = register_user(argv[1], argv[2], sock);
 						if (user != nullptr)
 						{
 							msg = "@" + to_string(PGM_SCC_REGISTER) + "|" + createRoomList() + "|";
-							if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+							if (send(sock, msg.c_str(), msg.length() + 1, 0) == SOCKET_ERROR)
 							{
 								closesocket(sock);
-								return;
+								std::cout << WSAGetLastError();
+								terminate;
 							}
 						}
 						else
@@ -114,7 +114,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 							}
 						}
 					}
-					else
+						else
 					{
 						msg = "@" + to_string(PGM_ERR_REGISTER_INFO) = "|args|invalid number of arguments||";
 						if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
@@ -127,9 +127,9 @@ void Manager::client_requests_thread(const SOCKET& sock)
 					//////////////////////////////////////////////////////////
 
 				case EN_LOGIN:
-					if (argv.size() == 2)
+					if (argv.size() == 3)
 					{
-						user = register_user(argv[1], argv[2], sock);
+						user = login_user(argv[1], argv[2], sock);
 						if (user != nullptr)
 						{
 							msg = "@" + to_string(PGM_SCC_LOGIN) + "|" + createRoomList() + "|";
@@ -294,18 +294,17 @@ void Manager::client_requests_thread(const SOCKET& sock)
 
 int Manager::get_args(const string &msg, vector<string> &argv) const
 {
-	argv.empty();
+	argv.clear();
 	string arg;
 	int i = 0;
 	if (msg[i] != '@')
 	{
 		return INVALID_MSG_SYNTAX;
 	}
-	for (++i; msg[i] != '|'; ++i);
-	while (msg[i + 1] != '|' && i != msg.length() - 1)
+	while (i < msg.length() && msg[i + 1] != '|')
 	{
 		arg = "";
-		for (++i; msg[i] != '|'; ++i);
+		for (++i; i < msg.length() && msg[i] != '|'; ++i)
 		{
 			arg += msg[i];
 		}

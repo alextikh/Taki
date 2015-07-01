@@ -97,7 +97,6 @@ int main()
 		}
 		
 		threads.push_back(thread(&Manager::client_requests_thread, &manager, client_sock));
-		threads.back().join();
 	}
 
 	closesocket(sock);

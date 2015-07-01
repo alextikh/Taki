@@ -25,6 +25,7 @@ using std::to_string;
 using std::all_of;
 using std::find;
 using std::find_if;
+using std::terminate;
 
 #define SQL_COMMAND_LEN 512
 #define BUF_LEN 2048
