@@ -30,7 +30,7 @@ public:
 	void close();
 	bool is_in_room(const User &user) const;
 	bool start_game();
-	Card Room::get_random_card();
+	Card get_random_card();
 	bool play_turn(vector<Card>& moves);
 	bool is_order_legal(vector<Card>& moves);
 	bool draw_cards(int card_number);
@@ -38,11 +38,11 @@ public:
 	bool is_draw_legal(int num_of_cards);
 	vector<Card> shuffle_cards(int num_of_cards);
 	vector<vector<Card>> shuffle_cards_start_game(int num_of_players);
-	void Room::init_bank();
+	void init_bank();
 	bool operator==(const Room &other);
 
 private: 
-	vector<Card> bank;
+	vector<Card> _bank;
 	string _room_name;
 	User* _admin;
 	User* _players[MAX_PLAYERS];
