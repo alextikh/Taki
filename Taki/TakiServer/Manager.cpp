@@ -77,7 +77,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 	{
 		if (recv(sock, buf, BUF_LEN, 0) == SOCKET_ERROR)
 		{
-			closesocket(sock);
+				closesocket(sock);
 			terminate;
 		}
 		if (get_args(buf, argv) != INVALID_MSG_SYNTAX)
@@ -182,7 +182,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 				case RM_CREATE_GAME:
 					if (argv.size() == 2)
 					{
-						_room_vector.push_back(Room(argv[1], user));
+						_room_vector.push_back(Room(argv[1], *user));
 						msg = "@" + to_string(PGM_SCC_GAME_CREATED) + "||";
 						if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 						{

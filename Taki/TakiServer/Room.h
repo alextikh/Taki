@@ -18,7 +18,7 @@ class User;
 class Room
 {
 public:
-	Room(const string &room_name, const User * const admin);
+	Room(const string &room_name, User &admin);
 	~Room();
 	vector<User> get_players() const;
 	User *get_admin() const;
