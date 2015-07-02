@@ -2,15 +2,27 @@
 
 
 Room::Room(const string &room_name, const User * const admin)
-	: _room_name(room_name), _admin((User *)admin)
+	: _room_name(room_name), _admin(new User(*admin)), _in_game(false)
 {
-	_players[0] = (User*)admin;
+	_players[0] = _admin;
+	for (int i = 1; i < MAX_PLAYERS; ++i)
+	{
+		_players[i] = nullptr;
+	}
 	this->bank = vector<Card>(NUM_CARDS_IN_BANK);
 }
 
 
 Room::~Room()
 {
+	delete _admin;
+	for (int i = 0; i < MAX_PLAYERS; ++i)
+	{
+		if (_players[i] != nullptr)
+		{
+			delete _players[i];
+		}
+	}
 }
 
 void Room::init_bank()
@@ -160,12 +172,12 @@ void Room::init_bank()
 bool Room::add_user(User &user)
 {
 	int i = 0;
-	while (_players[i] == NULL)
+	while (_players[i] != nullptr)
 	{
 		i++;
 	}
 	_players[i] = new User(user);
-	if (_players[i] != NULL) return true;
+	if (_players[i] != nullptr) return true;
 	else return false;
 }
 
@@ -176,18 +188,20 @@ Card Room::get_random_card()
 
 void Room::delete_user(User &user)
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
-		if (_players[i] == &user)
+		if (*_players[i] == user)
 		{
-			_players[i] = NULL;
+			delete _players[i];
+			_players[i] = nullptr;
+			break;
 		}
 	}
 }
 
 bool Room::is_open() const
 {
-	return !_in_game;
+	return get_num_players() != MAX_PLAYERS && !_in_game;
 }
 
 void Room::close()
@@ -199,7 +213,7 @@ bool Room::is_in_room(const User &user) const
 {
 	for (int i = 0; i < 4; i++)
 	{
-		if (_players[i] != NULL)
+		if (_players[i] != nullptr)
 		{
 			if (_players[i] == &user) return true;
 		}
@@ -237,38 +251,6 @@ bool Room::draw_cards(int card_number)
 		return true;
 	}
 	else return false;
-}
-
-bool Room::is_order_legal(vector<Card>& moves)
-{
-	size_t j;
-	bool ok = false;
-	if (moves.size() != 1)
-	{
-		for (size_t i = 0; i < moves.size(); i++)
-		{   //If after card plus has card with the same type or color
-			if (moves[i].getType() == CARD_PLUS && (moves[i + 1].getColor() == moves[i].getColor() || moves[i + 1].getType() == moves[i].getType()))
-			{
-				ok = true;
-			}
-			//If after card Taki or SuperTaki have a series of normal cards
-			else if (moves[i].getType() == CARD_SUPER_TAKI || moves[i].getType() == CARD_TAKI)
-			{
-				i++;
-				for (j = i; j < moves.size(); j++)
-				{
-					if (moves[j - 1].getColor() == moves[j].getColor() || moves[j - 1].getType() == moves[j].getType())
-					{
-						i++;
-					}
-				}
-				if (i == j) ok = true;
-			}
-			else return false;
-			return ok;
-		}
-	}
-	else return true;
 }
 
 int Room::is_turn_legal(vector<Card>& moves)
@@ -372,4 +354,35 @@ vector<User> Room::get_players() const
 		}
 	}
 	return players;
+}
+bool Room::is_order_legal(vector<Card>& moves)
+{
+	size_t j;
+	bool ok = false;
+	if (moves.size() != 1)
+	{
+		for (size_t i = 0; i < moves.size(); i++)
+		{   //If after card plus has card with the same type or color
+			if (moves[i].getType() == CARD_PLUS && (moves[i + 1].getColor() == moves[i].getColor() || moves[i + 1].getType() == moves[i].getType()))
+			{
+				ok = true;
+			}
+			//If after card Taki or SuperTaki have a series of normal cards
+			else if (moves[i].getType() == CARD_SUPER_TAKI || moves[i].getType() == CARD_TAKI)
+			{
+				i++;
+				for (j = i; j < moves.size(); j++)
+				{
+					if (moves[j - 1].getColor() == moves[j].getColor() || moves[j - 1].getType() == moves[j].getType())
+					{
+						i++;
+					}
+				}
+				if (i == j) ok = true;
+			}
+			else return false;
+			return ok;
+		}
+	}
+	else return true;
 }
