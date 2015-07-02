@@ -199,7 +199,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 						if (user->isAdmin())
 						{
 							Room *room_ptr = user->getRoom();
-							room_ptr->delete_user(*user);
+								room_ptr->delete_user(*user);
 							vector<User> players = room_ptr->get_players();
 							string gameClosedMsg = "@" + to_string(PGM_CTR_ROOM_CLOSED) + "||";
 							for (vector<User>::iterator it = players.begin(); it != players.end(); ++it)

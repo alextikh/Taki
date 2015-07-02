@@ -192,7 +192,7 @@ void Room::delete_user(User &user)
 				user.setAdmin(false);
 				_admin = nullptr;
 			}
-			//user.setRoom(nullptr);
+			user.setRoom(nullptr);
 			_players[i] = nullptr;
 			break;
 		}
