@@ -13,6 +13,7 @@ using std::vector;
 using std::string;
 class User;
 
+
 #define MAX_PLAYERS 4
 
 class Room
