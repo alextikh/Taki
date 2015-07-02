@@ -149,7 +149,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 					if (argv.size() == 1)
 					{
 
-						if (user->isAdmin())
+						/*if (user->isAdmin())
 						{
 							Room *room_ptr = user->getRoom();
 							string roomClosedMsg = "@" + to_string(PGM_CTR_ROOM_CLOSED) + "||";
@@ -161,7 +161,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 							}
 							delete room_ptr;
 							_room_vector.erase(find(_room_vector.begin(), _room_vector.end(), *room_ptr));
-						}
+						}*/
 						msg = "@" + to_string(PGM_ERR_LOGIN) = "|invalid username or password||";
 						if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 						{
