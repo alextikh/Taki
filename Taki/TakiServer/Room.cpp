@@ -317,7 +317,7 @@ vector<vector<Card>> Room::shuffle_cards_start_game(int num_of_players)
 
 bool Room::operator==(const Room &other)
 {
-	return _room_name == other._room_name;
+	return _admin == other._admin;
 }
 
 User *Room::get_admin() const

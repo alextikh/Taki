@@ -77,4 +77,9 @@
 #define ROOM_OPEN 1
 #define ROOM_CLOSED 0
 
+#define MAX_CHAT_LEN 100
+#define MAX_USERNAME_LEN 20
+#define MAX_PASSWORD_LEN 20
+#define MAX_ROOMNAME_LEN 20
+
 #endif
