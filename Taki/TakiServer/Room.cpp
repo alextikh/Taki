@@ -15,14 +15,6 @@ Room::Room(const string &room_name, const User * const admin)
 
 Room::~Room()
 {
-	delete _admin;
-	for (int i = 0; i < MAX_PLAYERS; ++i)
-	{
-		if (_players[i] != nullptr)
-		{
-			delete _players[i];
-		}
-	}
 }
 
 void Room::init_bank()
@@ -171,13 +163,14 @@ void Room::init_bank()
 
 bool Room::add_user(User &user)
 {
-	int i = 0;
-	while (_players[i] != nullptr)
+	int i;
+	for (i = 0; i < MAX_PLAYERS && _players[i] != nullptr; i++);
+	if (i < MAX_PLAYERS)
 	{
-		i++;
+		user.setRoom(this);
+		_players[i] = new User(user);
+		return true;
 	}
-	_players[i] = new User(user);
-	if (_players[i] != nullptr) return true;
 	else return false;
 }
 
@@ -192,6 +185,7 @@ void Room::delete_user(User &user)
 	{
 		if (*_players[i] == user)
 		{
+			user.setRoom(nullptr);
 			delete _players[i];
 			_players[i] = nullptr;
 			break;
@@ -253,37 +247,6 @@ bool Room::draw_cards(int card_number)
 	else return false;
 }
 
-bool Room::is_order_legal(vector<Card>& moves)
-{
-	size_t j;
-	bool ok = false;
-	if (moves.size() != 1)
-	{
-		for (size_t i = 0; i < moves.size(); i++)
-		{   //If after card plus has card with the same type or color
-			if (moves[i].getType() == CARD_PLUS && (moves[i + 1].getColor() == moves[i].getColor() || moves[i + 1].getType() == moves[i].getType()))
-			{
-				ok = true;
-			}
-			//If after card Taki or SuperTaki have a series of normal cards
-			else if (moves[i].getType() == CARD_SUPER_TAKI || moves[i].getType() == CARD_TAKI)
-			{
-				for (j = i; j < moves.size(); j++)
-				{
-					if (moves[j].getColor() == moves[j + 1].getColor() || moves[j].getType() == moves[j + 1].getType())
-					{
-						i++;
-					}
-				}
-				if (i == j) ok = true;
-			}
-			else return false;
-			return ok;
-		}
-	}
-	else return true;
-}
-
 int Room::is_turn_legal(vector<Card>& moves)
 {
 	if (play_turn(moves))
@@ -322,7 +285,7 @@ vector<Card> Room::shuffle_cards(int num_of_cards)
 	return shuffle_cards;
 }
 
-vector<vector<Card>> Room::shuffle_cards_start_game(int num_of_players) 
+vector<vector<Card>> Room::shuffle_cards_start_game(int num_of_players)
 {
 	srand(time(NULL));
 	vector<vector<Card>> game_cards(num_of_players, vector<Card>(NUM_OF_CARDS));
@@ -385,4 +348,35 @@ vector<User> Room::get_players() const
 		}
 	}
 	return players;
+}
+bool Room::is_order_legal(vector<Card>& moves)
+{
+	size_t j;
+	bool ok = false;
+	if (moves.size() != 1)
+	{
+		for (size_t i = 0; i < moves.size(); i++)
+		{   //If after card plus has card with the same type or color
+			if (moves[i].getType() == CARD_PLUS && (moves[i + 1].getColor() == moves[i].getColor() || moves[i + 1].getType() == moves[i].getType()))
+			{
+				ok = true;
+			}
+			//If after card Taki or SuperTaki have a series of normal cards
+			else if (moves[i].getType() == CARD_SUPER_TAKI || moves[i].getType() == CARD_TAKI)
+			{
+				i++;
+				for (j = i; j < moves.size(); j++)
+				{
+					if (moves[j - 1].getColor() == moves[j].getColor() || moves[j - 1].getType() == moves[j].getType())
+					{
+						i++;
+					}
+				}
+				if (i == j) ok = true;
+			}
+			else return false;
+			return ok;
+		}
+	}
+	else return true;
 }
