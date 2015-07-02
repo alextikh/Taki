@@ -5,7 +5,6 @@ User::User(const string &user_name, const Room *room, const bool &is_admin, cons
 
 User::~User()
 {
-	delete _room;
 }
 
 string User::getUserName() const
@@ -20,8 +19,7 @@ Room* User::getRoom() const
 
 void User::setRoom(Room *room)
 {
-	delete _room;
-	_room = (Room *)room;
+	_room = room;
 }
 
 bool User::isAdmin() const

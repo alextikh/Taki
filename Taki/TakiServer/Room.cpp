@@ -15,14 +15,6 @@ Room::Room(const string &room_name, const User * const admin)
 
 Room::~Room()
 {
-	delete _admin;
-	for (int i = 0; i < MAX_PLAYERS; ++i)
-	{
-		if (_players[i] != nullptr)
-		{
-			delete _players[i];
-		}
-	}
 }
 
 void Room::init_bank()
@@ -171,13 +163,14 @@ void Room::init_bank()
 
 bool Room::add_user(User &user)
 {
-	int i = 0;
-	while (_players[i] != nullptr)
+	int i;
+	for (i = 0; i < MAX_PLAYERS && _players[i] != nullptr; i++);
+	if (i < MAX_PLAYERS)
 	{
-		i++;
+		user.setRoom(this);
+		_players[i] = new User(user);
+		return true;
 	}
-	_players[i] = new User(user);
-	if (_players[i] != nullptr) return true;
 	else return false;
 }
 
@@ -192,6 +185,7 @@ void Room::delete_user(User &user)
 	{
 		if (*_players[i] == user)
 		{
+			user.setRoom(nullptr);
 			delete _players[i];
 			_players[i] = nullptr;
 			break;

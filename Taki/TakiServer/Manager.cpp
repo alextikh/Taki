@@ -26,7 +26,6 @@ User *Manager::register_user(const string &username, const string &password, con
 {
 	int rc;
 	User *user;
-	/*
 	char sql_command[SQL_COMMAND_LEN] = "INSERT INTO users(username, password_hash) VALUES('";
 	char *err = NULL;
 	const char * const unique_err = "UNIQUE constraint failed: users.username";
@@ -40,7 +39,6 @@ User *Manager::register_user(const string &username, const string &password, con
 		std::cout << err;
 		return nullptr;
 	}
-	*/
 	user = new User(username, nullptr, false, sock);
 	_user_map.insert(pair<SOCKET, User>(sock, *user));
 	return user;
@@ -50,13 +48,18 @@ User *Manager::login_user(const string &username, const string &password, const 
 {
 	int rc;
 	User *user;
-	/*
-	char sql_command[SQL_COMMAND_LEN] = "SELECT COUNT(*) FROM users WHERE username = '";
+	char sql_command[SQL_COMMAND_LEN] = "UPDATE users SET username='";
 	strcat(sql_command, username.c_str());
-	strcat(sql_command, "' AND password_hash = '");
+	strcat(sql_command, "' WHERE username='");
+	strcat(sql_command, username.c_str());
+	strcat(sql_command, "' AND password_hash='");
 	strcat(sql_command, password.c_str());
 	strcat(sql_command, "';");
-	*/
+	rc = sqlite3_exec(_db, sql_command, NULL, NULL, NULL);
+	if (sqlite3_changes(_db) == 0)
+	{
+		return nullptr;
+	}
 	user = new User(username, nullptr, false, sock);
 	_user_map.insert(pair<SOCKET, User>(sock, *user));
 	return user;
@@ -178,7 +181,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 						if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 						{
 							closesocket(sock);
-							return;
+							terminate;
 						}
 					}
 					break;
@@ -220,7 +223,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 								if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 								{
 									closesocket(sock);
-									return;
+									terminate;
 								}
 							}
 							else
@@ -229,7 +232,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 								if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 								{
 									closesocket(sock);
-									return;
+									terminate;
 								}
 							}
 						}
@@ -239,8 +242,23 @@ void Manager::client_requests_thread(const SOCKET& sock)
 							if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 							{
 								closesocket(sock);
-								return;
+								terminate;
 							}
+						}
+					}
+					break;
+					//////////////////////////////////////////////
+
+				case RM_LEAVE_GAME:
+					if (argv.size() == 1)
+					{
+						Room *room_ptr = user->getRoom();
+						room_ptr->delete_user(*user);
+						vector<User> players = room_ptr->get_players();
+						string userLeftMsg = "@" + to_string(PGM_CTR_REMOVE_USER) + "|" + user->getUserName() + "||";
+						for (vector<User>::iterator it = players.begin(); it != players.end(); ++it)
+						{
+							send(it->getUserSocket(), userLeftMsg.c_str(), userLeftMsg.length(), 0);
 						}
 					}
 					break;
@@ -264,7 +282,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 							if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 							{
 								closesocket(sock);
-								return;
+								terminate;
 							}
 						}
 					}
