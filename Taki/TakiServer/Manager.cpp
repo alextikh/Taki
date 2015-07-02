@@ -77,10 +77,8 @@ void Manager::client_requests_thread(const SOCKET& sock)
 	{
 		if (recv(sock, buf, BUF_LEN, 0) == SOCKET_ERROR)
 		{
-			//TODO: delete user from runtime server data
-
 			closesocket(sock);
-			return;
+			terminate;
 		}
 		if (get_args(buf, argv) != INVALID_MSG_SYNTAX)
 		{
@@ -195,6 +193,32 @@ void Manager::client_requests_thread(const SOCKET& sock)
 					break;
 					////////////////////////////////////////////////////////////
 
+				case RM_CLOSE_GAME:
+					if (argv.size() == 1)
+					{
+						if (user->isAdmin())
+						{
+							Room *room_ptr = user->getRoom();
+							room_ptr->delete_user(*user);
+							vector<User> players = room_ptr->get_players();
+							string gameClosedMsg = "@" + to_string(PGM_CTR_ROOM_CLOSED) + "||";
+							for (vector<User>::iterator it = players.begin(); it != players.end(); ++it)
+							{
+								send(it->getUserSocket(), gameClosedMsg.c_str(), gameClosedMsg.length(), 0);
+								room_ptr->delete_user(*it);
+							}
+							delete room_ptr;
+							msg = "@" + to_string(PGM_SCC_GAME_CLOSE) + "||";
+							if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+							{
+								closesocket(sock);
+								terminate;
+							}
+						}
+					}
+					break;
+					////////////////////////////////////////////////////////////
+
 				case RM_JOIN_GAME:
 					if (argv.size() == 2)
 					{
@@ -281,7 +305,17 @@ void Manager::client_requests_thread(const SOCKET& sock)
 						}
 					}
 					break;
+					///////////////////////////////////////////////////////
 				}
+			}
+		}
+		else
+		{
+			msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
+			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+			{
+				closesocket(sock);
+				terminate;
 			}
 		}
 	}
