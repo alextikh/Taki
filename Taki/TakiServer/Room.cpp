@@ -9,7 +9,7 @@ Room::Room(const string &room_name, const User * const admin)
 	{
 		_players[i] = nullptr;
 	}
-	this->_bank = vector<Card>(NUM_CARDS_IN_BANK);
+	this->bank = vector<Card>(NUM_CARDS_IN_BANK);
 }
 
 
@@ -30,21 +30,21 @@ void Room::init_bank()
 				if (j == 2) type = CARD_PLUS_2;
 				if (k == 1)
 				{
-					this->_bank[c].setColor(COLOR_BLUE);
+					this->bank[c].setColor(COLOR_BLUE);
 				}
 				if (k == 2)
 				{
-					this->_bank[c].setColor(COLOR_GREEN);
+					this->bank[c].setColor(COLOR_GREEN);
 				}
 				if (k == 3)
 				{
-					this->_bank[c].setColor(COLOR_RED);
+					this->bank[c].setColor(COLOR_RED);
 				}
 				if (k == 4)
 				{
-					this->_bank[c].setColor(COLOR_YELLOW);
+					this->bank[c].setColor(COLOR_YELLOW);
 				}
-				this->_bank[c].setType(type);
+				this->bank[c].setType(type);
 				c++;
 			}
 		}
@@ -55,21 +55,21 @@ void Room::init_bank()
 		{//push stop cards
 			if (k == 1)
 			{
-				this->_bank[c].setColor(COLOR_BLUE);
+				this->bank[c].setColor(COLOR_BLUE);
 			}
 			if (k == 2)
 			{
-				this->_bank[c].setColor(COLOR_GREEN);
+				this->bank[c].setColor(COLOR_GREEN);
 			}
 			if (k == 3)
 			{
-				this->_bank[c].setColor(COLOR_RED);
+				this->bank[c].setColor(COLOR_RED);
 			}
 			if (k == 4)
 			{
-				this->_bank[c].setColor(COLOR_YELLOW);
+				this->bank[c].setColor(COLOR_YELLOW);
 			}
-			this->_bank[c].setType(CARD_STOP);
+			this->bank[c].setType(CARD_STOP);
 			c++;
 		}
 	}
@@ -79,21 +79,21 @@ void Room::init_bank()
 		{
 			if (k == 1)
 			{
-				this->_bank[c].setColor(COLOR_BLUE);
+				this->bank[c].setColor(COLOR_BLUE);
 			}
 			if (k == 2)
 			{
-				this->_bank[c].setColor(COLOR_GREEN);
+				this->bank[c].setColor(COLOR_GREEN);
 			}
 			if (k == 3)
 			{
-				this->_bank[c].setColor(COLOR_RED);
+				this->bank[c].setColor(COLOR_RED);
 			}
 			if (k == 4)
 			{
-				this->_bank[c].setColor(COLOR_YELLOW);
+				this->bank[c].setColor(COLOR_YELLOW);
 			}
-			this->_bank[c].setType(CARD_CHANGE_DIRECTION);
+			this->bank[c].setType(CARD_CHANGE_DIRECTION);
 			c++;
 		}
 	}
@@ -103,21 +103,21 @@ void Room::init_bank()
 		{
 			if (k == 1)
 			{
-				this->_bank[c].setColor(COLOR_BLUE);
+				this->bank[c].setColor(COLOR_BLUE);
 			}
 			if (k == 2)
 			{
-				this->_bank[c].setColor(COLOR_GREEN);
+				this->bank[c].setColor(COLOR_GREEN);
 			}
 			if (k == 3)
 			{
-				this->_bank[c].setColor(COLOR_RED);
+				this->bank[c].setColor(COLOR_RED);
 			}
 			if (k == 4)
 			{
-				this->_bank[c].setColor(COLOR_YELLOW);
+				this->bank[c].setColor(COLOR_YELLOW);
 			}
-			this->_bank[c].setType(CARD_PLUS);
+			this->bank[c].setType(CARD_PLUS);
 			c++;
 		}
 	}
@@ -127,35 +127,35 @@ void Room::init_bank()
 		{
 			if (k == 1)
 			{
-				this->_bank[c].setColor(COLOR_BLUE);
+				this->bank[c].setColor(COLOR_BLUE);
 			}
 			if (k == 2)
 			{
-				this->_bank[c].setColor(COLOR_GREEN);
+				this->bank[c].setColor(COLOR_GREEN);
 			}
 			if (k == 3)
 			{
-				this->_bank[c].setColor(COLOR_RED);
+				this->bank[c].setColor(COLOR_RED);
 			}
 			if (k == 4)
 			{
-				this->_bank[c].setColor(COLOR_YELLOW);
+				this->bank[c].setColor(COLOR_YELLOW);
 			}
-			this->_bank[c].setType(CARD_TAKI);
+			this->bank[c].setType(CARD_TAKI);
 			c++;
 		}
 	}
 	for (int k = 1; k <= 4; k++)
 	{//push cange color cards 
-		this->_bank[c].setColor(NO_COLOR);
-		this->_bank[c].setType(CARD_CANGE_COLOR);
+		this->bank[c].setColor(NO_COLOR);
+		this->bank[c].setType(CARD_CANGE_COLOR);
 		c++;
 	}
 
 	for (int k = 1; k <= 2; k++)
 	{//push superTaki cards
-		this->_bank[c].setColor(NO_COLOR);
-		this->_bank[c].setType(CARD_SUPER_TAKI);
+		this->bank[c].setColor(NO_COLOR);
+		this->bank[c].setType(CARD_SUPER_TAKI);
 		c++;
 	}
 
@@ -176,14 +176,14 @@ bool Room::add_user(User &user)
 
 Card Room::get_random_card()
 {
-	return this->_bank[rand() % NUM_CARDS_IN_BANK];
+	return this->bank[rand() % NUM_CARDS_IN_BANK];
 }
 
 void Room::delete_user(User &user)
 {
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
-		if (_players[i] == &user)
+		if (*_players[i] == user)
 		{
 			user.setRoom(nullptr);
 			delete _players[i];
@@ -240,7 +240,7 @@ bool Room::play_turn(vector<Card>& moves)
 
 bool Room::draw_cards(int card_number)
 {
-	if (this->_bank.size() > card_number)
+	if (this->bank.size() > card_number)
 	{
 		return true;
 	}
