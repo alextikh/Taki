@@ -1,10 +1,12 @@
 #include "Room.h"
 
 
-Room::Room(const string &room_name, const User * const admin)
-	: _room_name(room_name), _admin(new User(*admin)), _in_game(false)
+Room::Room(const string &room_name, User &admin)
+	: _room_name(room_name), _admin(&admin), _in_game(false)
 {
 	_players[0] = _admin;
+	_admin->setAdmin(true);
+	_admin->setRoom(this);
 	for (int i = 1; i < MAX_PLAYERS; ++i)
 	{
 		_players[i] = nullptr;
@@ -168,7 +170,7 @@ bool Room::add_user(User &user)
 	if (i < MAX_PLAYERS)
 	{
 		user.setRoom(this);
-		_players[i] = new User(user);
+		_players[i] = &user;
 		return true;
 	}
 	else return false;
@@ -185,8 +187,12 @@ void Room::delete_user(User &user)
 	{
 		if (*_players[i] == user)
 		{
+			if (user.isAdmin())
+			{
+				user.setAdmin(false);
+				_admin = nullptr;
+			}
 			user.setRoom(nullptr);
-			delete _players[i];
 			_players[i] = nullptr;
 			break;
 		}
