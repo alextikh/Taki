@@ -68,7 +68,7 @@
 #define NUM_OF_CARDS 8
 #define NUM_CARDS_IN_BANK 110
 
-#define NO_COLOR ' ' //for CARD_CHANGE_DIRECTION (<) and CARD_CANGE_COLOR (%)
+#define NO_COLOR '\0' //for SUPER TAKI (*) and CARD_CANGE_COLOR (%)
 #define COLOR_RED 'r'
 #define COLOR_GREEN 'g'
 #define COLOR_YELLOW 'y'

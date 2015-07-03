@@ -15,6 +15,7 @@
 #include <cctype>
 #include "User.h"
 #include "Room.h"
+#include "Card.h"
 
 using std::map;
 using std::vector;
@@ -50,6 +51,7 @@ private:
 	User *register_user(const string &username, const string &password, const SOCKET& sock);
 	User *login_user(const string &username, const string &password, const SOCKET& sock);
 	int get_args(const string &msg, vector<string> &argv) const;
+	int get_cards(const string &msg, vector<Card> &cards);
 	string createRoomList() const;
 
 	map<SOCKET, User *> _user_map;

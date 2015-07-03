@@ -40,7 +40,6 @@ User *Manager::register_user(const string &username, const string &password, con
 		return nullptr;
 	}
 	user = new User(username, nullptr, false, sock);
-	//_user_map.insert(pair<SOCKET, User *>(sock, user));
 	_user_map[sock] = user;
 	return user;
 }
@@ -67,7 +66,6 @@ User *Manager::login_user(const string &username, const string &password, const 
 		return nullptr;
 	}
 	user = new User(username, nullptr, false, sock);
-	//_user_map.insert(pair<SOCKET, User *>(sock, user));
 	_user_map[sock] = user;
 	return user;
 }
@@ -365,13 +363,26 @@ void Manager::client_requests_thread(const SOCKET& sock)
 					{
 						if (user->getRoom() != nullptr && !user->getRoom()->is_open())
 						{
-							if (true)
+							vector<Card> played_cards;
+							if (get_cards(argv[1], played_cards) != INVALID_MSG_SYNTAX)
 							{
-								;
+								if (true)
+								{
+									std::cout << "something something";
+								}
+								else
+								{
+									;
+								}
 							}
 							else
 							{
-								;
+								msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
+								if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+								{
+									closesocket(sock);
+									ExitThread(1);
+								}
 							}
 						}
 						else
@@ -506,4 +517,58 @@ string Manager::createRoomList() const
 			+ "|" + to_string(((*it)->is_open()) ? ROOM_OPEN : ROOM_CLOSED) + "|";
 	}
 	return lst;
+}
+
+int Manager::get_cards(const string &msg, vector<Card> &cards)
+{
+	cards.clear();
+	int i = 0, j = msg.find(",", i);
+	char type, color;
+	while (j != msg.length())
+	{
+		if (j == string::npos)
+		{
+			j = msg.length();
+		}
+		if (j - i == 2)
+		{
+			type = msg[i];
+			if (((type < '1' || type > '9') && type != CARD_PLUS && type != CARD_STOP && type != CARD_CHANGE_DIRECTION
+				&& type != CARD_PLUS_2 && type != CARD_TAKI) || type == '2')
+			{
+				return INVALID_MSG_SYNTAX;
+			}
+			color = msg[i + 1];
+			if (color != COLOR_RED && color != COLOR_GREEN && color != COLOR_YELLOW && color != COLOR_BLUE)
+			{
+				return INVALID_MSG_SYNTAX;
+			}
+		}
+		else
+		{
+			if (j - i == 1)
+			{
+				type = msg[i];
+				if (type == '%' || type == '*')
+				{
+					color = NO_COLOR;
+				}
+				else
+				{
+					return INVALID_MSG_SYNTAX;
+				}
+			}
+			else
+			{
+				return INVALID_MSG_SYNTAX;
+			}
+		}
+		cards.push_back(Card(color, type));
+		if (j != msg.length())
+		{
+			i = j + 1;
+			j = msg.find(",", i);
+		}
+	}
+	return !INVALID_MSG_SYNTAX;
 }
