@@ -206,7 +206,7 @@ bool Room::is_open() const
 
 void Room::close()
 {
-	free(_players);
+	delete[] _players;
 }
 
 bool Room::is_in_room(const User &user) const
@@ -221,9 +221,10 @@ bool Room::is_in_room(const User &user) const
 	return false;
 }
 
-bool Room::start_game()
+map<User, vector<Card>> Room::start_game()
 {
-	return _in_game;
+	_in_game = true;
+	return shuffle_cards_start_game();
 }
 
 bool Room::play_turn(vector<Card>& moves)
@@ -289,30 +290,46 @@ vector<Card> Room::shuffle_cards(int num_of_cards)
 		shuffle_cards[i] = this->get_random_card();
 	}
 	return shuffle_cards;
+
 }
 
-vector<vector<Card>> Room::shuffle_cards_start_game(int num_of_players)
+map<User, vector<Card>> Room::shuffle_cards_start_game()
 {
 	srand(time(NULL));
-	vector<vector<Card>> game_cards(num_of_players, vector<Card>(NUM_OF_CARDS));
 
-	for (int i = 0; i < num_of_players; i++)
+	init_bank();
+	for (int i = 0; i < NUM_SHUFFLES; ++i)
 	{
-		for (int j = 0; j < NUM_OF_CARDS; j++)
+		int loc1 = rand() % bank.size(), loc2 = rand() % bank.size();
+		Card temp = bank[loc1];
+		bank[loc1] = bank[loc2];
+		bank[loc2] = temp;
+	}
+
+	map<User, vector<Card>> players_decks;
+	for (int i = 0; i < MAX_PLAYERS; ++i)
+	{
+		if (_players[i] != nullptr)
 		{
-			game_cards[i][j] = this->get_random_card();
+			players_decks.insert(pair<User, vector<Card>>(*_players[i], vector<Card>()));
 		}
 	}
 
-	for (int i = 0; i < num_of_players; i++)
+	for (int i = 0; i < PLAYER_DECK_SIZE; ++i)
 	{
-		std::cout << "PLAYER " << i + 1 << std::endl << std::endl;
-		for (int j = 0; j < NUM_OF_CARDS; j++)
+		for (int j = 0; j < MAX_PLAYERS; ++j)
 		{
-			std::cout << game_cards[i][j].to_string() << std::endl;
+			if (_players[j] != nullptr)
+			{
+				players_decks[*_players[j]].push_back(bank.front());
+				bank.erase(bank.begin());
+			}
 		}
 	}
-	return game_cards;
+	_last_card = bank.front();
+	bank.erase(bank.begin());
+
+	return players_decks;
 }
 
 bool Room::operator==(const Room &other)
@@ -355,6 +372,7 @@ vector<User> Room::get_players() const
 	}
 	return players;
 }
+
 bool Room::is_order_legal(vector<Card>& moves)
 {
 	size_t j;
@@ -385,4 +403,9 @@ bool Room::is_order_legal(vector<Card>& moves)
 		}
 	}
 	else return true;
+}
+
+Card Room::get_top_card() const
+{
+	return _last_card;
 }

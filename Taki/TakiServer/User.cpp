@@ -41,3 +41,8 @@ bool User::operator==(const User &other)
 {
 	return _user_name == other._user_name;
 }
+
+bool User::operator<(const User &other) const
+{
+	return (_user_name.compare(other._user_name) > 0);
+}

@@ -29,6 +29,16 @@ using std::find_if;
 #define BUF_LEN 2048
 #define INVALID_MSG_SYNTAX -1
 
+#define ROOM_OPEN 1
+#define ROOM_CLOSED 0
+
+#define MIN_PLAYERS_FOR_GAME 2
+
+#define MAX_CHAT_LEN 100
+#define MAX_USERNAME_LEN 20
+#define MAX_PASSWORD_LEN 20
+#define MAX_ROOMNAME_LEN 20
+
 class Manager
 {
 public:
@@ -42,8 +52,8 @@ private:
 	int get_args(const string &msg, vector<string> &argv) const;
 	string createRoomList() const;
 
-	map<SOCKET, User> _user_map;
-	vector<Room> _room_vector;
+	map<SOCKET, User *> _user_map;
+	vector<Room *> _room_vector;
 	sqlite3 *_db;
 };
 
