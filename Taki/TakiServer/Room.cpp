@@ -294,8 +294,7 @@ int Room::play_turn(User *player, Card move)
 	}
 	_curr_player_order.push_back(move);
 	_last_card = move;
-	map<User *, vector<Card>>::iterator it;
-	find_if(_players_decks.begin(), _players_decks.end(),
+	map<User *, vector<Card>>::iterator it = find_if(_players_decks.begin(), _players_decks.end(),
 		[this](pair<User *, vector<Card>> curr_pair){ return *_players[_curr_player_index] == *(curr_pair.first); });
 	vector<Card>::iterator it2 = find_if(it->second.begin(), it->second.end(),
 		[move](Card curr_card) {return curr_card == move; });
