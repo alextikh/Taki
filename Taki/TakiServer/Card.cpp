@@ -20,12 +20,12 @@ string Card::to_string()
 	return { _type, _color };
 }
 
-char Card::getColor()
+char Card::getColor() const
 {
 	return _color;
 }
 
-char Card::getType()
+char Card::getType() const
 {
 	return _type;
 }
@@ -38,4 +38,9 @@ void Card::setType(char type)
 void Card::setColor(char color)
 {
 	_color = color;
+}
+
+bool Card::operator==(const Card &other) const
+{
+	return _type == other._type && _color == other._color;
 }

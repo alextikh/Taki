@@ -14,10 +14,11 @@ public:
 	Card(char color, char type);
 	~Card();
 	string to_string();
-	char getColor();
-	char getType();
+	char getColor() const;
+	char getType() const;
 	void setType(char type);
 	void setColor(char color);
+	bool operator==(const Card &other) const;
 
 private:
 	char _type;

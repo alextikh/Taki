@@ -28,7 +28,7 @@ public:
 	bool isAdmin() const;
 	void setAdmin(const bool &is_admin);
 	SOCKET getUserSocket() const;
-	bool operator==(const User &other);
+	bool operator==(const User &other) const;
 	bool operator<(const User &other) const;
 };
 
