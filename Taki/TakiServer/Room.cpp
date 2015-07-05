@@ -380,6 +380,14 @@ void Room::shuffle_cards_start_game()
 
 	shuffle_cards();
 
+	for (int i = 0; i < MAX_PLAYERS; ++i)
+	{
+		if (_players[i] != nullptr)
+		{
+			_players_decks[_players[i]] = vector<Card>();
+		}
+	}
+
 	for (int i = 0; i < PLAYER_DECK_SIZE; ++i)
 	{
 		for (int j = 0; j < MAX_PLAYERS; ++j)
