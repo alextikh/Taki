@@ -177,6 +177,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 					{
 						delete user;
 						_user_map.erase(sock);
+						closesocket(sock);
 					}
 					break;
 					//////////////////////////////////////////////////////
