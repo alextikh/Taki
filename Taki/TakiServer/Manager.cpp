@@ -415,7 +415,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 										ExitThread(1);
 									}
 								}
-								else if (status == PGM_MER_MESSAGE)
+								else if (status == PGM_MER_ACCESS)
 								{
 									msg = "@" + to_string(PGM_MER_ACCESS) + "||";
 									if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
@@ -467,13 +467,14 @@ void Manager::client_requests_thread(const SOCKET& sock)
 										msg += ",";
 									}
 								}
-								msg += "|";
+								msg += "||";
 								if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 								{
 									closesocket(sock);
 									ExitThread(1);
 								}
-								msg = "@" + to_string(GAM_CTR_DRAW_CARDS) + "|" + to_string(drawn_cards.size()) + "||";
+								msg = "@" + to_string(GAM_CTR_DRAW_CARDS) + "|" + user->getUserName() + "|"
+									+ to_string(drawn_cards.size()) + "||";
 								vector<User *> players = room->get_players();
 								for (vector<User *>::iterator it = players.begin(); it != players.end(); ++it)
 								{
@@ -678,31 +679,12 @@ int Manager::get_cards(const string &msg, vector<Card> &cards)
 		{
 			type = msg[i];
 			if (((type < '1' || type > '9') && type != CARD_PLUS && type != CARD_STOP && type != CARD_CHANGE_DIRECTION
-				&& type != CARD_PLUS_2 && type != CARD_TAKI) || type == '2')
+				&& type != CARD_PLUS_2 && type != CARD_TAKI && type != CARD_CANGE_COLOR && type != CARD_SUPER_TAKI) || type == '2')
 			{
 				return INVALID_MSG_SYNTAX;
 			}
 			color = msg[i + 1];
 			if (color != COLOR_RED && color != COLOR_GREEN && color != COLOR_YELLOW && color != COLOR_BLUE)
-			{
-				return INVALID_MSG_SYNTAX;
-			}
-		}
-		else
-		{
-			if (j - i == 1)
-			{
-				type = msg[i];
-				if (type == '%' || type == '*')
-				{
-					color = NO_COLOR;
-				}
-				else
-				{
-					return INVALID_MSG_SYNTAX;
-				}
-			}
-			else
 			{
 				return INVALID_MSG_SYNTAX;
 			}

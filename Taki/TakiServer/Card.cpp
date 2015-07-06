@@ -42,5 +42,5 @@ void Card::setColor(char color)
 
 bool Card::operator==(const Card &other) const
 {
-	return _type == other._type && _color == other._color;
+	return (_type == other._type && (_color == other._color || _color == ' ' || other._color == ' '));
 }
