@@ -314,7 +314,7 @@ int Room::play_turn(User *player, Card move)
 	return GAM_SCC_TURN;
 }
 
-bool Room::draw_cards(User *player, vector<Card> &drawed_cards)
+bool Room::draw_cards(User *player, vector<Card> &drawn_cards)
 {
 	if (_in_game)
 	{
@@ -323,14 +323,14 @@ bool Room::draw_cards(User *player, vector<Card> &drawed_cards)
 			_plus = false;
 			for (; !_bank.empty() && _draw_counter > 0; --_draw_counter)
 			{
-				drawed_cards.push_back(_bank.front());
+				drawn_cards.push_back(_bank.front());
 				_bank.erase(_bank.begin());
 			}
 			if (_draw_counter > 0)
 			{
 				_bank = _used_cards;
 				_used_cards.clear();
-				draw_cards(player, drawed_cards);
+				draw_cards(player, drawn_cards);
 			}
 			return true;
 		}

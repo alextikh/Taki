@@ -333,9 +333,15 @@ void Manager::client_requests_thread(const SOCKET& sock)
 									{
 										msg += it2->getType();
 										msg += it2->getColor();
-										msg += ",";
+										if (next(it2) != player_deck.end())
+										{
+											msg += ",";
+										}
 									}
-									msg += "|" + to_string(top_card.getType()) + to_string(top_card.getColor()) + "||";
+									msg += "|";
+									msg += top_card.getType();
+									msg += top_card.getColor();
+									msg += "|" + room->get_curr_player()->getUserName() + "||";
 									send((*it)->getUserSocket(), msg.c_str(), msg.length(), 0);
 								}
 							}
@@ -448,13 +454,18 @@ void Manager::client_requests_thread(const SOCKET& sock)
 						Room *room = user->getRoom();
 						if (room != nullptr && !room->is_open())
 						{
-							vector<Card> drawed_cards;
-							if (room->draw_cards(user, drawed_cards))
+							vector<Card> drawn_cards;
+							if (room->draw_cards(user, drawn_cards))
 							{
 								msg = "@" + to_string(GAM_SCC_DRAW) + "|";
-								for (vector<Card>::iterator it = drawed_cards.begin(); it != drawed_cards.end(); ++it)
+								for (vector<Card>::iterator it = drawn_cards.begin(); it != drawn_cards.end(); ++it)
 								{
-									msg += it->getType() + it->getColor() + "|";
+									msg += it->getType();
+									msg += it->getColor();
+									if (next(it) != drawn_cards.end())
+									{
+										msg += ",";
+									}
 								}
 								msg += "|";
 								if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
@@ -462,7 +473,7 @@ void Manager::client_requests_thread(const SOCKET& sock)
 									closesocket(sock);
 									ExitThread(1);
 								}
-								msg = "@" + to_string(GAM_CTR_DRAW_CARDS) + "|" + to_string(drawed_cards.size()) + "||";
+								msg = "@" + to_string(GAM_CTR_DRAW_CARDS) + "|" + to_string(drawn_cards.size()) + "||";
 								vector<User *> players = room->get_players();
 								for (vector<User *>::iterator it = players.begin(); it != players.end(); ++it)
 								{
