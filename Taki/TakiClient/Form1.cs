@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -19,9 +19,7 @@ namespace newGUI_Taki
         private string menu;
         bool is_admin;
         bool is_register;
-        private string cardString;
         private Thread myThread;
-        private Thread myckeck;
         private bool shutdown = false;
         private int numOfPlayers = 1;
         private Dictionary<string, Image> map;
@@ -136,13 +134,12 @@ namespace newGUI_Taki
         }
         private void butEnterDetails_Click(object sender, EventArgs e)
         {
-            this.cardString = "";
             byte[] buffer;
             string username = tbUsername.Text;
             string password = tbPassword.Text;
             string recv = "";
             TcpClient client = new TcpClient();
-            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("10.0.0.142"), 10113);
+            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("10.0.0.11"), 10113);
             client.Connect(serverEndPoint);
             this.sock = client.GetStream();
             if (is_register)
@@ -314,7 +311,7 @@ namespace newGUI_Taki
 
             if (option.Equals("1"))
             {
-                if (this.myckeck.IsAlive || this.myThread.IsAlive)
+                if (this.myThread.IsAlive)
                 {
                     StopThreads();
                 }
@@ -336,8 +333,6 @@ namespace newGUI_Taki
                 buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||\0", status_code.RM_START_GAME));//start game
                 this.sock.Write(buffer, 0, buffer.Length);
                 this.sock.Flush();
-                while (this.cardString.Equals("")) ;
-                parseInfo(this.cardString);
             }
             else if (numOfPlayers < status_code.MIN_PLAYERS_FOR_GAME)
             {
@@ -492,12 +487,23 @@ namespace newGUI_Taki
             }
         }
 */
+        delegate void updateStringCardsCallback(string msg);
+        private void updateStringCards(string msg)
+        {
+            if (this.InvokeRequired)
+            {
+                updateStringCardsCallback d = new updateStringCardsCallback(updateStringCards);
+                this.Invoke(d, new object[] { msg });
+            }
+            else
+            {
+                parseInfo(msg);
+            }
+        }
         private void in_room(bool admin)
         {
             this.myThread = new Thread(secThread);
-            this.myckeck = new Thread(checkCardString);
             myThread.Start();
-            myckeck.Start();
             is_admin = admin;
             string str = "";
             str += "1. leave room\n";
@@ -510,19 +516,6 @@ namespace newGUI_Taki
             lblScreen.Text = str + "\nEnter your chose:";
             tbEnterChose.Text = "";
             butEnterChoseInRoom.Visible = true;
-            if (!is_admin)
-            {
-                myckeck.Join();
-                parseInfo(this.cardString);
-            }
-        }
-        private void checkCardString(object ob)
-        {
-            while (this.cardString.Equals("") && !shutdown)
-            {
-                Thread.Sleep(1000);
-            }
-            return;
         }
         private void StopThreads()
         {
@@ -560,7 +553,7 @@ namespace newGUI_Taki
                 {
                     if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
                     {
-                        this.cardString = msg; //build a d-e-l-e-g-a-t-e-!!!!!
+                        updateStringCards(msg);
                         int i = 0, j;
                         for (j = 0; j < 4; ++j)
                         {
@@ -578,10 +571,10 @@ namespace newGUI_Taki
                     {
                         int i = msg.IndexOf("|");
                         int j = msg.IndexOf("||");
-                        string player = msg.Substring(i + 1, j - i -1);
+                        string player = msg.Substring(i + 1, j - i - 1);
                         updateCurrPlayer(player);
                     }
-                }   
+                }
                 msg = "";
             }
         }
@@ -667,18 +660,10 @@ namespace newGUI_Taki
 
         private void pbBankCards_Click(object sender, EventArgs e)
         {
-            //List<string> drawn_cards = new List<string>();
             byte[] buffer;
-            //string msg;
-            //int i, j, x = 50, y = 5;
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.GM_DRAW));
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
-            /*
-            buffer = new byte[status_code.MSG_LEN];
-            int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
-            msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
-            */
         }
 
         delegate void updateDrawCallback(string msg);
