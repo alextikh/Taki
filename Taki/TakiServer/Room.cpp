@@ -176,7 +176,7 @@ int Room::play_turn(User *player, const Card &move)
 	{
 		return GAM_ERR_ILLEGAL_ORDER;
 	}
-	if (_curr_player_order.size() > 0 && !_open_taki && _plus)
+	if (_curr_player_order.size() > 0 && !_open_taki && !_plus)
 	{
 		return GAM_ERR_ILLEGAL_ORDER;
 	}
@@ -191,14 +191,9 @@ int Room::play_turn(User *player, const Card &move)
 			return GAM_ERR_ILLEGAL_CARD;
 		}
 	}
-	_plus = false;
 	if (move.getType() == CARD_PLUS)
 	{
 		_plus = true;
-	}
-	else if (move.getType() == CARD_PLUS_2)
-	{
-		_draw_counter += 2;
 	}
 	else if (move.getType() == CARD_TAKI)
 	{
@@ -206,28 +201,39 @@ int Room::play_turn(User *player, const Card &move)
 	}
 	else if (move.getType() == CARD_CHANGE_DIRECTION)
 	{
-		_game_dir = !_game_dir;
+		_game_dir == DIR_NORMAL ? _game_dir = DIR_CHANGE : _game_dir = DIR_NORMAL;
 	}
 	else if (move.getType() == CARD_STOP)
 	{
 		_stop = true;
 	}
+	else if (move.getType() == CARD_PLUS_2)
+	{
+		_draw_counter += 2;
+	}
+	if (_curr_player_order.size() > 0)
+	{
+		if (move.getType() != CARD_PLUS_2)
+		{
+			_draw_counter = 0;
+		}
+		else if (move.getType() != CARD_STOP)
+		{
+			_stop = false;
+		}
+		else if (move.getType() != CARD_PLUS)
+		{
+			_plus = false;
+		}
+		else if (move.getType() != CARD_CHANGE_DIRECTION)
+		{
+			_game_dir = DIR_NORMAL;
+		}
+	}
 	_curr_player_order.push_back(move);
 	_top_card = move;
 	it->second.erase(it2);
 	_used_cards.push_back(move);
-	if (it->second.empty())
-	{
-		_in_game = false;
-		_game_ended = true;
-		for (winner_index = 0; winner_index < MAX_PLAYERS; ++winner_index)
-		{
-			if (_players[winner_index] != nullptr && *_players[winner_index] == *player)
-			{
-				break;
-			}
-		}
-	}
 	return GAM_SCC_TURN;
 }
 
@@ -237,24 +243,18 @@ bool Room::draw_cards(User *player, vector<Card> &drawn_cards)
 	{
 		if (*player == *_players[_curr_player_index])
 		{
-			if (_curr_player_order.empty())
+			if (!_draw_made && (_curr_player_order.empty() || _plus))
 			{
-				if (!_draw_made && _draw_counter == 0)
-				{
-					++_draw_counter;
-					_draw_made = true;
-				}
-				else
-				{
-					return false;
-				}
+					if (_plus)
+					{
+						_plus = false;
+					}
+					if (_draw_counter == 0)
+					{
+						++_draw_counter;
+					}
 			}
-			else if (_plus && _draw_counter == 0)
-			{
-				_plus = false;
-				++_draw_counter;
-			}
-			if (_draw_counter == 0)
+			else
 			{
 				return false;
 			}
@@ -272,6 +272,7 @@ bool Room::draw_cards(User *player, vector<Card> &drawn_cards)
 				_used_cards.clear();
 				draw_cards(player, drawn_cards);
 			}
+			_draw_made = true;
 			return true;
 		}
 	}
@@ -284,6 +285,21 @@ int Room::end_turn(User *player)
 	{
 		if (_in_game)
 		{
+			map<User *, vector<Card>>::iterator it = find_if(_players_decks.begin(), _players_decks.end(),
+				[this](pair<User *, vector<Card>> curr_pair){ return *_players[_curr_player_index] == *(curr_pair.first); });
+			if (it->second.empty())
+			{
+				_in_game = false;
+				_game_ended = true;
+				for (winner_index = 0; winner_index < MAX_PLAYERS; ++winner_index)
+				{
+					if (_players[winner_index] != nullptr && *_players[winner_index] == *player)
+					{
+						break;
+					}
+				}
+				return GAM_CTR_GAME_ENDED;
+			}
 			if (_plus && _draw_counter == 0)
 			{
 				return GAM_ERR_LAST_CARD;
@@ -327,10 +343,6 @@ int Room::end_turn(User *player)
 			{
 				return GAM_ERR_LAST_CARD;
 			}
-		}
-		else if (_game_ended)
-		{
-			return GAM_CTR_GAME_ENDED;
 		}
 		else
 		{

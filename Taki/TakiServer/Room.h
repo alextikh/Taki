@@ -21,7 +21,8 @@ class User;
 #define MAX_PLAYERS 4
 #define NUM_SHUFFLES 100
 #define PLAYER_DECK_SIZE 8
-#define DIR_NORMAL true
+#define DIR_NORMAL 1
+#define DIR_CHANGE 0
 
 class Room
 {
@@ -64,12 +65,11 @@ private:
 	User* _admin;
 	User* _players[MAX_PLAYERS];
 	bool _in_game;
-	int _turn_modifier;
 	int _draw_counter;
 	bool _open_taki;
 	bool _plus;
 	bool _stop;
-	bool _game_dir;
+	int _game_dir;
 	bool _game_ended;
 	bool _draw_made;
 	Card _top_card;
