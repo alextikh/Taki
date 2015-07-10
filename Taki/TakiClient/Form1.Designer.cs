@@ -163,7 +163,7 @@ namespace newGUI_Taki
             // 
             this.lblScreen.AutoSize = true;
             this.lblScreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblScreen.Location = new System.Drawing.Point(272, 77);
+            this.lblScreen.Location = new System.Drawing.Point(272, 65);
             this.lblScreen.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblScreen.Name = "lblScreen";
             this.lblScreen.Size = new System.Drawing.Size(0, 24);
@@ -253,7 +253,6 @@ namespace newGUI_Taki
             this.pbTopCard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbTopCard.TabIndex = 15;
             this.pbTopCard.TabStop = false;
-            this.pbTopCard.Click += new System.EventHandler(this.pbTopCard_Click);
             // 
             // pbBankCards
             // 
@@ -275,6 +274,7 @@ namespace newGUI_Taki
             this.tbEndTurn.Text = "End turn";
             this.tbEndTurn.UseVisualStyleBackColor = true;
             this.tbEndTurn.Visible = false;
+            this.tbEndTurn.Click += new System.EventHandler(this.tbEndTurn_Click);
             // 
             // Form1
             // 
@@ -336,4 +336,3 @@ namespace newGUI_Taki
         private System.Windows.Forms.Button tbEndTurn;
     }
 }
-

@@ -516,20 +516,11 @@ void Manager::client_requests_thread(const SOCKET& sock)
 							int status = room->end_turn(user);
 							if (status == GAM_SCC_TURN)
 							{
-								msg = "@" + to_string(GAM_SCC_TURN) + "|" + room->get_curr_player()->getUserName() + "||";
-								if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-								{
-									closesocket(sock);
-									ExitThread(1);
-								}
 								vector<User *> players = room->get_players();
 								msg = "@" + to_string(GAM_CTR_TURN_COMPELTE) + "|" + room->get_curr_player()->getUserName() + "||";
 								for (vector<User *>::iterator it = players.begin(); it != players.end(); ++it)
 								{
-									if (!(**it == *user))
-									{
-										send((*it)->getUserSocket(), msg.c_str(), msg.length(), 0);
-									}
+									send((*it)->getUserSocket(), msg.c_str(), msg.length(), 0);
 								}
 							}
 							else if (status == GAM_CTR_GAME_ENDED)

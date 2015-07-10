@@ -142,7 +142,7 @@ namespace newGUI_Taki
             string password = tbPassword.Text;
             string recv = "";
             TcpClient client = new TcpClient();
-            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("10.0.0.139"), 10113);
+            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("10.0.0.142"), 10113);
             client.Connect(serverEndPoint);
             this.sock = client.GetStream();
             if (is_register)
@@ -560,15 +560,43 @@ namespace newGUI_Taki
                 {
                     if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
                     {
-
-                        this.cardString = msg;
+                        this.cardString = msg; //build a d-e-l-e-g-a-t-e-!!!!!
+                        int i = 0, j;
+                        for (j = 0; j < 4; ++j)
+                        {
+                            i = msg.IndexOf("|", i + 1);
+                        }
+                        j = msg.IndexOf("|", i + 1);
+                        string player = msg.Substring(i + 1, j - i - 1);
+                        updateCurrPlayer(player);
                     }
                     else if (msg.Contains(String.Format("@{0}", status_code.GAM_SCC_DRAW)))
                     {
                         updateDraw(msg);
                     }
+                    else if (msg.Contains(String.Format("@{0}", status_code.GAM_CTR_TURN_COMPLETE)))
+                    {
+                        int i = msg.IndexOf("|");
+                        int j = msg.IndexOf("||");
+                        string player = msg.Substring(i + 1, j - i -1);
+                        updateCurrPlayer(player);
+                    }
                 }   
                 msg = "";
+            }
+        }
+
+        delegate void updateCurrPlayerCallback(string player);
+        private void updateCurrPlayer(string player)
+        {
+            if (this.lblScreen.InvokeRequired)
+            {
+                updateCurrPlayerCallback d = new updateCurrPlayerCallback(updateCurrPlayer);
+                this.Invoke(d, new object[] { player });
+            }
+            else
+            {
+                lblScreen.Text = "Current player: " + player;
             }
         }
 
@@ -664,7 +692,7 @@ namespace newGUI_Taki
             else
             {
                 List<string> drawn_cards = new List<string>();
-                int i, j, x = 50, y = 5;
+                int i, j, x = 50, y = 250;
                 if (msg.Contains(String.Format("{0}", status_code.GAM_SCC_DRAW)))
                 {
                     i = msg.IndexOf("|");
@@ -717,10 +745,11 @@ namespace newGUI_Taki
         {
             pbTopCard.Visible = true;
             pbBankCards.Visible = true;
-            int j, x = 50, y = 5;
+            int j, x = 50, y = 250;
             tbEnterChose.Visible = false;
             tbEndTurn.Visible = true;
-            lblScreen.Visible = false;
+            lblScreen.Visible = true;
+            lblScreen.Text = "";
             butEnterChoseInRoom.Visible = false;
             this.playerCards = new List<string>();
             this.Shapes = new PictureBox[status_code.NUM_OF_CARDS];
@@ -800,7 +829,14 @@ namespace newGUI_Taki
                 this.playerCards.Add(msg[j]);
             }
             pbTopCard.Image = map[msg[j]];
-            shutdown = true;
+        }
+
+        private void tbEndTurn_Click(object sender, EventArgs e)
+        {
+            byte[] buffer;
+            buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.GAM_SCC_TURN));
+            this.sock.Write(buffer, 0, buffer.Length);
+            this.sock.Flush();
         }
     }
 }
