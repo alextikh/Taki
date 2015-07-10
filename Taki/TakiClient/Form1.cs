@@ -142,7 +142,7 @@ namespace newGUI_Taki
             string password = tbPassword.Text;
             string recv = "";
             TcpClient client = new TcpClient();
-            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("10.0.0.11"), 10113);
+            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("10.0.0.139"), 10113);
             client.Connect(serverEndPoint);
             this.sock = client.GetStream();
             if (is_register)
@@ -556,11 +556,18 @@ namespace newGUI_Taki
             {
                 ;
             }*/
-                else if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
+                else
                 {
-                    
-                    this.cardString = msg;
-                }
+                    if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
+                    {
+
+                        this.cardString = msg;
+                    }
+                    else if (msg.Contains(String.Format("@{0}", status_code.GAM_SCC_DRAW)))
+                    {
+                        updateDraw(msg);
+                    }
+                }   
                 msg = "";
             }
         }
@@ -632,61 +639,78 @@ namespace newGUI_Taki
 
         private void pbBankCards_Click(object sender, EventArgs e)
         {
-            List<string> drawn_cards = new List<string>();
+            //List<string> drawn_cards = new List<string>();
             byte[] buffer;
-            string msg;
-            int i, j, x = 50, y = 5;
+            //string msg;
+            //int i, j, x = 50, y = 5;
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.GM_DRAW));
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
+            /*
             buffer = new byte[status_code.MSG_LEN];
             int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
             msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
+            */
+        }
 
-            if (msg.Contains(String.Format("{0}", status_code.GAM_SCC_DRAW)))
+        delegate void updateDrawCallback(string msg);
+        private void updateDraw(string msg)
+        {
+            if (this.InvokeRequired)
             {
-                i = msg.IndexOf("|");
-                j = msg.IndexOf(',', i + 1);
-                while (j != -1)
+                updateDrawCallback d = new updateDrawCallback(updateDraw);
+                this.Invoke(d, new object[] { msg });
+            }
+            else
+            {
+                List<string> drawn_cards = new List<string>();
+                int i, j, x = 50, y = 5;
+                if (msg.Contains(String.Format("{0}", status_code.GAM_SCC_DRAW)))
                 {
-                    drawn_cards.Add(msg[i + 1].ToString() + msg[i + 2].ToString());
-                    i = j;
+                    i = msg.IndexOf("|");
                     j = msg.IndexOf(',', i + 1);
-                }
-                drawn_cards.Add(msg[i + 1].ToString() + msg[i + 2].ToString());
-                for (int k = 0; k < drawn_cards.Count; k++)
-                {
-                    this.playerCards.Add(drawn_cards[k]);
-                }
+                    while (j != -1)
+                    {
+                        drawn_cards.Add(msg[i + 1].ToString() + msg[i + 2].ToString());
+                        i = j;
+                        j = msg.IndexOf(',', i + 1);
+                    }
+                    drawn_cards.Add(msg[i + 1].ToString() + msg[i + 2].ToString());
+                    for (int k = 0; k < drawn_cards.Count; k++)
+                    {
+                        this.playerCards.Add(drawn_cards[k]);
+                    }
 
-                this.Shapes = new PictureBox[this.playerCards.Count];
-                for (i = 0; i < this.playerCards.Count; i++)
-                {
-                    Shapes[i] = new PictureBox();
-                    Shapes[i].Name = "ItemNum_" + i.ToString();
-                    x += 50;
-                    Shapes[i].Location = new Point(x, y);
-                    Shapes[i].Size = new Size(100, 100);
-                    Shapes[i].BackColor = Color.Yellow;
+                    this.Shapes = new PictureBox[this.playerCards.Count];
+                    for (i = 0; i < this.playerCards.Count; i++)
+                    {
+                        Shapes[i] = new PictureBox();
+                        Shapes[i].Name = "ItemNum_" + i.ToString();
+                        x += 50;
+                        Shapes[i].Location = new Point(x, y);
+                        Shapes[i].Size = new Size(100, 100);
+                        Shapes[i].BackColor = Color.Yellow;
 
-                    Shapes[i].SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                    Shapes[i].Visible = true;
-                    this.Controls.Add(Shapes[i]);
+                        Shapes[i].SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                        Shapes[i].Visible = true;
+
+                        this.Controls.Add(Shapes[i]);
+                    }
+                    for (i = 0; i < this.playerCards.Count; i++)
+                    {
+                        Shapes[i].Image = this.map[this.playerCards[i]];
+                    }
                 }
-                for(i=0;i<this.playerCards.Count;i++)
+                else if (msg.Contains(String.Format("{0}", status_code.GAM_ERROR_WRONG_DRAW)))
                 {
-                    Shapes[i].Image = this.map[this.playerCards[i]];
+                    lblError.Visible = true;
+                    lblError.Text = "wrong draw";
                 }
-            }
-            else if (msg.Contains(String.Format("{0}", status_code.GAM_ERROR_WRONG_DRAW)))
-            {
-                lblError.Visible = true;
-                lblError.Text = "wrong draw";
-            }
-            else if (msg.Contains(String.Format("{0}", status_code.PGM_MER_ACCESS)))
-            {
-                lblError.Visible = true;
-                lblError.Text = "access error";
+                else if (msg.Contains(String.Format("{0}", status_code.PGM_MER_ACCESS)))
+                {
+                    lblError.Visible = true;
+                    lblError.Text = "access error";
+                }
             }
         }
         private void printCardsInPB(string[] msg)
