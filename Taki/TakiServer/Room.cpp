@@ -191,6 +191,7 @@ int Room::play_turn(User *player, const Card &move)
 			return GAM_ERR_ILLEGAL_CARD;
 		}
 	}
+	_plus = false;
 	if (move.getType() == CARD_PLUS)
 	{
 		_plus = true;

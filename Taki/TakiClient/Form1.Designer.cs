@@ -44,19 +44,23 @@ namespace newGUI_Taki
             this.tbEnterChose = new System.Windows.Forms.TextBox();
             this.butEnterChoseInRoom = new System.Windows.Forms.Button();
             this.butEnterRoomName = new System.Windows.Forms.Button();
-            this.dgvRoomList = new System.Windows.Forms.DataGridView();
-            this.Admin = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NumberPlayers = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.IsOpen = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pbTopCard = new System.Windows.Forms.PictureBox();
             this.pbBankCards = new System.Windows.Forms.PictureBox();
             this.tbEndTurn = new System.Windows.Forms.Button();
             this.ChatShowBox = new System.Windows.Forms.TextBox();
             this.butSendChat = new System.Windows.Forms.Button();
             this.ChatSendBox = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvRoomList)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTopCard)).BeginInit();
+            this.pbTopCard = new System.Windows.Forms.PictureBox();
+            this.dgvRoomList = new System.Windows.Forms.DataGridView();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.admin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.players = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.state = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.join = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.butCreateRoom = new System.Windows.Forms.Button();
+            this.butRefresh = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbBankCards)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTopCard)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRoomList)).BeginInit();
             this.SuspendLayout();
             // 
             // butRegistr
@@ -220,43 +224,6 @@ namespace newGUI_Taki
             this.butEnterRoomName.Visible = false;
             this.butEnterRoomName.Click += new System.EventHandler(this.butEnterRoomName_Click);
             // 
-            // dgvRoomList
-            // 
-            this.dgvRoomList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvRoomList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Admin,
-            this.NumberPlayers,
-            this.IsOpen});
-            this.dgvRoomList.Location = new System.Drawing.Point(410, 195);
-            this.dgvRoomList.Name = "dgvRoomList";
-            this.dgvRoomList.Size = new System.Drawing.Size(345, 150);
-            this.dgvRoomList.TabIndex = 14;
-            this.dgvRoomList.Visible = false;
-            // 
-            // Admin
-            // 
-            this.Admin.HeaderText = "Admin";
-            this.Admin.Name = "Admin";
-            // 
-            // NumberPlayers
-            // 
-            this.NumberPlayers.HeaderText = "number of players";
-            this.NumberPlayers.Name = "NumberPlayers";
-            // 
-            // IsOpen
-            // 
-            this.IsOpen.HeaderText = "Is open";
-            this.IsOpen.Name = "IsOpen";
-            // 
-            // pbTopCard
-            // 
-            this.pbTopCard.Location = new System.Drawing.Point(553, 217);
-            this.pbTopCard.Name = "pbTopCard";
-            this.pbTopCard.Size = new System.Drawing.Size(100, 109);
-            this.pbTopCard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbTopCard.TabIndex = 15;
-            this.pbTopCard.TabStop = false;
-            // 
             // pbBankCards
             // 
             this.pbBankCards.Image = ((System.Drawing.Image)(resources.GetObject("pbBankCards.Image")));
@@ -313,11 +280,86 @@ namespace newGUI_Taki
             this.ChatSendBox.TabIndex = 20;
             this.ChatSendBox.Visible = false;
             // 
+            // pbTopCard
+            // 
+            this.pbTopCard.Location = new System.Drawing.Point(553, 217);
+            this.pbTopCard.Name = "pbTopCard";
+            this.pbTopCard.Size = new System.Drawing.Size(100, 109);
+            this.pbTopCard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbTopCard.TabIndex = 15;
+            this.pbTopCard.TabStop = false;
+            // 
+            // dgvRoomList
+            // 
+            this.dgvRoomList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvRoomList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.name,
+            this.admin,
+            this.players,
+            this.state,
+            this.join});
+            this.dgvRoomList.Location = new System.Drawing.Point(81, 15);
+            this.dgvRoomList.Name = "dgvRoomList";
+            this.dgvRoomList.Size = new System.Drawing.Size(557, 228);
+            this.dgvRoomList.TabIndex = 14;
+            this.dgvRoomList.Visible = false;
+            this.dgvRoomList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.joinRoom_click);
+            // 
+            // name
+            // 
+            this.name.HeaderText = "name";
+            this.name.Name = "name";
+            // 
+            // admin
+            // 
+            this.admin.HeaderText = "admin";
+            this.admin.Name = "admin";
+            // 
+            // players
+            // 
+            this.players.HeaderText = "players";
+            this.players.Name = "players";
+            // 
+            // state
+            // 
+            this.state.HeaderText = "state";
+            this.state.Name = "state";
+            this.state.ReadOnly = true;
+            // 
+            // join
+            // 
+            this.join.HeaderText = "";
+            this.join.Name = "join";
+            // 
+            // butCreateRoom
+            // 
+            this.butCreateRoom.Location = new System.Drawing.Point(127, 242);
+            this.butCreateRoom.Name = "butCreateRoom";
+            this.butCreateRoom.Size = new System.Drawing.Size(145, 51);
+            this.butCreateRoom.TabIndex = 21;
+            this.butCreateRoom.Text = "Create room";
+            this.butCreateRoom.UseVisualStyleBackColor = true;
+            this.butCreateRoom.Visible = false;
+            this.butCreateRoom.Click += new System.EventHandler(this.butCreateRoom_Click);
+            // 
+            // butRefresh
+            // 
+            this.butRefresh.Location = new System.Drawing.Point(446, 242);
+            this.butRefresh.Name = "butRefresh";
+            this.butRefresh.Size = new System.Drawing.Size(152, 51);
+            this.butRefresh.TabIndex = 22;
+            this.butRefresh.Text = "Refresh";
+            this.butRefresh.UseVisualStyleBackColor = true;
+            this.butRefresh.Visible = false;
+            this.butRefresh.Click += new System.EventHandler(this.butRefresh_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 422);
+            this.Controls.Add(this.butRefresh);
+            this.Controls.Add(this.butCreateRoom);
             this.Controls.Add(this.ChatSendBox);
             this.Controls.Add(this.butSendChat);
             this.Controls.Add(this.ChatShowBox);
@@ -343,9 +385,9 @@ namespace newGUI_Taki
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Taki";
-            ((System.ComponentModel.ISupportInitialize)(this.dgvRoomList)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTopCard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBankCards)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTopCard)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRoomList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -367,15 +409,19 @@ namespace newGUI_Taki
         private System.Windows.Forms.TextBox tbEnterChose;
         private System.Windows.Forms.Button butEnterChoseInRoom;
         private System.Windows.Forms.Button butEnterRoomName;
-        private System.Windows.Forms.DataGridView dgvRoomList;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Admin;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NumberPlayers;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IsOpen;
-        private System.Windows.Forms.PictureBox pbTopCard;
         private System.Windows.Forms.PictureBox pbBankCards;
         private System.Windows.Forms.Button tbEndTurn;
         private System.Windows.Forms.TextBox ChatShowBox;
         private System.Windows.Forms.Button butSendChat;
         private System.Windows.Forms.TextBox ChatSendBox;
+        private System.Windows.Forms.PictureBox pbTopCard;
+        private System.Windows.Forms.DataGridView dgvRoomList;
+        private System.Windows.Forms.Button butCreateRoom;
+        private System.Windows.Forms.Button butRefresh;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn admin;
+        private System.Windows.Forms.DataGridViewTextBoxColumn players;
+        private System.Windows.Forms.DataGridViewTextBoxColumn state;
+        private System.Windows.Forms.DataGridViewButtonColumn join;
     }
 }

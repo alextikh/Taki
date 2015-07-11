@@ -19,9 +19,7 @@ namespace newGUI_Taki
         private string menu;
         bool is_admin;
         bool is_register;
-        private string cardString;
         private Thread myThread;
-        private Thread myckeck;
         private bool shutdown = false;
         private int numOfPlayers = 1;
         private Dictionary<string, Image> map;
@@ -85,33 +83,20 @@ namespace newGUI_Taki
             butEnterChoseInRoom.Visible = false;
             tbUsername.Visible = false;
             butEnterDetails.Visible = false;
-            butEnterChoseLobby.Visible = true;
-            butEnterChoseLobby.Text = "Enter option";
-            tbEnterChose.Visible = true;
-            tbEnterChose.Text = "";
-            if (open_rooms)
-            {
-                menu = "1. get room list\n2. join room\n3. create room\n4. logout\n";
-            }
-            else
-            {
-                menu = "No open rooms!\n3. create room\n4. logout\n";
-            }
-            lblScreen.Visible = true;
-            lblScreen.Text = menu;
+            dgvRoomList.Visible = true;
+            butRefresh.Visible = true;
+            butCreateRoom.Visible = true;
         }
-        private void print_room_list(string msg)
+        private void updateRoomList(string msg)
         {
-            string str = "Room list:\nAdmin, Number of players, Is open\n";
-            int i = msg.IndexOf('|');
-            int j;
-            int num_players;
-            string is_open, room, admin;
+            int i = msg.IndexOf('|'), j, num_players, row_index;
+            string is_open, name, admin;
+            dgvRoomList.Rows.Clear();
             while (msg[i + 1] != '|')
             {
                 msg.Substring(i + 1).Contains('|');
                 j = msg.Substring(i + 1).IndexOf("|") + i + 1;
-                room = msg.Substring(i + 1, j - (i + 1));
+                name = msg.Substring(i + 1, j - (i + 1));
                 i = j;
                 j = msg.Substring(i + 1).IndexOf("|") + i + 1;
                 admin = msg.Substring(i + 1, j - (i + 1));
@@ -129,14 +114,16 @@ namespace newGUI_Taki
                 {
                     is_open = "close";
                 }
-                str += String.Format("{0}{1}{2}{3}\n", room, admin, num_players, is_open);
+                row_index = dgvRoomList.Rows.Add();
+                dgvRoomList["name", row_index].Value = name;
+                dgvRoomList["admin", row_index].Value = admin;
+                dgvRoomList["players", row_index].Value = num_players.ToString();
+                dgvRoomList["state", row_index].Value = is_open;
                 i = j;
             }
-            lblScreen.Text = str;
         }
         private void butEnterDetails_Click(object sender, EventArgs e)
         {
-            this.cardString = "";
             byte[] buffer;
             string username = tbUsername.Text;
             string password = tbPassword.Text;
@@ -179,7 +166,7 @@ namespace newGUI_Taki
                     tbPassword.Visible = false;
                     tbUsername.Visible = true;
                     butLogin.Visible = false;
-                    print_room_list(recv);
+                    updateRoomList(recv);
                     lobby(true);
                 }
                 else if (recv.Contains(String.Format("@{0}|", status_code.PGM_ERR_NAME_TAKEN)))
@@ -213,7 +200,7 @@ namespace newGUI_Taki
                     tbPassword.Visible = false;
                     tbUsername.Visible = true;
                     butLogin.Visible = false;
-                    print_room_list(recv);
+                    updateRoomList(recv);
                     lobby(true);
                 }
                 else if (recv.Contains(String.Format("@{0}|", status_code.PGM_ERR_LOGIN)))
@@ -229,7 +216,6 @@ namespace newGUI_Taki
                 this.Text = tbUsername.Text;
             }
         }
-
         private void butEnterChoseLobby_Click(object sender, EventArgs e)
         {
             byte[] buffer;
@@ -250,7 +236,6 @@ namespace newGUI_Taki
                 buffer = new byte[status_code.MSG_LEN];
                 int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
                 msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
-                print_room_list(msg);
             }
             else if (option.Equals("2"))///join room  by admin name
             {
@@ -300,7 +285,6 @@ namespace newGUI_Taki
             tbEnterChose.Visible = false;
             butEnterChoseLobby.Visible = false;
         }
-
         private void butEnterChoseInRoom_Click(object sender, EventArgs e)
         {
             byte[] buffer;
@@ -314,7 +298,7 @@ namespace newGUI_Taki
 
             if (option.Equals("1"))
             {
-                if (this.myckeck.IsAlive || this.myThread.IsAlive)
+                if (this.myThread.IsAlive)
                 {
                     StopThreads();
                 }
@@ -336,8 +320,6 @@ namespace newGUI_Taki
                 buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||\0", status_code.RM_START_GAME));//start game
                 this.sock.Write(buffer, 0, buffer.Length);
                 this.sock.Flush();
-                while (this.cardString.Equals("")) ;
-                parseInfo(this.cardString);
             }
             else if (numOfPlayers < status_code.MIN_PLAYERS_FOR_GAME)
             {
@@ -346,162 +328,10 @@ namespace newGUI_Taki
                 tbEnterChose.Text = "";
             }
         }
-        /*
-        private void play(string top_card, string curr_player)
-        {
-            byte[] buffer;
-            string card, code, msg, option, draw_player;
-            int j, i;
-            bool game_ended = false;
-            Dictionary<string, string> options = new Dictionary<string, string>(3)
-            {
-                {"PLAY", "1"},
-                {"DRAW", "2"},
-                {"END", "3"}
-            };
-            while (game_ended == false)
-            {
-
-                //print top_card;
-                //print cards;
-                lblScreen.Visible = true;
-                lblScreen.Text = "player: " + curr_player;
-                string str = "";
-                if (curr_player.Equals(tbUsername.Text))
-                {
-                    str += options["PLAY"] + ". play card";
-                    str += options["DRAW"] + ". draw cards";
-                    str += options["END"] + ". end turn";
-                    lblScreen.Text = str;
-                    option = tbEnterChose.Text;
-                    
-                    while (option not in options.values())
-                    {
-                        print options["PLAY"] + ". play card";
-                        print options["DRAW"] + ". draw cards";
-                        print options["END"] + ". end turn";
-                        option = raw_input("choose again: ");
-                    }
-                    
-                    if (option == options["PLAY"])
-                    {
-                        // card = this.map[];
-
-                        buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}|{1}{2}||", status_code.GM_PLAY, card[0], card[1]));
-                        this.sock.Write(buffer, 0, buffer.Length);
-
-                        this.sock.Flush();
-                        buffer = new byte[status_code.MSG_LEN];
-                        int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
-                        msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
-
-                        if (msg.Contains(String.Format("@{0}", status_code.GAM_SCC_TURN)))
-                        {
-                            lblScreen.Text = "turn complete";
-                            cards.remove(card);
-                            top_card = card;
-                        }
-                        else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERR_ILLEGAL_CARD)))
-                        {
-                            lblError.Visible = true;
-                            lblError.Text = "illegal card";
-                        }
-                        else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERR_ILLEGAL_ORDER)))
-                        {
-                            lblError.Visible = true;
-                            lblError.Text = "illegal order";
-                        }
-                        else if (msg.Contains(String.Format("@{0}", status_code.PGM_MER_ACCESS)))
-                        {
-                            lblError.Visible = true;
-                            lblError.Text = "access error";
-                        }
-                    }
-                    else if (option == options["END"])
-                    {
-                        buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.GAM_SCC_TURN));
-                        this.sock.Write(buffer, 0, buffer.Length);
-
-                        this.sock.Flush();
-                        buffer = new byte[status_code.MSG_LEN];
-                        int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
-                        msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
-
-                        if (msg.Contains(String.Format("@{0}", status_code.GAM_SCC_TURN)))
-                        {
-                            i = msg.IndexOf('|');
-                            j = msg.IndexOf("||");
-                            curr_player = msg.Substring(i + 1, j - i - 1);
-                        }
-                        else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERR_LAST_CARD)))
-                        {
-                            lblError.Visible = true;
-                            lblError.Text = "illegal last card";
-                        }
-                        else if (msg.Contains(String.Format("@{0}", status_code.PGM_MER_ACCESS)))
-                        {
-                            lblError.Visible = true;
-                            lblError.Text = "access error";
-                        }
-                    }
-                }
-                else
-                {
-                    this.sock.Flush();
-                    buffer = new byte[status_code.MSG_LEN];
-                    int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
-                    msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
-
-                    if (msg.Contains(String.Format("@{0}", status_code.GAM_CTR_TURN_COMPLETE)))
-                    {
-                        j = 0;
-                        i = msg.IndexOf('|');
-                        while (i != -1)
-                        {
-                            j += 1;
-                            i = msg.IndexOf('|', i + 1);
-                        }
-                        if (j == 4)
-                        {
-                            i = msg.IndexOf('|');
-                            card = msg[i + 1].ToString() + msg[i + 2].ToString();
-                            lblScreen.Text = curr_player + "played:" + card;
-                            top_card = card;
-                            i = msg.IndexOf('|', i + 1);
-                            j = msg.IndexOf("||");
-                            curr_player = msg.Substring(i + 1, j - i - 1);
-                        }
-                        else if (j == 3)
-                        {
-                            i = msg.IndexOf('|');
-                            j = msg.IndexOf("||");
-                            curr_player = msg.Substring(i + 1, j - i - 1);
-                        }
-                    }
-
-                    else if (msg.Contains(String.Format("@{0}", status_code.GAM_CTR_DRAW_CARDS)))
-                    {
-                        i = msg.IndexOf('|');
-                        j = msg.IndexOf('|', i + 1);
-                        draw_player = msg.Substring(i + 1, j - i - 1);
-                        i = j;
-                        j = msg.IndexOf("||");
-                        lblScreen.Text = draw_player + "drawn" + msg.Substring(i + 1, j - i - 1) + "cards";
-                    }
-                }
-            }
-        }
-*/
         private void in_room(bool admin)
         {
-
-            ChatShowBox.Visible = true;
-            ChatSendBox.Visible = true;
-            butSendChat.Visible = true;
             this.myThread = new Thread(secThread);
-            this.myckeck = new Thread(checkCardString);
             myThread.Start();
-            myckeck.Start();
             is_admin = admin;
             string str = "";
             str += "1. leave room\n";
@@ -510,23 +340,16 @@ namespace newGUI_Taki
                 str += "2. start game\n";
             }
             butEnterChoseLobby.Visible = false;
+            dgvRoomList.Visible = false;
             lblScreen.Visible = true;
             lblScreen.Text = str + "\nEnter your chose:";
             tbEnterChose.Text = "";
             butEnterChoseInRoom.Visible = true;
-            if (!is_admin)
-            {
-                myckeck.Join();
-                parseInfo(this.cardString);
-            }
-        }
-        private void checkCardString(object ob)
-        {
-            while (this.cardString.Equals("") && !shutdown)
-            {
-                Thread.Sleep(1000);
-            }
-            return;
+            ChatShowBox.Visible = true;
+            ChatSendBox.Visible = true;
+            butSendChat.Visible = true;
+            butRefresh.Visible = false;
+            butCreateRoom.Visible = false;
         }
         private void StopThreads()
         {
@@ -547,14 +370,14 @@ namespace newGUI_Taki
                     int i = msg.IndexOf("|");
                     int j = msg.IndexOf("||");
                     this.numOfPlayers++;
-                    updateChatBox("User joined: " + msg.Substring(i + 1, j - i - 1) + "\n");
+                    updateChatBox("User joined: " + msg.Substring(i + 1, j - i - 1) + "\r\n");
                 }
                 else if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_REMOVE_USER)))
                 {
                     int i = msg.IndexOf("|");
                     int j = msg.IndexOf("||");
                     this.numOfPlayers--;
-                    updateChatBox("User left: " + msg.Substring(i + 1, j - i - 1) + "\n");
+                    updateChatBox("User left: " + msg.Substring(i + 1, j - i - 1) + "\r\n");
                 }
                 else if (msg.Contains(String.Format("@{0}|", status_code.CH_SEND)))
                 {
@@ -563,11 +386,11 @@ namespace newGUI_Taki
                     string sender = msg.Substring(i + 1, j - i - 1);
                     i = msg.IndexOf("||");
                     string chat = msg.Substring(j + 1, i - j - 1);
-                    updateChatBox(sender + ": " + chat + "\n");
+                    updateChatBox(sender + ": " + chat + "\r\n");
                 }
-                else if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
+                if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
                 {
-                    this.cardString = msg; //build a d-e-l-e-g-a-t-e-!!!!!
+                    updateStringCards(msg);
                     int i = 0, j;
                     for (j = 0; j < 4; ++j)
                     {
@@ -678,7 +501,19 @@ namespace newGUI_Taki
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
         }
-
+        delegate void updateStringCardsCallback(string msg);
+        private void updateStringCards(string msg)
+        {
+            if (this.InvokeRequired)
+            {
+                updateStringCardsCallback d = new updateStringCardsCallback(updateStringCards);
+                this.Invoke(d, new object[] { msg });
+            }
+            else
+            {
+                parseInfo(msg);
+            }
+        }
         delegate void updateChatBoxCallback(string msg);
 
         private void updateChatBox(string msg)
@@ -859,7 +694,60 @@ namespace newGUI_Taki
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}|{1}||", status_code.CH_SEND, ChatSendBox.Text));
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
+            updateChatBox(ChatSendBox.Text + "\r\n");
             ChatSendBox.Text = "";
+        }
+
+        private void joinRoom_click(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView sender1 = (DataGridView)sender;
+            byte[] buffer;
+            buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}|{1}||", status_code.RM_JOIN_GAME,
+                sender1["admin", e.RowIndex].Value.ToString()));
+            this.sock.Write(buffer, 0, buffer.Length);
+            this.sock.Flush();
+            buffer = new byte[status_code.MSG_LEN];
+            int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
+            string msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
+            if (msg.Contains(String.Format("@{0}|", status_code.PGM_SCC_GAME_JOIN)))
+            {
+                in_room(false);
+            }
+        }
+
+        private void butCreateRoom_Click(object sender, EventArgs e)
+        {
+            byte[] buffer;
+            string name = Microsoft.VisualBasic.Interaction.InputBox("Enter room name", "", "");
+            buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}|{1}||", status_code.RM_CREATE_GAME, name));
+            this.sock.Write(buffer, 0, buffer.Length);
+            this.sock.Flush();
+            buffer = new byte[status_code.MSG_LEN];
+            int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
+            string msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
+            if (msg.Contains(String.Format("@{0}|", status_code.PGM_SCC_GAME_CREATED)))
+            {
+                in_room(true);
+            }
+            else if (msg.Contains(String.Format("@{0}|", status_code.PGM_ERR_INFO_TOO_LONG)))
+            {
+                MessageBox.Show("Name too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void butRefresh_Click(object sender, EventArgs e)
+        {
+            byte[] buffer;
+            buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.RM_ROOM_LIST));
+            this.sock.Write(buffer, 0, buffer.Length);
+            this.sock.Flush();
+            buffer = new byte[status_code.MSG_LEN];
+            int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
+            string msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
+            if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_ROOM_LIST)))
+            {
+                updateRoomList(msg);
+            }
         }
     }
 }
