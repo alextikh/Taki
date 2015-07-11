@@ -494,6 +494,10 @@ namespace newGUI_Taki
 */
         private void in_room(bool admin)
         {
+
+            ChatShowBox.Visible = true;
+            ChatSendBox.Visible = true;
+            butSendChat.Visible = true;
             this.myThread = new Thread(secThread);
             this.myckeck = new Thread(checkCardString);
             myThread.Start();
@@ -543,45 +547,47 @@ namespace newGUI_Taki
                     int i = msg.IndexOf("|");
                     int j = msg.IndexOf("||");
                     this.numOfPlayers++;
-                    MessageBox.Show("User joined: " + msg.Substring(i + 1, j - i - 1), tbUsername.Text);
+                    updateChatBox("User joined: " + msg.Substring(i + 1, j - i - 1) + "\n");
                 }
                 else if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_REMOVE_USER)))
                 {
                     int i = msg.IndexOf("|");
                     int j = msg.IndexOf("||");
                     this.numOfPlayers--;
-                    MessageBox.Show("User left: " + msg.Substring(i + 1, j - i - 1), tbUsername.Text);
-                }/*
-            else if (msg.Contains(String.Format("@{0}|", status_code.CH_SEND)))
-            {
-                ;
-            }*/
-                else
+                    updateChatBox("User left: " + msg.Substring(i + 1, j - i - 1) + "\n");
+                }
+                else if (msg.Contains(String.Format("@{0}|", status_code.CH_SEND)))
                 {
-                    if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
+                    int i = msg.IndexOf("|");
+                    int j = msg.IndexOf("|", i + 1);
+                    string sender = msg.Substring(i + 1, j - i - 1);
+                    i = msg.IndexOf("||");
+                    string chat = msg.Substring(j + 1, i - j - 1);
+                    updateChatBox(sender + ": " + chat + "\n");
+                }
+                else if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
+                {
+                    this.cardString = msg; //build a d-e-l-e-g-a-t-e-!!!!!
+                    int i = 0, j;
+                    for (j = 0; j < 4; ++j)
                     {
-                        this.cardString = msg; //build a d-e-l-e-g-a-t-e-!!!!!
-                        int i = 0, j;
-                        for (j = 0; j < 4; ++j)
-                        {
-                            i = msg.IndexOf("|", i + 1);
-                        }
-                        j = msg.IndexOf("|", i + 1);
-                        string player = msg.Substring(i + 1, j - i - 1);
-                        updateCurrPlayer(player);
+                        i = msg.IndexOf("|", i + 1);
                     }
-                    else if (msg.Contains(String.Format("@{0}", status_code.GAM_SCC_DRAW)))
-                    {
-                        updateDraw(msg);
-                    }
-                    else if (msg.Contains(String.Format("@{0}", status_code.GAM_CTR_TURN_COMPLETE)))
-                    {
-                        int i = msg.IndexOf("|");
-                        int j = msg.IndexOf("||");
-                        string player = msg.Substring(i + 1, j - i -1);
-                        updateCurrPlayer(player);
-                    }
-                }   
+                    j = msg.IndexOf("|", i + 1);
+                    string player = msg.Substring(i + 1, j - i - 1);
+                    updateCurrPlayer(player);
+                }
+                else if (msg.Contains(String.Format("@{0}", status_code.GAM_SCC_DRAW)))
+                {
+                    updateDraw(msg);
+                }
+                else if (msg.Contains(String.Format("@{0}", status_code.GAM_CTR_TURN_COMPLETE)))
+                {
+                    int i = msg.IndexOf("|");
+                    int j = msg.IndexOf("||");
+                    string player = msg.Substring(i + 1, j - i - 1);
+                    updateCurrPlayer(player);
+                }
                 msg = "";
             }
         }
@@ -667,18 +673,25 @@ namespace newGUI_Taki
 
         private void pbBankCards_Click(object sender, EventArgs e)
         {
-            //List<string> drawn_cards = new List<string>();
             byte[] buffer;
-            //string msg;
-            //int i, j, x = 50, y = 5;
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.GM_DRAW));
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
-            /*
-            buffer = new byte[status_code.MSG_LEN];
-            int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
-            msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
-            */
+        }
+
+        delegate void updateChatBoxCallback(string msg);
+
+        private void updateChatBox(string msg)
+        {
+            if (this.ChatShowBox.InvokeRequired)
+            {
+                updateChatBoxCallback d = new updateChatBoxCallback(updateChatBox);
+                this.Invoke(d, new object[] { msg });
+            }
+            else
+            {
+                ChatShowBox.Text += msg;
+            }
         }
 
         delegate void updateDrawCallback(string msg);
@@ -749,6 +762,7 @@ namespace newGUI_Taki
             tbEnterChose.Visible = false;
             tbEndTurn.Visible = true;
             lblScreen.Visible = true;
+            pbBankCards.Visible = true;
             lblScreen.Text = "";
             butEnterChoseInRoom.Visible = false;
             this.playerCards = new List<string>();
@@ -837,6 +851,15 @@ namespace newGUI_Taki
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.GAM_SCC_TURN));
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
+        }
+
+        private void butSendChat_Click(object sender, EventArgs e)
+        {
+            byte[] buffer;
+            buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}|{1}||", status_code.CH_SEND, ChatSendBox.Text));
+            this.sock.Write(buffer, 0, buffer.Length);
+            this.sock.Flush();
+            ChatSendBox.Text = "";
         }
     }
 }

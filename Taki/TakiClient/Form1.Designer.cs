@@ -51,6 +51,9 @@ namespace newGUI_Taki
             this.pbTopCard = new System.Windows.Forms.PictureBox();
             this.pbBankCards = new System.Windows.Forms.PictureBox();
             this.tbEndTurn = new System.Windows.Forms.Button();
+            this.ChatShowBox = new System.Windows.Forms.TextBox();
+            this.butSendChat = new System.Windows.Forms.Button();
+            this.ChatSendBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRoomList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopCard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBankCards)).BeginInit();
@@ -257,12 +260,13 @@ namespace newGUI_Taki
             // pbBankCards
             // 
             this.pbBankCards.Image = ((System.Drawing.Image)(resources.GetObject("pbBankCards.Image")));
-            this.pbBankCards.Location = new System.Drawing.Point(553, 65);
+            this.pbBankCards.Location = new System.Drawing.Point(486, 65);
             this.pbBankCards.Name = "pbBankCards";
             this.pbBankCards.Size = new System.Drawing.Size(100, 124);
             this.pbBankCards.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbBankCards.TabIndex = 16;
             this.pbBankCards.TabStop = false;
+            this.pbBankCards.Visible = false;
             this.pbBankCards.Click += new System.EventHandler(this.pbBankCards_Click);
             // 
             // tbEndTurn
@@ -276,11 +280,47 @@ namespace newGUI_Taki
             this.tbEndTurn.Visible = false;
             this.tbEndTurn.Click += new System.EventHandler(this.tbEndTurn_Click);
             // 
+            // ChatShowBox
+            // 
+            this.ChatShowBox.Location = new System.Drawing.Point(592, 12);
+            this.ChatShowBox.Multiline = true;
+            this.ChatShowBox.Name = "ChatShowBox";
+            this.ChatShowBox.ReadOnly = true;
+            this.ChatShowBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.ChatShowBox.Size = new System.Drawing.Size(210, 77);
+            this.ChatShowBox.TabIndex = 18;
+            this.ChatShowBox.UseWaitCursor = true;
+            this.ChatShowBox.Visible = false;
+            // 
+            // butSendChat
+            // 
+            this.butSendChat.Location = new System.Drawing.Point(727, 108);
+            this.butSendChat.Name = "butSendChat";
+            this.butSendChat.Size = new System.Drawing.Size(75, 23);
+            this.butSendChat.TabIndex = 19;
+            this.butSendChat.Text = "send";
+            this.butSendChat.UseVisualStyleBackColor = true;
+            this.butSendChat.Visible = false;
+            this.butSendChat.Click += new System.EventHandler(this.butSendChat_Click);
+            // 
+            // ChatSendBox
+            // 
+            this.ChatSendBox.Location = new System.Drawing.Point(592, 90);
+            this.ChatSendBox.Multiline = true;
+            this.ChatSendBox.Name = "ChatSendBox";
+            this.ChatSendBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.ChatSendBox.Size = new System.Drawing.Size(210, 20);
+            this.ChatSendBox.TabIndex = 20;
+            this.ChatSendBox.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(682, 422);
+            this.ClientSize = new System.Drawing.Size(812, 422);
+            this.Controls.Add(this.ChatSendBox);
+            this.Controls.Add(this.butSendChat);
+            this.Controls.Add(this.ChatShowBox);
             this.Controls.Add(this.tbEndTurn);
             this.Controls.Add(this.pbBankCards);
             this.Controls.Add(this.pbTopCard);
@@ -334,5 +374,8 @@ namespace newGUI_Taki
         private System.Windows.Forms.PictureBox pbTopCard;
         private System.Windows.Forms.PictureBox pbBankCards;
         private System.Windows.Forms.Button tbEndTurn;
+        private System.Windows.Forms.TextBox ChatShowBox;
+        private System.Windows.Forms.Button butSendChat;
+        private System.Windows.Forms.TextBox ChatSendBox;
     }
 }
