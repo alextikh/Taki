@@ -150,6 +150,12 @@ void Room::start_game()
 	shuffle_cards_start_game();
 }
 
+void Room::end_game()
+{
+	_in_game = false;
+	_game_ended = true;
+}
+
 int Room::play_turn(User *player, const Card &move)
 {
 	if (!_in_game)
@@ -226,10 +232,6 @@ int Room::play_turn(User *player, const Card &move)
 		{
 			_plus = false;
 		}
-		else if (move.getType() != CARD_CHANGE_DIRECTION)
-		{
-			_game_dir = DIR_NORMAL;
-		}
 	}
 	_curr_player_order.push_back(move);
 	_top_card = move;
@@ -290,8 +292,7 @@ int Room::end_turn(User *player)
 				[this](pair<User *, vector<Card>> curr_pair){ return *_players[_curr_player_index] == *(curr_pair.first); });
 			if (it->second.empty())
 			{
-				_in_game = false;
-				_game_ended = true;
+				end_game();
 				for (winner_index = 0; winner_index < MAX_PLAYERS; ++winner_index)
 				{
 					if (_players[winner_index] != nullptr && *_players[winner_index] == *player)

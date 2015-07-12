@@ -16,7 +16,6 @@ namespace newGUI_Taki
     public partial class Form1 : Form
     {
         private NetworkStream sock;
-        private string menu;
         bool is_admin;
         bool is_register;
         private Thread myThread;

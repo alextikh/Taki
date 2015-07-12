@@ -46,6 +46,7 @@ public:
 	bool operator==(const Room &other) const;
 
 	void start_game();
+	void end_game();
 	int play_turn(User *player, const Card &move);
 	bool draw_cards(User *player, vector<Card> &drawed_cards);
 	int end_turn(User *player);

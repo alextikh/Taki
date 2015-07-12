@@ -118,166 +118,211 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ChangeColor" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\ChangeColor.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ChangeDirect_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\ChangeDirect_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ChangeDirect_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\ChangeDirect_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ChangeDirect_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\ChangeDirect_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ChangeDirect_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\ChangeDirect_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Plus2_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Plus2_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Plus2_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\CardsImage\Plus2_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Plus2_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Plus2_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Plus2_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Plus2_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Plus_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Plus_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Plus_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Plus_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Plus_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Plus_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Plus_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Plus_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Stop_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Stop_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Stop_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Stop_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Stop_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Stop_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Stop_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Stop_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SuperTaki" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\CardsImage\SuperTaki.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Taki_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Taki_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Taki_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Taki_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Taki_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Taki_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Taki_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\Taki_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_1_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\1_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_1_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\1_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_1_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\1_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_1_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\1_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_3_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\3_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_3_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\3_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_3_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\3_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_3_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\3_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_4_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\4_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_4_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\4_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_4_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\4_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_4_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\4_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_5_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\5_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_5_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\5_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_5_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\5_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_5_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\5_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_6_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\6_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_6_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\6_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_6_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\6_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_6_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\6_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_7_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\7_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_7_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\7_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_7_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\7_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_7_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\7_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_8_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\8_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_8_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\8_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_8_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\8_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="captcha_lucytpft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CaptchaImages\captcha_lucytpft.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="_8_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\CardsImage\8_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_9_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\CardsImage\9_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="_9_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\CardsImage\9_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Stop_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Stop_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_4_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\4_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="takiback" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FormBackgrounds\takiback.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Taki_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Taki_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Plus_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Plus_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_1_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\1_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_5_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\5_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_6_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\6_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_7_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\7_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Taki_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Taki_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_7_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\7_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_3_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\3_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Stop_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Stop_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_4_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\4_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_5_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\5_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="captcha_yhykemwr" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CaptchaImages\captcha_yhykemwr.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Plus2_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Plus2_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_3_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\3_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="captcha_udbbgxls" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CaptchaImages\captcha_udbbgxls.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_1_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\1_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_6_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\6_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Plus2_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Plus2_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Plus_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Plus_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TakiIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\TakiIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ChangeDirect_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\ChangeDirect_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="_9_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\CardsImage\9_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="_1_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\1_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ChangeDirect_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\ChangeDirect_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_8_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\8_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="captcha_czchjiav" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CaptchaImages\captcha_czchjiav.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="captcha_zagxtwdx" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CaptchaImages\captcha_zagxtwdx.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Plus_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Plus_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_4_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\4_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_4_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\4_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_7_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\7_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Plus2_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Plus2_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_6_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\6_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Taki_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Taki_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Stop_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Stop_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_8_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\8_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_7_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\7_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_6_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\6_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_3_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\3_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_1_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\1_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_5_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\5_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="_9_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\CardsImage\9_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ChangeDirect_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\ChangeDirect_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Taki_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Taki_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ChangeDirect_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\ChangeDirect_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_9_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\9_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_8_G" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\8_G.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="captcha_dpbaiajz" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CaptchaImages\captcha_dpbaiajz.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="captcha_phxxjdrk" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CaptchaImages\captcha_phxxjdrk.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_5_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\5_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="takiback2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FormBackgrounds\takiback2.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="captcha_nvhoxdm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CaptchaImages\captcha_nvhoxdm.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="captcha_wvvjcfua" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CaptchaImages\captcha_wvvjcfua.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="captcha_nrtgdkwn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CaptchaImages\captcha_nrtgdkwn.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="captcha_plbhxzxl" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CaptchaImages\captcha_plbhxzxl.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ChangeColor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\ChangeColor.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Plus_B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Plus_B.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Stop_Y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\Stop_Y.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_3_R" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\CardsImage\3_R.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="takiback3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\FormBackgrounds\takiback3.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

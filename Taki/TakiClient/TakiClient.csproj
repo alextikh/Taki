@@ -45,18 +45,69 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeColor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangeColor.Designer.cs">
+      <DependentUpon>ChangeColor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Card.cs" />
+    <Compile Include="EnterIPScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EnterIPScreen.Designer.cs">
+      <DependentUpon>EnterIPScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="LobbyScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LobbyScreen.Designer.cs">
+      <DependentUpon>LobbyScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegisterLoginScreenChoice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegisterLoginScreenChoice.Designer.cs">
+      <DependentUpon>RegisterLoginScreenChoice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RegisterLoginScreenExe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegisterLoginScreenExe.Designer.cs">
+      <DependentUpon>RegisterLoginScreenExe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoomNameScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RoomNameScreen.Designer.cs">
+      <DependentUpon>RoomNameScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoomScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RoomScreen.Designer.cs">
+      <DependentUpon>RoomScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="status_code.cs" />
+    <EmbeddedResource Include="ChangeColor.resx">
+      <DependentUpon>ChangeColor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterIPScreen.resx">
+      <DependentUpon>EnterIPScreen.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LobbyScreen.resx">
+      <DependentUpon>LobbyScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -68,6 +119,18 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="RegisterLoginScreenChoice.resx">
+      <DependentUpon>RegisterLoginScreenChoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegisterLoginScreenExe.resx">
+      <DependentUpon>RegisterLoginScreenExe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RoomNameScreen.resx">
+      <DependentUpon>RoomNameScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RoomScreen.resx">
+      <DependentUpon>RoomScreen.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -245,6 +308,120 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CardsImage\Taki_Y.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CardsImage\takiback.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha4.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha5.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha6.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha7.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha8.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha9.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha10.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha11.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\capthca1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FormBackgrounds\takiback.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\czchjiav.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\dpbaiajz.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\lucytpft.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\nrtgdkwn.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\nvhoxdm.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\phxxjdrk.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\plbhxzxl.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\udbbgxls.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\wvvjcfua.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\yhykemwr.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\zagxtwdx.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FormBackgrounds\takiback1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha_czchjiav.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha_dpbaiajz.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha_lucytpft.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha_nrtgdkwn.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha_nvhoxdm.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha_phxxjdrk.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha_plbhxzxl.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha_udbbgxls.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha_wvvjcfua.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha_yhykemwr.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CaptchaImages\captcha_zagxtwdx.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TakiIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FormBackgrounds\takiback3.jpeg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -16,7 +16,7 @@ namespace newGUI_Taki
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new EnterIPScreen());
         }
     }
 }

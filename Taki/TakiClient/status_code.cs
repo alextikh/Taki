@@ -55,6 +55,7 @@ namespace newGUI_Taki
         public const string GAM_CTR_TURN_COMPLETE = "210";
         public const string GAM_CTR_DRAW_CARDS = "211";
         public const string GAM_CTR_GAME_ENDED = "212";
+        public const string GAM_CTR_TURN_ENDED = "213";
 
         public const string GAM_ERR_ILLEGAL_CARD = "220";
         public const string GAM_ERR_ILLEGAL_ORDER = "221";
