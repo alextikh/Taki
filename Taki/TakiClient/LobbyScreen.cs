@@ -32,6 +32,7 @@ namespace newGUI_Taki
             int i = msg.IndexOf('|'), j, num_players, row_index;
             string is_open, name, admin;
             dgvRoomList.Rows.Clear();
+
             while (msg[i + 1] != '|')
             {
                 msg.Substring(i + 1).Contains('|');
@@ -54,6 +55,7 @@ namespace newGUI_Taki
                 {
                     is_open = "close";
                 }
+
                 row_index = this.dgvRoomList.Rows.Add();
                 this.dgvRoomList["name", row_index].Value = name;
                 this.dgvRoomList["admin", row_index].Value = admin;
@@ -61,6 +63,7 @@ namespace newGUI_Taki
                 this.dgvRoomList["state", row_index].Value = is_open;
                 i = j;
             }
+
             dgvRoomList.ClearSelection();
             dgvRoomList.CurrentCell = null;
         }
