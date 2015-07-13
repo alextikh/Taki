@@ -36,6 +36,7 @@
             this.CaptchaPBox = new System.Windows.Forms.PictureBox();
             this.ErrorLabel = new System.Windows.Forms.Label();
             this.EnterBut = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.CaptchaPBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,7 +52,7 @@
             this.UsernameBox.Text = "username";
             this.UsernameBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.UsernameBox.GotFocus += new System.EventHandler(this.UsernameBox_GotFocus);
-            this.UsernameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UsernameBox_keyDown);
+            this.UsernameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_keyDown);
             // 
             // PasswordBox
             // 
@@ -65,7 +66,7 @@
             this.PasswordBox.Text = "password";
             this.PasswordBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.PasswordBox.GotFocus += new System.EventHandler(this.PasswordBox_GotFocus);
-            this.PasswordBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PasswordBox_keyDown);
+            this.PasswordBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_keyDown);
             // 
             // BackBut
             // 
@@ -94,7 +95,7 @@
             this.ProveHumanBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.ProveHumanBox.Visible = false;
             this.ProveHumanBox.GotFocus += new System.EventHandler(this.ProveHumanBox_GotFocus);
-            this.ProveHumanBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ProveHumanBox_keyDown);
+            this.ProveHumanBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_keyDown);
             // 
             // ExitBut
             // 
@@ -126,9 +127,9 @@
             this.ErrorLabel.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.ErrorLabel.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ErrorLabel.ForeColor = System.Drawing.Color.Red;
-            this.ErrorLabel.Location = new System.Drawing.Point(137, 70);
+            this.ErrorLabel.Location = new System.Drawing.Point(51, 75);
             this.ErrorLabel.Name = "ErrorLabel";
-            this.ErrorLabel.Size = new System.Drawing.Size(274, 30);
+            this.ErrorLabel.Size = new System.Drawing.Size(367, 30);
             this.ErrorLabel.TabIndex = 0;
             this.ErrorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ErrorLabel.Visible = false;
@@ -147,11 +148,26 @@
             this.EnterBut.UseVisualStyleBackColor = false;
             this.EnterBut.Click += new System.EventHandler(this.EnterBut_Click);
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.BackColor = System.Drawing.Color.LightPink;
+            this.checkBox1.Font = new System.Drawing.Font("Comic Sans MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox1.ForeColor = System.Drawing.Color.Navy;
+            this.checkBox1.Location = new System.Drawing.Point(424, 75);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(139, 27);
+            this.checkBox1.TabIndex = 8;
+            this.checkBox1.Text = "Show password";
+            this.checkBox1.UseVisualStyleBackColor = false;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // RegisterLoginScreenExe
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(575, 305);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.EnterBut);
             this.Controls.Add(this.ErrorLabel);
             this.Controls.Add(this.CaptchaPBox);
@@ -178,5 +194,6 @@
         private System.Windows.Forms.PictureBox CaptchaPBox;
         private System.Windows.Forms.Label ErrorLabel;
         private System.Windows.Forms.Button EnterBut;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

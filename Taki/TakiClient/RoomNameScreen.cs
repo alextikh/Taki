@@ -20,6 +20,8 @@ namespace newGUI_Taki
         public RoomNameScreen()
         {
             InitializeComponent();
+            this.Icon = Properties.Resources.TakiIcon;
+            this.Text = "Enter room name windows";
         }
 
         private void RoomNameBox_Click(object sender, EventArgs e)
@@ -32,8 +34,7 @@ namespace newGUI_Taki
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                this.RoomName = RoomNameBox.Text;
-                this.Close();
+                this.CreateRoomBut.PerformClick();
             }
         }
 

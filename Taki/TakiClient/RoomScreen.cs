@@ -36,6 +36,10 @@ namespace newGUI_Taki
             this.thread = new Thread(recvHandlingThread);
             this.thread.Start();
             this.Text = username;
+            if(!is_admin)
+            {
+                butStartGame.Visible = false;
+            }
         }
         private void tbEndTurn_Click(object sender, EventArgs e)
         {
@@ -56,7 +60,7 @@ namespace newGUI_Taki
             else if (numOfPlayers < status_code.MIN_PLAYERS_FOR_GAME)
             {
                 ErrorLabel.Visible = true;
-                ErrorLabel.Text = "missing players";
+                ErrorLabel.Text = "Missing players";
             }
         }
         private void StopThreads()
@@ -68,13 +72,12 @@ namespace newGUI_Taki
             byte[] buffer;
             while (!shutdown)
             {
-
                 this.sock.Flush();
                 buffer = new byte[status_code.MSG_LEN];
                 int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
                 string msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
                 this.sock.Flush();
-
+                updatErrorLabel("");
                 if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_NEW_USER)))
                 {
                     int i = msg.IndexOf("|");
@@ -121,7 +124,7 @@ namespace newGUI_Taki
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_SCC_TURN)))
                 {
-                    updateChatBox("turn complete");
+                    updateChatBox("Turn complete\n");
                     updateCards(this.top_card);
                 }
 
@@ -145,6 +148,29 @@ namespace newGUI_Taki
                         int i = msg.IndexOf("|");
                         int j = msg.IndexOf("||");
                         this.top_card = msg.Substring(i + 1, j - i - 1);
+                        if (this.top_card.Contains(string.Format(status_code.CARD_CHANGE_COLOR)) || this.top_card.Contains(string.Format(status_code.CARD_SUPER_TAKI)))
+                        {
+                            if (this.top_card.Contains(string.Format(status_code.CARD_CHANGE_COLOR)))
+                            {
+                                if (this.top_card[1] == 'r')
+                                {
+                                    updateChatBox("color change to red");
+                                }
+                                if (this.top_card[1] == 'b')
+                                {
+                                    updateChatBox("color change to blue");
+                                }
+                                if (this.top_card[1] == 'y')
+                                {
+                                    updateChatBox("color change to yellow");
+                                }
+                                if (this.top_card[1] == 'g')
+                                {
+                                    updateChatBox("color change to green");
+                                }
+                            }
+                            this.top_card = this.top_card[0] + " ";
+                        }
                         updateTopCard(this.top_card);
                     }
                 }
@@ -194,7 +220,6 @@ namespace newGUI_Taki
                 {
                     updatErrorLabel("Message compatibility");
                 }
-
                 msg = "";
             }
         }
@@ -209,7 +234,7 @@ namespace newGUI_Taki
             }
             else
             {
-                int x = 5, y = 250;
+                int x = 10, y = 250;
                 pbTopCard.Image = this.map[card];
                 for (int i = 0; i < this.playerCards.Count; i++)
                 {
@@ -236,7 +261,6 @@ namespace newGUI_Taki
                 }
             }
         }
-
         delegate void updateErrorLabelCallback(string msg);
         private void updatErrorLabel(string msg)
         {
@@ -274,7 +298,7 @@ namespace newGUI_Taki
             }
             else
             {
-                CurrPlayerLabel.Text = "Current player: " + player;
+                CurrPlayerLabel.Text = player;
             }
         }
 
@@ -321,7 +345,11 @@ namespace newGUI_Taki
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}|{1}||", status_code.GM_PLAY, card));
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
-            this.top_card = card[0] + " ";
+            if (card[0].ToString() == status_code.CARD_CHANGE_COLOR || card[0].ToString() == status_code.CARD_SUPER_TAKI)
+            {
+                card = card[0] + " ";
+            }
+            this.top_card = card;
         }
         private void pbBankCards_Click(object sender, EventArgs e)
         {
@@ -369,7 +397,7 @@ namespace newGUI_Taki
             else
             {
                 List<string> drawn_cards = new List<string>();
-                int i, j, x = 50, y = 250;
+                int i, j, x = 10, y = 250;
                 for (i = 0; i < this.playerCards.Count; i++)
                 {
                     this.Shapes[i].Visible = false;
@@ -425,16 +453,16 @@ namespace newGUI_Taki
         }
         private void printCardsInPB()
         {
-            pbTopCard.Visible = true;
-            pbBankCards.Visible = true;
-            int j, x = 50, y = 250;
             butEndTurn.Visible = true;
             butSurrender.Visible = true;
+            butLeaveRoom.Visible = false;
+            butStartGame.Visible = false;
+            pbTopCard.Visible = true;
+            pbBankCards.Visible = true;
+            int j, x = 10, y = 250;
             CurrPlayerLabel.Visible = true;
             pbBankCards.Visible = true;
             CurrPlayerLabel.Text = "";
-            butStartGame.Visible = false;
-            butLeaveRoom.Visible = false;
 
             this.Shapes = new PictureBox[this.playerCards.Count];
             for (int i = 0; i < this.playerCards.Count; i++)
@@ -556,6 +584,7 @@ namespace newGUI_Taki
 
         private void butSurrender_Click(object sender, EventArgs e)
         {
+            StopThreads();
             byte[] buffer;
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||\0", status_code.RM_LEAVE_GAME));
             this.sock.Write(buffer, 0, buffer.Length);
@@ -563,6 +592,7 @@ namespace newGUI_Taki
             {
                 this.Shapes[i].Visible = false;
             }
+            this.thread.Abort();
             this.pbTopCard.Visible = false;
             this.pbBankCards.Visible = false;
             butSurrender.Visible = false;

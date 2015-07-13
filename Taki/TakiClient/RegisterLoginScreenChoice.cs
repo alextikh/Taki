@@ -20,6 +20,7 @@ namespace newGUI_Taki
             this.Icon = Properties.Resources.TakiIcon;
             this.sock = sock;
             InitializeComponent();
+            this.Text = "Taki";
         }
 
         private void ExitBut_Click(object sender, EventArgs e)

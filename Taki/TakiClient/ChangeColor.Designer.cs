@@ -63,6 +63,7 @@
             // 
             this.butColorYellow.BackColor = System.Drawing.Color.Yellow;
             this.butColorYellow.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.butColorYellow.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.butColorYellow.Location = new System.Drawing.Point(180, 9);
             this.butColorYellow.Name = "butColorYellow";
             this.butColorYellow.Size = new System.Drawing.Size(110, 110);

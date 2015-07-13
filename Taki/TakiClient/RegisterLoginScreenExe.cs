@@ -32,10 +32,12 @@ namespace newGUI_Taki
             {
                 initCaptcha();
                 this.BackColor = Color.Aquamarine;
+                this.Text = "Register";
             }
             else
             {
                 this.BackColor = Color.PaleGreen;
+                this.Text = "Login";
             }
         }
 
@@ -78,6 +80,10 @@ namespace newGUI_Taki
             if (this.PasswordBox.Text == "password")
             {
                 this.PasswordBox.Text = "";
+                if (!this.checkBox1.Checked)
+                {
+                    this.PasswordBox.UseSystemPasswordChar = true;
+                }
             }
             this.focusedBox = this.PasswordBox;
             fillEmptyBoxes();
@@ -108,46 +114,21 @@ namespace newGUI_Taki
             if (this.PasswordBox.Text == "" && this.focusedBox != this.PasswordBox)
             {
                 this.PasswordBox.Text = "password";
+                this.PasswordBox.UseSystemPasswordChar = false;
             }
             if (this.ProveHumanBox.Text == "" && this.focusedBox != this.ProveHumanBox)
             {
                 this.ProveHumanBox.Text = "please prove that you are a human";
             }
         }
-        private void UsernameBox_keyDown(object sender, KeyEventArgs e)
+        private void TextBox_keyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                this.PasswordBox.Focus();
+                this.EnterBut.PerformClick();
             }
         }
-
-        private void PasswordBox_keyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                if (this.reg_log == "register")
-                {
-                    this.ProveHumanBox.Focus();
-                }
-                else
-                {
-                    sendDetails();
-                }
-            }
-        }
-
-        private void ProveHumanBox_keyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                sendDetails();
-            }
-        }
-
         private void sendDetails()
         {
             this.ErrorLabel.Visible = false;
@@ -249,6 +230,18 @@ namespace newGUI_Taki
         private void ExitBut_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                PasswordBox.UseSystemPasswordChar = false;
+            }
+            else
+            {
+                PasswordBox.UseSystemPasswordChar = true;
+            }
         }
     }
 }

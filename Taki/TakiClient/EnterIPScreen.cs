@@ -20,6 +20,7 @@ namespace newGUI_Taki
         {
             this.Icon = Properties.Resources.TakiIcon;
             InitializeComponent();
+            this.Text = "Enter IP windows";
         }
 
         private void keyPressed(object sender, KeyEventArgs e)
@@ -27,7 +28,7 @@ namespace newGUI_Taki
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                connect();
+                this.EnterBut.PerformClick();
             }
         }
 

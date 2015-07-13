@@ -58,12 +58,6 @@
     <Compile Include="EnterIPScreen.Designer.cs">
       <DependentUpon>EnterIPScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="LobbyScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,9 +97,6 @@
     <EmbeddedResource Include="EnterIPScreen.resx">
       <DependentUpon>EnterIPScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="LobbyScreen.resx">
       <DependentUpon>LobbyScreen.cs</DependentUpon>
     </EmbeddedResource>
@@ -127,6 +118,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RoomNameScreen.resx">
       <DependentUpon>RoomNameScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RoomScreen.resx">
+      <DependentUpon>RoomScreen.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -419,6 +413,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="FormBackgrounds\takiback3.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CardsImage\backCard.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
