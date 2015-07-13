@@ -23,7 +23,6 @@ namespace newGUI_Taki
 
         public RegisterLoginScreenExe(Form parent, NetworkStream sock, string reg_log)
         {
-            this.Icon = Properties.Resources.TakiIcon;
             this.parent = parent;
             this.sock = sock;
             this.reg_log = reg_log.ToLower();

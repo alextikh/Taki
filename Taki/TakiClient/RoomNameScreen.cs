@@ -20,7 +20,6 @@ namespace newGUI_Taki
         public RoomNameScreen()
         {
             InitializeComponent();
-            this.Icon = Properties.Resources.TakiIcon;
             this.Text = "Enter room name windows";
         }
 

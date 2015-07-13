@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegisterLoginScreenChoice));
             this.RegisterBut = new System.Windows.Forms.Button();
             this.LoginBut = new System.Windows.Forms.Button();
             this.ExitBut = new System.Windows.Forms.Button();
@@ -87,6 +88,7 @@
             this.Controls.Add(this.ExitBut);
             this.Controls.Add(this.LoginBut);
             this.Controls.Add(this.RegisterBut);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RegisterLoginScreenChoice";
             this.Text = "RegisterLoginScreenChoice";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EnterIPScreen));
             this.EnterIPLabel = new System.Windows.Forms.Label();
             this.EnterIPBox = new System.Windows.Forms.TextBox();
             this.ErrorLabel = new System.Windows.Forms.Label();
@@ -118,6 +119,7 @@
             this.Controls.Add(this.EnterIPBox);
             this.Controls.Add(this.EnterIPLabel);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "EnterIPScreen";
             this.Text = "EnterIPScreen";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

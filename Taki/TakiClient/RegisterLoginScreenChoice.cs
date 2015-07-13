@@ -17,7 +17,6 @@ namespace newGUI_Taki
         private NetworkStream sock;
         public RegisterLoginScreenChoice(NetworkStream sock)
         {
-            this.Icon = Properties.Resources.TakiIcon;
             this.sock = sock;
             InitializeComponent();
             this.Text = "Taki";

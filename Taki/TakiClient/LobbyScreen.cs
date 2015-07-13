@@ -24,7 +24,6 @@ namespace newGUI_Taki
             InitializeComponent();
             updateRoomList(msg);
             this.Text = username;
-            this.Icon = newGUI_Taki.Properties.Resources.TakiIcon;
         }
 
         private void updateRoomList(string msg)
@@ -117,7 +116,8 @@ namespace newGUI_Taki
             string msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
             if (msg.Contains(String.Format("@{0}|", status_code.PGM_SCC_GAME_JOIN)))
             {
-                RoomScreen form = new RoomScreen(this, this.sock, false, this.Text); form.Show();
+                RoomScreen form = new RoomScreen(this, this.sock, false, this.Text);
+                form.Show();
                 this.Hide();
             }
         }

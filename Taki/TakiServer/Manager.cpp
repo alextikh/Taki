@@ -210,7 +210,6 @@ void Manager::logout(SOCKET &sock, User *&user, vector<string> &argv)
 		{
 			delete user;
 			_user_map.erase(sock);
-			closesocket(sock);
 		}
 		else
 		{
@@ -400,6 +399,13 @@ void Manager::leave_game(SOCKET &sock, User *&user, vector<string> &argv)
 		{
 			Room *room = user->getRoom();
 			room->delete_user(*user);
+			msg = "@" + to_string(PGM_SCC_GAME_LEAVE) + "||";
+			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+			{
+				cout << WSAGetLastError() << endl;
+				closesocket(sock);
+				ExitThread(1);
+			}
 			vector<User *> players = room->get_players();
 			if (room->in_game() && room->get_num_players() >= MIN_PLAYERS_FOR_GAME)
 			{

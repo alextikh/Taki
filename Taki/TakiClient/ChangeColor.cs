@@ -16,7 +16,6 @@ namespace newGUI_Taki
         public ChangeColor()
         {
             this.Text = "Change coloe windows";
-            this.Icon = Properties.Resources.TakiIcon;
             InitializeComponent();
         }
         private void butColorRed_Click(object sender, EventArgs e)

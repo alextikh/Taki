@@ -28,7 +28,6 @@ namespace newGUI_Taki
 
         public RoomScreen(Form parent, NetworkStream sock, bool is_admin, string username)
         {
-            this.Icon = Properties.Resources.TakiIcon;
             this.parent = parent;
             this.sock = sock;
             this.is_admin = is_admin;
@@ -61,6 +60,7 @@ namespace newGUI_Taki
 
         private void StopThreads()
         {
+            this.thread.Abort();
             shutdown = true;
         }
 
@@ -108,8 +108,16 @@ namespace newGUI_Taki
                     updateChatBox(txt, Color.Blue);
                 }
 
+
                 else if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_ROOM_CLOSED)))
                 {
+                    Thread.CurrentThread.Abort();
+                    exitRoom();
+                }
+
+                else if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_ROOM_CLOSED)))
+                {
+                    Thread.CurrentThread.Abort();
                     exitRoom();
                 }
 
@@ -614,22 +622,16 @@ namespace newGUI_Taki
         private void butLeaveRoom_Click(object sender, EventArgs e)
         {
             byte[] buffer;
-            if (this.thread.IsAlive)
-            {
-                StopThreads();
-            }
             if (!is_admin)
             {
                 buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.RM_LEAVE_GAME));
-                this.sock.Write(buffer, 0, buffer.Length);
-                this.sock.Flush();
             }
             else
             {
                 buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.RM_CLOSE_GAME));
-                this.sock.Write(buffer, 0, buffer.Length);
-                this.sock.Flush();
             }
+            this.sock.Write(buffer, 0, buffer.Length);
+            this.sock.Flush();
             exitRoom();
         }
 
@@ -664,9 +666,12 @@ namespace newGUI_Taki
             }
             else
             {
-                this.thread.Abort();
+                if (this.thread.IsAlive)
+                {
+                    StopThreads();
+                }
                 this.parent.Show();
-                this.Hide();
+                this.Close();
             }
         }
 

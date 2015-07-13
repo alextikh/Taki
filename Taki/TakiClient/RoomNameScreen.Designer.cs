@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RoomNameScreen));
             this.RoomNameBox = new System.Windows.Forms.TextBox();
             this.CreateRoomBut = new System.Windows.Forms.Button();
             this.BackBut = new System.Windows.Forms.Button();
@@ -92,7 +93,7 @@
             this.Controls.Add(this.CreateRoomBut);
             this.Controls.Add(this.RoomNameBox);
             this.ForeColor = System.Drawing.Color.DarkGreen;
-            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RoomNameScreen";
             this.Text = "RoomNameScreen";
             this.ResumeLayout(false);

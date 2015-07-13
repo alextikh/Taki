@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RoomScreen));
             this.ChatSendBox = new System.Windows.Forms.TextBox();
             this.SendChatBut = new System.Windows.Forms.Button();
             this.CurrPlayerLabel = new System.Windows.Forms.Label();
@@ -184,6 +185,7 @@
             this.Controls.Add(this.CurrPlayerLabel);
             this.Controls.Add(this.ChatSendBox);
             this.Controls.Add(this.SendChatBut);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RoomScreen";
             this.Text = "RoomScreen";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

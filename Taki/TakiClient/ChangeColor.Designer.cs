@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChangeColor));
             this.butColorBlue = new System.Windows.Forms.Button();
             this.butColorRed = new System.Windows.Forms.Button();
             this.butColorYellow = new System.Windows.Forms.Button();
@@ -109,6 +110,7 @@
             this.Controls.Add(this.butColorYellow);
             this.Controls.Add(this.butColorRed);
             this.Controls.Add(this.butColorBlue);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ChangeColor";
             this.Text = "CangeColor";
             this.ResumeLayout(false);

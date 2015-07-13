@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegisterLoginScreenExe));
             this.UsernameBox = new System.Windows.Forms.TextBox();
             this.PasswordBox = new System.Windows.Forms.TextBox();
             this.BackBut = new System.Windows.Forms.Button();
@@ -185,6 +186,7 @@
             this.Controls.Add(this.BackBut);
             this.Controls.Add(this.PasswordBox);
             this.Controls.Add(this.UsernameBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RegisterLoginScreenExe";
             this.Text = "RegisterLoginScreenExe";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

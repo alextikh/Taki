@@ -30,6 +30,7 @@ namespace newGUI_Taki
         public const string PGM_SCC_GAME_CREATED = "102";
         public const string PGM_SCC_GAME_JOIN = "103";
         public const string PGM_SCC_GAME_CLOSE = "104";
+        public const string PGM_SCC_GAME_LEAVE = "105";
 
         public const string PGM_CTR_NEW_USER = "110";
         public const string PGM_CTR_REMOVE_USER = "111";

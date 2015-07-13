@@ -18,7 +18,6 @@ namespace newGUI_Taki
         private const int PORT = 10113;
         public EnterIPScreen()
         {
-            this.Icon = Properties.Resources.TakiIcon;
             InitializeComponent();
             this.Text = "Enter IP windows";
         }
