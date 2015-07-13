@@ -35,6 +35,7 @@ public:
 	string get_room_name() const;
 	int get_num_players() const;
 	bool is_open() const;
+	bool in_game() const;
 
 	bool get_player_deck(User *player, vector<Card> &player_deck);
 	User *get_curr_player() const;

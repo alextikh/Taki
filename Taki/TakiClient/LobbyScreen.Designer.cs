@@ -37,8 +37,7 @@
             this.admin = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.players = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.state = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ExitBut = new System.Windows.Forms.Button();
-            this.BackBut = new System.Windows.Forms.Button();
+            this.LogoutBut = new System.Windows.Forms.Button();
             this.RefreshBut = new System.Windows.Forms.Button();
             this.JoinBut = new System.Windows.Forms.Button();
             this.CreateRoomBut = new System.Windows.Forms.Button();
@@ -124,35 +123,20 @@
             this.state.Name = "state";
             this.state.ReadOnly = true;
             // 
-            // ExitBut
+            // LogoutBut
             // 
-            this.ExitBut.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.ExitBut.BackColor = System.Drawing.Color.MediumVioletRed;
-            this.ExitBut.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ExitBut.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ExitBut.ForeColor = System.Drawing.Color.DarkRed;
-            this.ExitBut.Location = new System.Drawing.Point(58, 217);
-            this.ExitBut.Name = "ExitBut";
-            this.ExitBut.Size = new System.Drawing.Size(180, 60);
-            this.ExitBut.TabIndex = 1;
-            this.ExitBut.Text = "Exit";
-            this.ExitBut.UseVisualStyleBackColor = false;
-            this.ExitBut.Click += new System.EventHandler(this.ExitBut_Click);
-            // 
-            // BackBut
-            // 
-            this.BackBut.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.BackBut.BackColor = System.Drawing.Color.CornflowerBlue;
-            this.BackBut.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.BackBut.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BackBut.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.BackBut.Location = new System.Drawing.Point(276, 217);
-            this.BackBut.Name = "BackBut";
-            this.BackBut.Size = new System.Drawing.Size(180, 60);
-            this.BackBut.TabIndex = 2;
-            this.BackBut.Text = "Back";
-            this.BackBut.UseVisualStyleBackColor = false;
-            this.BackBut.Click += new System.EventHandler(this.BackBut_Click);
+            this.LogoutBut.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.LogoutBut.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.LogoutBut.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.LogoutBut.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LogoutBut.ForeColor = System.Drawing.Color.MidnightBlue;
+            this.LogoutBut.Location = new System.Drawing.Point(175, 217);
+            this.LogoutBut.Name = "LogoutBut";
+            this.LogoutBut.Size = new System.Drawing.Size(180, 60);
+            this.LogoutBut.TabIndex = 2;
+            this.LogoutBut.Text = "Logout";
+            this.LogoutBut.UseVisualStyleBackColor = false;
+            this.LogoutBut.Click += new System.EventHandler(this.LogoutBut_Click);
             // 
             // RefreshBut
             // 
@@ -208,8 +192,7 @@
             this.Controls.Add(this.CreateRoomBut);
             this.Controls.Add(this.JoinBut);
             this.Controls.Add(this.RefreshBut);
-            this.Controls.Add(this.BackBut);
-            this.Controls.Add(this.ExitBut);
+            this.Controls.Add(this.LogoutBut);
             this.Controls.Add(this.dgvRoomList);
             this.Name = "LobbyScreen";
             this.Text = "LobbyScreen";
@@ -221,8 +204,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button ExitBut;
-        private System.Windows.Forms.Button BackBut;
+        private System.Windows.Forms.Button LogoutBut;
         private System.Windows.Forms.Button RefreshBut;
         private System.Windows.Forms.Button JoinBut;
         private System.Windows.Forms.Button CreateRoomBut;

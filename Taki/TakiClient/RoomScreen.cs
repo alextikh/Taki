@@ -25,6 +25,7 @@ namespace newGUI_Taki
         private PictureBox[] Shapes;
         private bool is_admin;
         private string top_card;
+
         public RoomScreen(Form parent, NetworkStream sock, bool is_admin, string username)
         {
             this.Icon = Properties.Resources.TakiIcon;
@@ -36,11 +37,12 @@ namespace newGUI_Taki
             this.thread = new Thread(recvHandlingThread);
             this.thread.Start();
             this.Text = username;
-            if(!is_admin)
+            if (!is_admin)
             {
                 butStartGame.Visible = false;
             }
         }
+
         private void tbEndTurn_Click(object sender, EventArgs e)
         {
             byte[] buffer;
@@ -48,25 +50,20 @@ namespace newGUI_Taki
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
         }
+
         private void butStartGame_Click(object sender, EventArgs e)
         {
             byte[] buffer;
-            if (is_admin && numOfPlayers >= status_code.MIN_PLAYERS_FOR_GAME)
-            {
-                buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||\0", status_code.RM_START_GAME));//start game
-                this.sock.Write(buffer, 0, buffer.Length);
-                this.sock.Flush();
-            }
-            else if (numOfPlayers < status_code.MIN_PLAYERS_FOR_GAME)
-            {
-                ErrorLabel.Visible = true;
-                ErrorLabel.Text = "Missing players";
-            }
+            buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.RM_START_GAME));
+            this.sock.Write(buffer, 0, buffer.Length);
+            this.sock.Flush();
         }
+
         private void StopThreads()
         {
             shutdown = true;
         }
+
         private void recvHandlingThread(object obj)
         {
             byte[] buffer;
@@ -74,7 +71,7 @@ namespace newGUI_Taki
             {
                 this.sock.Flush();
                 buffer = new byte[status_code.MSG_LEN];
-                updatErrorLabel("");
+                updateErrorLabel("");
                 int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
                 string msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
                 this.sock.Flush();
@@ -82,29 +79,21 @@ namespace newGUI_Taki
                 {
                     int i = msg.IndexOf("|");
                     int j = msg.IndexOf("||");
-                    this.numOfPlayers++;
-                    updateChatBox("User joined: " + msg.Substring(i + 1, j - i - 1) + "\r\n");
+                    string txt = string.Format("[{0}] User joined: {1}\r\n", DateTime.Now.ToShortTimeString(),
+                        msg.Substring(i + 1, j - i - 1));
+                    updateChatBox(txt, Color.Green);
                 }
 
                 else if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_REMOVE_USER)))
                 {
                     int i = msg.IndexOf("|");
                     int j = msg.IndexOf("||");
-                    this.numOfPlayers--;
-                    updateChatBox("User left: " + msg.Substring(i + 1, j - i - 1) + "\r\n");
+                    string txt = string.Format("[{0}] User left: {1}\r\n", DateTime.Now.ToShortTimeString(),
+                        msg.Substring(i + 1, j - i - 1));
+                    updateChatBox(txt, Color.Red);
                 }
 
-                else if (msg.Contains(String.Format("@{0}|", status_code.CH_SEND)))
-                {
-                    int i = msg.IndexOf("|");
-                    int j = msg.IndexOf("|", i + 1);
-                    string sender = msg.Substring(i + 1, j - i - 1);
-                    i = msg.IndexOf("||");
-                    string chat = msg.Substring(j + 1, i - j - 1);
-                    updateChatBox(string.Format("[{0}][{1}] {2}\r\n", DateTime.Now.ToShortTimeString(), sender, chat));
-                }
-
-                if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
+                else if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
                 {
                     updateStringCards(msg);
                     int i = 0, j;
@@ -115,6 +104,24 @@ namespace newGUI_Taki
                     j = msg.IndexOf("|", i + 1);
                     string player = msg.Substring(i + 1, j - i - 1);
                     updateCurrPlayer(player);
+                    string txt = string.Format("[{0}] Admin started the game:\r\n", DateTime.Now.ToShortTimeString());
+                    updateChatBox(txt, Color.Blue);
+                }
+
+                else if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_ROOM_CLOSED)))
+                {
+                    exitRoom();
+                }
+
+                else if (msg.Contains(String.Format("@{0}|", status_code.CH_SEND)))
+                {
+                    int i = msg.IndexOf("|");
+                    int j = msg.IndexOf("|", i + 1);
+                    string sender = msg.Substring(i + 1, j - i - 1);
+                    i = msg.IndexOf("||");
+                    string chat = msg.Substring(j + 1, i - j - 1);
+                    updateChatBox(string.Format("[{0}] {1}: {2}\r\n", DateTime.Now.ToShortTimeString(), sender, chat),
+                        Color.Black);
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_SCC_DRAW)))
@@ -124,7 +131,7 @@ namespace newGUI_Taki
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_SCC_TURN)))
                 {
-                    updateChatBox("Turn complete\n");
+                    updateChatBox("Turn completed\r\n", Color.Black);
                     updateCards(this.top_card);
                 }
 
@@ -152,21 +159,23 @@ namespace newGUI_Taki
                         {
                             if (this.top_card.Contains(string.Format(status_code.CARD_CHANGE_COLOR)))
                             {
+                                updateChatBox(string.Format("[{0}] Color changed to: ", DateTime.Now.ToShortTimeString()),
+                                    Color.Black);
                                 if (this.top_card[1] == 'r')
                                 {
-                                    updateChatBox("color change to red");
+                                    updateChatBox("RED\r\n", Color.Red);
                                 }
                                 if (this.top_card[1] == 'b')
                                 {
-                                    updateChatBox("color change to blue");
+                                    updateChatBox("BLUE\r\n", Color.Blue);
                                 }
                                 if (this.top_card[1] == 'y')
                                 {
-                                    updateChatBox("color change to yellow");
+                                    updateChatBox("YELLOW\r\n", Color.Yellow);
                                 }
                                 if (this.top_card[1] == 'g')
                                 {
-                                    updateChatBox("color change to green");
+                                    updateChatBox("GREEN\r\n", Color.Green);
                                 }
                             }
                             this.top_card = this.top_card[0] + " ";
@@ -179,7 +188,8 @@ namespace newGUI_Taki
                 {
                     int i = msg.IndexOf("|");
                     int j = msg.IndexOf("||");
-                    updateChatBox(this.CurrPlayerLabel.Text + "drawed " + msg.Substring(i + 1, j - i - 1) + "cards" + "\r\n");
+                    updateChatBox(string.Format("[{0}] [{1}] drawed {2} cards\r\n", DateTime.Now.ToShortTimeString(),
+                        this.CurrPlayerLabel.Text, msg.Substring(i + 1, j - i - 1)), Color.Black);
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_CTR_TURN_ENDED)))
@@ -196,35 +206,41 @@ namespace newGUI_Taki
                     updateCurrPlayer("Winner: " + msg.Substring(i + 1, j - i - 1));
                 }
 
+                else if (msg.Contains(String.Format("@{0}", status_code.PGM_ERR_TOO_FEW_USERS)))
+                {
+                    updateErrorLabel("Not Enough Players");
+                }
+
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERR_ILLEGAL_CARD)))
                 {
-                    updatErrorLabel("Illegal card");
+                    updateErrorLabel("Illegal card");
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERR_ILLEGAL_ORDER)))
                 {
-                    updatErrorLabel("Illegal order");
+                    updateErrorLabel("Illegal order");
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERR_LAST_CARD)))
                 {
-                    updatErrorLabel("Cant end a turn with this card");
+                    updateErrorLabel("Cant end a turn with this card");
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_MER_ACCESS)))
                 {
-                    updatErrorLabel("No access");
+                    updateErrorLabel("No access");
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_MER_MESSAGE)))
                 {
-                    updatErrorLabel("Message compatibility");
+                    updateErrorLabel("Message compatibility");
                 }
                 msg = "";
             }
         }
 
         delegate void updateCardsCallback(string card);
+
         private void updateCards(string card)
         {
             if (this.ErrorLabel.InvokeRequired)
@@ -261,12 +277,14 @@ namespace newGUI_Taki
                 }
             }
         }
+
         delegate void updateErrorLabelCallback(string msg);
-        private void updatErrorLabel(string msg)
+
+        private void updateErrorLabel(string msg)
         {
             if (this.ErrorLabel.InvokeRequired)
             {
-                updateErrorLabelCallback d = new updateErrorLabelCallback(updatErrorLabel);
+                updateErrorLabelCallback d = new updateErrorLabelCallback(updateErrorLabel);
                 this.Invoke(d, new object[] { msg });
             }
             else
@@ -276,6 +294,7 @@ namespace newGUI_Taki
         }
 
         delegate void updateTopCardCallback(string msg);
+
         private void updateTopCard(string top_card)
         {
             if (this.ErrorLabel.InvokeRequired)
@@ -288,7 +307,9 @@ namespace newGUI_Taki
                 pbTopCard.Image = this.map[top_card];
             }
         }
+
         delegate void updateCurrPlayerCallback(string player);
+
         private void updateCurrPlayer(string player)
         {
             if (this.CurrPlayerLabel.InvokeRequired)
@@ -305,9 +326,10 @@ namespace newGUI_Taki
         private void parseInfo(string msg)
         {
             this.playerCards = new List<string>(status_code.NUM_OF_CARDS);
-            msg = msg.Substring(6);
-            int i = msg.IndexOf('|');
-            int j = 0, k = 0;
+            int i = msg.IndexOf("|");
+            int j = msg.IndexOf("|", i + 1), k = 0;
+            this.numOfPlayers = int.Parse(msg.Substring(i + 1, j - i - 1));
+            i = j;
             while (k < status_code.NUM_OF_CARDS - 1)
             {
                 msg.Substring(i + 1).Contains(',');
@@ -324,6 +346,7 @@ namespace newGUI_Taki
             this.top_card = msg.Substring(i + 1, 2);
             printCardsInPB();
         }
+
         private void pbCard_Click(object sender, EventArgs e)
         {
             byte[] buffer;
@@ -351,6 +374,7 @@ namespace newGUI_Taki
             }
             this.top_card = card;
         }
+
         private void pbBankCards_Click(object sender, EventArgs e)
         {
             byte[] buffer;
@@ -358,7 +382,9 @@ namespace newGUI_Taki
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
         }
+
         delegate void updateStringCardsCallback(string msg);
+
         private void updateStringCards(string msg)
         {
             if (this.InvokeRequired)
@@ -371,19 +397,33 @@ namespace newGUI_Taki
                 parseInfo(msg);
             }
         }
-        delegate void updateChatBoxCallback(string msg);
 
-        private void updateChatBox(string msg)
+        delegate void updateChatBoxCallback(string msg, Color color);
+
+        private void updateChatBox(string txt, Color color)
         {
             if (this.ChatShowBox.InvokeRequired)
             {
                 updateChatBoxCallback d = new updateChatBoxCallback(updateChatBox);
-                this.Invoke(d, new object[] { msg });
+                this.Invoke(d, new object[] { txt, color });
             }
             else
             {
-                ChatShowBox.Text += msg;
+                ChatShowBox.SelectionColor = color;
+                ChatShowBox.AppendText(txt);
             }
+        }
+
+        private void ChatShowBox_TextChanged(object sender, EventArgs e)
+        {
+            ChatShowBox.SelectionStart = ChatShowBox.Text.Length;
+            ChatShowBox.ScrollToCaret();
+        }
+
+        private void ChatSendBox_TextChanged(object sender, EventArgs e)
+        {
+            ChatSendBox.SelectionStart = ChatSendBox.Text.Length;
+            ChatSendBox.ScrollToCaret();
         }
 
         private void ChatSendBox_KeyDown(object sender, KeyEventArgs e)
@@ -396,6 +436,7 @@ namespace newGUI_Taki
         }
 
         delegate void updateDrawCallback(string msg);
+
         private void updateDraw(string msg)
         {
             if (this.InvokeRequired)
@@ -460,11 +501,10 @@ namespace newGUI_Taki
                 }
             }
         }
+
         private void printCardsInPB()
         {
             butEndTurn.Visible = true;
-            butSurrender.Visible = true;
-            butLeaveRoom.Visible = false;
             butStartGame.Visible = false;
             pbTopCard.Visible = true;
             pbBankCards.Visible = true;
@@ -493,6 +533,7 @@ namespace newGUI_Taki
             }
             pbTopCard.Image = map[this.top_card];
         }
+
         private void initMap()
         {
             map = new Dictionary<string, Image>(53);
@@ -551,6 +592,7 @@ namespace newGUI_Taki
             map["% "] = newGUI_Taki.Properties.Resources.ChangeColor;
             map["* "] = newGUI_Taki.Properties.Resources.SuperTaki;
         }
+
         private void butEndTurn_Click(object sender, EventArgs e)
         {
             byte[] buffer;
@@ -558,13 +600,14 @@ namespace newGUI_Taki
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
         }
+
         private void SendChatBut_Click(object sender, EventArgs e)
         {
             byte[] buffer;
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}|{1}||", status_code.CH_SEND, ChatSendBox.Text));
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
-            updateChatBox(ChatSendBox.Text + "\r\n");
+            updateChatBox(string.Format("[{0}] {1}\r\n", DateTime.Now.ToShortTimeString() , ChatSendBox.Text), Color.Black);
             ChatSendBox.Text = "";
         }
 
@@ -577,18 +620,17 @@ namespace newGUI_Taki
             }
             if (!is_admin)
             {
-                buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||\0", status_code.RM_LEAVE_GAME));
+                buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.RM_LEAVE_GAME));
                 this.sock.Write(buffer, 0, buffer.Length);
-                this.parent.Show();
-                this.Close();
+                this.sock.Flush();
             }
             else
             {
-                buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||\0", status_code.RM_CLOSE_GAME));
+                buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.RM_CLOSE_GAME));
                 this.sock.Write(buffer, 0, buffer.Length);
-                this.parent.Show();
-                this.Close();
+                this.sock.Flush();
             }
+            exitRoom();
         }
 
         private void butSurrender_Click(object sender, EventArgs e)
@@ -604,13 +646,33 @@ namespace newGUI_Taki
             this.thread.Abort();
             this.pbTopCard.Visible = false;
             this.pbBankCards.Visible = false;
-            butSurrender.Visible = false;
             butEndTurn.Visible = false;
             ChatShowBox.Visible = false;
             ChatSendBox.Visible = false;
             SendChatBut.Visible = false;
             this.parent.Show();
             this.Close();
+        }
+
+        delegate void exitRoomCallback();
+        private void exitRoom()
+        {
+            if (this.parent.InvokeRequired)
+            {
+                exitRoomCallback d = new exitRoomCallback(exitRoom);
+                this.Invoke(d, new object[] { });
+            }
+            else
+            {
+                this.thread.Abort();
+                this.parent.Show();
+                this.Hide();
+            }
+        }
+
+        private void pbTopCard_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

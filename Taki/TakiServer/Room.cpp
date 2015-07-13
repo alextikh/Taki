@@ -59,6 +59,10 @@ bool Room::is_open() const
 	return get_num_players() < MAX_PLAYERS && !_in_game;
 }
 
+bool Room::in_game() const
+{
+	return _in_game;
+}
 
 bool Room::get_player_deck(User *player, vector<Card> &player_deck)
 {
@@ -178,7 +182,7 @@ int Room::play_turn(User *player, const Card &move)
 	{
 		return GAM_ERR_ILLEGAL_ORDER;
 	}
-	if (_draw_counter > 0 && move.getType() != CARD_PLUS_2)
+	if (_draw_counter > 0 && move.getType() != CARD_PLUS_2 && !_open_taki)
 	{
 		return GAM_ERR_ILLEGAL_ORDER;
 	}

@@ -24,6 +24,8 @@ using std::map;
 using std::vector;
 using std::pair;
 using std::string;
+using std::cout;
+using std::endl;
 using std::stoi;
 using std::to_string;
 using std::all_of;

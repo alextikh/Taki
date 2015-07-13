@@ -81,8 +81,12 @@ namespace newGUI_Taki
             Application.Exit();
         }
 
-        private void BackBut_Click(object sender, EventArgs e)
+        private void LogoutBut_Click(object sender, EventArgs e)
         {
+            byte[] buffer;
+            buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.EN_LOGOUT));
+            this.sock.Write(buffer, 0, buffer.Length);
+            this.sock.Flush();
             parent.Show();
             this.Close();
         }
@@ -114,7 +118,7 @@ namespace newGUI_Taki
             if (msg.Contains(String.Format("@{0}|", status_code.PGM_SCC_GAME_JOIN)))
             {
                 RoomScreen form = new RoomScreen(this, this.sock, false, this.Text); form.Show();
-                this.Close();
+                this.Hide();
             }
         }
 

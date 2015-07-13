@@ -22,6 +22,7 @@ void Manager::client_requests_thread(SOCKET &sock)
 	{
 		if (recv(sock, buf, BUF_LEN, 0) == SOCKET_ERROR)
 		{
+			cout << WSAGetLastError() << endl;
 			closesocket(sock);
 			ExitThread(1);
 		}
@@ -105,11 +106,9 @@ void Manager::client_requests_thread(SOCKET &sock)
 	}
 }
 
-
 void Manager::register_user(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 3)
 	{
 		if (argv[1].length() <= MAX_USERNAME_LEN && argv[2].length() <= MAX_PASSWORD_LEN)
@@ -117,11 +116,12 @@ void Manager::register_user(SOCKET &sock, User *&user, vector<string> &argv)
 			if (_db.register_user(argv[1], argv[2]))
 			{
 				user = new User(argv[1], nullptr, false, sock);
+				_user_map[sock] = user;
 				msg = "@" + to_string(PGM_SCC_REGISTER) + "|" + createRoomList() + "|";
 				if (send(sock, msg.c_str(), msg.length() + 1, 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
-					std::cout << WSAGetLastError();
 					ExitThread(1);
 				}
 			}
@@ -130,6 +130,7 @@ void Manager::register_user(SOCKET &sock, User *&user, vector<string> &argv)
 				msg = "@" + to_string(PGM_ERR_NAME_TAKEN) + "|" + argv[1] + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
 					ExitThread(1);
 				}
@@ -140,6 +141,7 @@ void Manager::register_user(SOCKET &sock, User *&user, vector<string> &argv)
 			msg = "@" + to_string(PGM_ERR_INFO_TOO_LONG) + "||";
 			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 			{
+				cout << WSAGetLastError() << endl;
 				closesocket(sock);
 				ExitThread(1);
 			}
@@ -149,13 +151,11 @@ void Manager::register_user(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendAccessError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::login_user(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 3)
 	{
 		if (argv[1].length() <= MAX_USERNAME_LEN && argv[2].length() <= MAX_USERNAME_LEN)
@@ -164,9 +164,11 @@ void Manager::login_user(SOCKET &sock, User *&user, vector<string> &argv)
 			if (!userInMap(argv[1]) && _db.login_user(argv[1], argv[2]))
 			{
 				user = new User(argv[1], nullptr, false, sock);
+				_user_map[sock] = user;
 				msg = "@" + to_string(PGM_SCC_LOGIN) + "|" + createRoomList() + "|";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
 					ExitThread(1);
 				}
@@ -176,6 +178,7 @@ void Manager::login_user(SOCKET &sock, User *&user, vector<string> &argv)
 				msg = "@" + to_string(PGM_ERR_LOGIN) + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
 					ExitThread(1);
 				}
@@ -186,6 +189,7 @@ void Manager::login_user(SOCKET &sock, User *&user, vector<string> &argv)
 			msg = "@" + to_string(PGM_ERR_INFO_TOO_LONG) + "||";
 			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 			{
+				cout << WSAGetLastError() << endl;
 				closesocket(sock);
 				ExitThread(1);
 			}
@@ -195,12 +199,10 @@ void Manager::login_user(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::logout(SOCKET &sock, User *&user, vector<string> &argv)
 {
-	mut.lock();
 	string msg;
 	if (argv.size() == 1)
 	{
@@ -219,13 +221,11 @@ void Manager::logout(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::room_list(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 1)
 	{
 		if (user != nullptr)
@@ -233,6 +233,7 @@ void Manager::room_list(SOCKET &sock, User *&user, vector<string> &argv)
 			msg = "@" + to_string(PGM_CTR_ROOM_LIST) + "|" + createRoomList() + "|";
 			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 			{
+				cout << WSAGetLastError() << endl;
 				closesocket(sock);
 				ExitThread(1);
 			}
@@ -246,13 +247,11 @@ void Manager::room_list(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::create_room(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 2)
 	{
 		if (user != nullptr && user->getRoom() == nullptr)
@@ -263,6 +262,7 @@ void Manager::create_room(SOCKET &sock, User *&user, vector<string> &argv)
 				msg = "@" + to_string(PGM_SCC_GAME_CREATED) + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
 					ExitThread(1);
 				}
@@ -272,6 +272,7 @@ void Manager::create_room(SOCKET &sock, User *&user, vector<string> &argv)
 				msg = "@" + to_string(PGM_ERR_INFO_TOO_LONG) + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
 					ExitThread(1);
 				}
@@ -286,13 +287,11 @@ void Manager::create_room(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::close_game(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 1)
 	{
 		if (user != nullptr && user->getRoom() != nullptr && user->isAdmin())
@@ -313,6 +312,7 @@ void Manager::close_game(SOCKET &sock, User *&user, vector<string> &argv)
 			msg = "@" + to_string(PGM_SCC_GAME_CLOSE) + "||";
 			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 			{
+				cout << WSAGetLastError() << endl;
 				closesocket(sock);
 				ExitThread(1);
 			}
@@ -326,13 +326,11 @@ void Manager::close_game(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::join_game(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 2)
 	{
 		if (user != nullptr && user->getRoom() == nullptr)
@@ -355,6 +353,7 @@ void Manager::join_game(SOCKET &sock, User *&user, vector<string> &argv)
 					(*it)->add_user(*user);
 					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 					{
+						cout << WSAGetLastError() << endl;
 						closesocket(sock);
 						ExitThread(1);
 					}
@@ -364,6 +363,7 @@ void Manager::join_game(SOCKET &sock, User *&user, vector<string> &argv)
 					msg = "@" + to_string(PGM_ERR_ROOM_FULL) + "|" + argv[1] + "||";
 					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 					{
+						cout << WSAGetLastError() << endl;
 						closesocket(sock);
 						ExitThread(1);
 					}
@@ -374,6 +374,7 @@ void Manager::join_game(SOCKET &sock, User *&user, vector<string> &argv)
 				msg = "@" + to_string(PGM_ERR_ROOM_NOT_FOUND) + "|" + argv[1] + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
 					ExitThread(1);
 				}
@@ -388,13 +389,11 @@ void Manager::join_game(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::leave_game(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 1)
 	{
 		if (user != nullptr && user->getRoom() != nullptr)
@@ -402,19 +401,19 @@ void Manager::leave_game(SOCKET &sock, User *&user, vector<string> &argv)
 			Room *room = user->getRoom();
 			room->delete_user(*user);
 			vector<User *> players = room->get_players();
-			if (room->get_num_players() >= MIN_PLAYERS_FOR_GAME)
+			if (room->in_game() && room->get_num_players() >= MIN_PLAYERS_FOR_GAME)
+			{
+				msg = "@" + to_string(GAM_CTR_GAME_ENDED) + "|" + (*players.begin())->getUserName() + "||";
+				send((*players.begin())->getUserSocket(), msg.c_str(), msg.length(), 0);
+				room->end_game();
+			}
+			else
 			{
 				msg = "@" + to_string(PGM_CTR_REMOVE_USER) + "|" + user->getUserName() + "||";
 				for (vector<User *>::iterator it = players.begin(); it != players.end(); ++it)
 				{
 					send((*it)->getUserSocket(), msg.c_str(), msg.length(), 0);
 				}
-			}
-			else
-			{
-				msg = "@" + to_string(GAM_CTR_GAME_ENDED) + "|" + (*players.begin())->getUserName() + "||";
-				send((*players.begin())->getUserSocket(), msg.c_str(), msg.length(), 0);
-				room->end_game();
 			}
 		}
 		else
@@ -426,13 +425,11 @@ void Manager::leave_game(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::start_game(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 1)
 	{
 		if (user != nullptr && user->getRoom() != nullptr && user->isAdmin())
@@ -469,6 +466,7 @@ void Manager::start_game(SOCKET &sock, User *&user, vector<string> &argv)
 				msg = "@" + to_string(PGM_ERR_TOO_FEW_USERS) + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
 					ExitThread(1);
 				}
@@ -483,13 +481,11 @@ void Manager::start_game(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::play_card(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 2)
 	{
 		if (user != nullptr && user->getRoom() != nullptr)
@@ -505,6 +501,7 @@ void Manager::play_card(SOCKET &sock, User *&user, vector<string> &argv)
 					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 					{
 						closesocket(sock);
+						cout << WSAGetLastError() << endl;
 						ExitThread(1);
 					}
 					vector<User *> players = room->get_players();
@@ -523,6 +520,7 @@ void Manager::play_card(SOCKET &sock, User *&user, vector<string> &argv)
 					msg = "@" + to_string(GAM_ERR_ILLEGAL_CARD) + "||";
 					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 					{
+						cout << WSAGetLastError() << endl;
 						closesocket(sock);
 						ExitThread(1);
 					}
@@ -532,6 +530,7 @@ void Manager::play_card(SOCKET &sock, User *&user, vector<string> &argv)
 					msg = "@" + to_string(GAM_ERR_ILLEGAL_ORDER) + "||";
 					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 					{
+						cout << WSAGetLastError() << endl;
 						closesocket(sock);
 						ExitThread(1);
 					}
@@ -555,13 +554,11 @@ void Manager::play_card(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::draw_card(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 1)
 	{
 		if (user != nullptr && user->getRoom() != nullptr)
@@ -584,6 +581,7 @@ void Manager::draw_card(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					closesocket(sock);
+					cout << WSAGetLastError() << endl;
 					ExitThread(1);
 				}
 				msg = "@" + to_string(GAM_CTR_DRAW_CARDS) + "|" + to_string(drawn_cards.size()) + "||";
@@ -601,6 +599,7 @@ void Manager::draw_card(SOCKET &sock, User *&user, vector<string> &argv)
 				msg = "@" + to_string(GAM_ERROR_WRONG_DRAW) + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
 					ExitThread(1);
 				}
@@ -615,13 +614,11 @@ void Manager::draw_card(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::end_turn(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 1)
 	{
 		if (user != nullptr && user->getRoom() != nullptr)
@@ -651,6 +648,7 @@ void Manager::end_turn(SOCKET &sock, User *&user, vector<string> &argv)
 				msg = "@" + to_string(GAM_ERR_LAST_CARD) + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
 					ExitThread(1);
 				}
@@ -669,13 +667,11 @@ void Manager::end_turn(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 void Manager::send_chat(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
-	mut.lock();
 	if (argv.size() == 2)
 	{
 		if (user != nullptr && user->getRoom() != nullptr)
@@ -694,6 +690,7 @@ void Manager::send_chat(SOCKET &sock, User *&user, vector<string> &argv)
 				msg = "@" + to_string(CHA_SCC) + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
 					ExitThread(1);
 				}
@@ -703,6 +700,7 @@ void Manager::send_chat(SOCKET &sock, User *&user, vector<string> &argv)
 				msg = "@" + to_string(PGM_ERR_INFO_TOO_LONG) + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
+					cout << WSAGetLastError() << endl;
 					closesocket(sock);
 					ExitThread(1);
 				}
@@ -717,7 +715,6 @@ void Manager::send_chat(SOCKET &sock, User *&user, vector<string> &argv)
 	{
 		sendProtocolError(sock);
 	}
-	mut.unlock();
 }
 
 
@@ -726,6 +723,7 @@ void Manager::sendProtocolError(SOCKET &sock)
 	string msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
 	if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 	{
+		cout << WSAGetLastError() << endl;
 		closesocket(sock);
 		ExitThread(1);
 	}
@@ -736,6 +734,7 @@ void Manager::sendAccessError(SOCKET &sock)
 	string msg = "@" + to_string(PGM_MER_ACCESS) + "||";
 	if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 	{
+		cout << WSAGetLastError() << endl;
 		closesocket(sock);
 		ExitThread(1);
 	}
