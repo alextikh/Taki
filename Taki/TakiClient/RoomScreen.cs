@@ -101,7 +101,7 @@ namespace newGUI_Taki
                     string sender = msg.Substring(i + 1, j - i - 1);
                     i = msg.IndexOf("||");
                     string chat = msg.Substring(j + 1, i - j - 1);
-                    updateChatBox(sender + ": " + chat + "\r\n");
+                    updateChatBox(string.Format("[{0}][{1}] {2}\r\n", DateTime.Now.ToShortTimeString(), sender, chat));
                 }
 
                 if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
@@ -383,6 +383,15 @@ namespace newGUI_Taki
             else
             {
                 ChatShowBox.Text += msg;
+            }
+        }
+
+        private void ChatSendBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                this.butSendChat.PerformClick();
             }
         }
 

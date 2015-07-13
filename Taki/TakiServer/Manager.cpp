@@ -255,7 +255,7 @@ void Manager::create_room(SOCKET &sock, User *&user, vector<string> &argv)
 	mut.lock();
 	if (argv.size() == 2)
 	{
-		if (user != nullptr && user->getRoom() != nullptr)
+		if (user != nullptr && user->getRoom() == nullptr)
 		{
 			if (argv[1].length() <= MAX_ROOMNAME_LEN)
 			{

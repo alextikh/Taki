@@ -30,7 +30,6 @@
         {
             this.ChatSendBox = new System.Windows.Forms.TextBox();
             this.butSendChat = new System.Windows.Forms.Button();
-            this.ChatShowBox = new System.Windows.Forms.TextBox();
             this.CurrPlayerLabel = new System.Windows.Forms.Label();
             this.ErrorLabel = new System.Windows.Forms.Label();
             this.butEndTurn = new System.Windows.Forms.Button();
@@ -39,6 +38,7 @@
             this.butStartGame = new System.Windows.Forms.Button();
             this.butSurrender = new System.Windows.Forms.Button();
             this.butLeaveRoom = new System.Windows.Forms.Button();
+            this.ChatShowBox = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopCard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBankCards)).BeginInit();
             this.SuspendLayout();
@@ -46,35 +46,24 @@
             // ChatSendBox
             // 
             this.ChatSendBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.ChatSendBox.Location = new System.Drawing.Point(469, 90);
+            this.ChatSendBox.Location = new System.Drawing.Point(469, 224);
             this.ChatSendBox.Multiline = true;
             this.ChatSendBox.Name = "ChatSendBox";
             this.ChatSendBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.ChatSendBox.Size = new System.Drawing.Size(210, 20);
+            this.ChatSendBox.Size = new System.Drawing.Size(210, 56);
             this.ChatSendBox.TabIndex = 23;
+            this.ChatSendBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChatSendBox_KeyDown);
             // 
             // butSendChat
             // 
             this.butSendChat.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.butSendChat.Location = new System.Drawing.Point(604, 108);
+            this.butSendChat.Location = new System.Drawing.Point(604, 286);
             this.butSendChat.Name = "butSendChat";
             this.butSendChat.Size = new System.Drawing.Size(75, 23);
             this.butSendChat.TabIndex = 22;
             this.butSendChat.Text = "send";
             this.butSendChat.UseVisualStyleBackColor = true;
             this.butSendChat.Click += new System.EventHandler(this.butSendChat_Click);
-            // 
-            // ChatShowBox
-            // 
-            this.ChatShowBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.ChatShowBox.Location = new System.Drawing.Point(469, 12);
-            this.ChatShowBox.Multiline = true;
-            this.ChatShowBox.Name = "ChatShowBox";
-            this.ChatShowBox.ReadOnly = true;
-            this.ChatShowBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.ChatShowBox.Size = new System.Drawing.Size(210, 77);
-            this.ChatShowBox.TabIndex = 21;
-            this.ChatShowBox.UseWaitCursor = true;
             // 
             // CurrPlayerLabel
             // 
@@ -138,7 +127,7 @@
             this.butStartGame.BackColor = System.Drawing.Color.Blue;
             this.butStartGame.Font = new System.Drawing.Font("Comic Sans MS", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butStartGame.ForeColor = System.Drawing.Color.Cornsilk;
-            this.butStartGame.Location = new System.Drawing.Point(136, 155);
+            this.butStartGame.Location = new System.Drawing.Point(95, 155);
             this.butStartGame.Name = "butStartGame";
             this.butStartGame.Size = new System.Drawing.Size(176, 68);
             this.butStartGame.TabIndex = 29;
@@ -164,7 +153,7 @@
             this.butLeaveRoom.BackColor = System.Drawing.Color.Red;
             this.butLeaveRoom.Font = new System.Drawing.Font("Comic Sans MS", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butLeaveRoom.ForeColor = System.Drawing.Color.PaleGreen;
-            this.butLeaveRoom.Location = new System.Drawing.Point(321, 155);
+            this.butLeaveRoom.Location = new System.Drawing.Point(277, 155);
             this.butLeaveRoom.Name = "butLeaveRoom";
             this.butLeaveRoom.Size = new System.Drawing.Size(176, 68);
             this.butLeaveRoom.TabIndex = 31;
@@ -172,12 +161,21 @@
             this.butLeaveRoom.UseVisualStyleBackColor = false;
             this.butLeaveRoom.Click += new System.EventHandler(this.butLeaveRoom_Click);
             // 
+            // ChatShowBox
+            // 
+            this.ChatShowBox.Location = new System.Drawing.Point(469, 13);
+            this.ChatShowBox.Name = "ChatShowBox";
+            this.ChatShowBox.Size = new System.Drawing.Size(209, 205);
+            this.ChatShowBox.TabIndex = 32;
+            this.ChatShowBox.Text = "";
+            // 
             // RoomScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(691, 362);
+            this.Controls.Add(this.ChatShowBox);
             this.Controls.Add(this.butLeaveRoom);
             this.Controls.Add(this.butSurrender);
             this.Controls.Add(this.butStartGame);
@@ -188,7 +186,6 @@
             this.Controls.Add(this.CurrPlayerLabel);
             this.Controls.Add(this.ChatSendBox);
             this.Controls.Add(this.butSendChat);
-            this.Controls.Add(this.ChatShowBox);
             this.Name = "RoomScreen";
             this.Text = "RoomScreen";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -203,7 +200,6 @@
 
         private System.Windows.Forms.TextBox ChatSendBox;
         private System.Windows.Forms.Button butSendChat;
-        private System.Windows.Forms.TextBox ChatShowBox;
         private System.Windows.Forms.Label CurrPlayerLabel;
         private System.Windows.Forms.Label ErrorLabel;
         private System.Windows.Forms.Button butEndTurn;
@@ -212,5 +208,6 @@
         private System.Windows.Forms.Button butStartGame;
         private System.Windows.Forms.Button butSurrender;
         private System.Windows.Forms.Button butLeaveRoom;
+        private System.Windows.Forms.RichTextBox ChatShowBox;
     }
 }
