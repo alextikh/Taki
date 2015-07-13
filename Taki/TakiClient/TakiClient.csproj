@@ -184,9 +184,6 @@
     <None Include="CardsImage\5_R.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CardsImage\5_Y.PNG" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="CardsImage\6_B.jpg" />
   </ItemGroup>
   <ItemGroup>
@@ -299,9 +296,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CardsImage\Taki_Y.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="CardsImage\takiback.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CaptchaImages\captcha2.jpg" />

@@ -37,6 +37,7 @@
             // 
             // EnterIPLabel
             // 
+            this.EnterIPLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.EnterIPLabel.AutoSize = true;
             this.EnterIPLabel.BackColor = System.Drawing.Color.GreenYellow;
             this.EnterIPLabel.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -49,6 +50,7 @@
             // 
             // EnterIPBox
             // 
+            this.EnterIPBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.EnterIPBox.BackColor = System.Drawing.Color.GreenYellow;
             this.EnterIPBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.EnterIPBox.Font = new System.Drawing.Font("Comic Sans MS", 24F);
@@ -62,6 +64,7 @@
             // 
             // ErrorLabel
             // 
+            this.ErrorLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ErrorLabel.AutoSize = true;
             this.ErrorLabel.Font = new System.Drawing.Font("Comic Sans MS", 24F);
             this.ErrorLabel.ForeColor = System.Drawing.Color.Red;
@@ -74,6 +77,7 @@
             // 
             // ExitBut
             // 
+            this.ExitBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ExitBut.BackColor = System.Drawing.Color.LightCoral;
             this.ExitBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ExitBut.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -88,6 +92,7 @@
             // 
             // EnterBut
             // 
+            this.EnterBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.EnterBut.BackColor = System.Drawing.Color.DarkGreen;
             this.EnterBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.EnterBut.Font = new System.Drawing.Font("Comic Sans MS", 24F);
@@ -115,6 +120,7 @@
             this.DoubleBuffered = true;
             this.Name = "EnterIPScreen";
             this.Text = "EnterIPScreen";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.ResumeLayout(false);
             this.PerformLayout();
 

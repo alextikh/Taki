@@ -20,6 +20,7 @@ namespace newGUI_Taki
         private Dictionary<string, Image> captcha;
         private string captcha_value;
         private TextBox focusedBox;
+
         public RegisterLoginScreenExe(Form parent, NetworkStream sock, string reg_log)
         {
             this.Icon = Properties.Resources.TakiIcon;
@@ -67,7 +68,7 @@ namespace newGUI_Taki
 
         private void UsernameBox_GotFocus(object sender, EventArgs e)
         {
-            if (this.UsernameBox.Text == "username")
+            if (this.UsernameBox.Text == "username ")
             {
                 this.UsernameBox.Text = "";
             }
@@ -77,7 +78,7 @@ namespace newGUI_Taki
 
         private void PasswordBox_GotFocus(object sender, EventArgs e)
         {
-            if (this.PasswordBox.Text == "password")
+            if (this.PasswordBox.Text == "password ")
             {
                 this.PasswordBox.Text = "";
                 if (!this.checkBox1.Checked)
@@ -109,11 +110,11 @@ namespace newGUI_Taki
         {
             if (this.UsernameBox.Text == "" && this.focusedBox != this.UsernameBox)
             {
-                this.UsernameBox.Text = "username";
+                this.UsernameBox.Text = "username ";
             }
             if (this.PasswordBox.Text == "" && this.focusedBox != this.PasswordBox)
             {
-                this.PasswordBox.Text = "password";
+                this.PasswordBox.Text = "password ";
                 this.PasswordBox.UseSystemPasswordChar = false;
             }
             if (this.ProveHumanBox.Text == "" && this.focusedBox != this.ProveHumanBox)
@@ -121,6 +122,7 @@ namespace newGUI_Taki
                 this.ProveHumanBox.Text = "please prove that you are a human";
             }
         }
+
         private void TextBox_keyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -129,6 +131,7 @@ namespace newGUI_Taki
                 this.EnterBut.PerformClick();
             }
         }
+
         private void sendDetails()
         {
             this.ErrorLabel.Visible = false;
@@ -234,13 +237,16 @@ namespace newGUI_Taki
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox1.Checked)
+            if (this.PasswordBox.Text != "password ")
             {
-                PasswordBox.UseSystemPasswordChar = false;
-            }
-            else
-            {
-                PasswordBox.UseSystemPasswordChar = true;
+                if (checkBox1.Checked)
+                {
+                    PasswordBox.UseSystemPasswordChar = false;
+                }
+                else
+                {
+                    PasswordBox.UseSystemPasswordChar = true;
+                }
             }
         }
     }

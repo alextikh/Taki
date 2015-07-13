@@ -74,10 +74,10 @@ namespace newGUI_Taki
             {
                 this.sock.Flush();
                 buffer = new byte[status_code.MSG_LEN];
+                updatErrorLabel("");
                 int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
                 string msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
                 this.sock.Flush();
-                updatErrorLabel("");
                 if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_NEW_USER)))
                 {
                     int i = msg.IndexOf("|");

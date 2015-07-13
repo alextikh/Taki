@@ -35,6 +35,7 @@
             // 
             // RegisterBut
             // 
+            this.RegisterBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.RegisterBut.BackColor = System.Drawing.Color.SkyBlue;
             this.RegisterBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.RegisterBut.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -49,6 +50,7 @@
             // 
             // LoginBut
             // 
+            this.LoginBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LoginBut.BackColor = System.Drawing.Color.RoyalBlue;
             this.LoginBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.LoginBut.Font = new System.Drawing.Font("Comic Sans MS", 24F);
@@ -63,6 +65,7 @@
             // 
             // ExitBut
             // 
+            this.ExitBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ExitBut.BackColor = System.Drawing.Color.IndianRed;
             this.ExitBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ExitBut.Font = new System.Drawing.Font("Comic Sans MS", 24F);
@@ -86,6 +89,7 @@
             this.Controls.Add(this.RegisterBut);
             this.Name = "RegisterLoginScreenChoice";
             this.Text = "RegisterLoginScreenChoice";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.ResumeLayout(false);
 
         }

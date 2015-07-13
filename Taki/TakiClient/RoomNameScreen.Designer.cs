@@ -35,6 +35,7 @@
             // 
             // RoomNameBox
             // 
+            this.RoomNameBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.RoomNameBox.BackColor = System.Drawing.Color.Wheat;
             this.RoomNameBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.RoomNameBox.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -50,6 +51,7 @@
             // 
             // CreateRoomBut
             // 
+            this.CreateRoomBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.CreateRoomBut.BackColor = System.Drawing.Color.LightGreen;
             this.CreateRoomBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.CreateRoomBut.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -65,6 +67,7 @@
             // 
             // BackBut
             // 
+            this.BackBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.BackBut.BackColor = System.Drawing.Color.Pink;
             this.BackBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BackBut.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -89,6 +92,7 @@
             this.Controls.Add(this.CreateRoomBut);
             this.Controls.Add(this.RoomNameBox);
             this.ForeColor = System.Drawing.Color.DarkGreen;
+            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Name = "RoomNameScreen";
             this.Text = "RoomNameScreen";
             this.ResumeLayout(false);

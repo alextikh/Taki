@@ -45,6 +45,7 @@
             // 
             // ChatSendBox
             // 
+            this.ChatSendBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ChatSendBox.Location = new System.Drawing.Point(469, 90);
             this.ChatSendBox.Multiline = true;
             this.ChatSendBox.Name = "ChatSendBox";
@@ -54,6 +55,7 @@
             // 
             // butSendChat
             // 
+            this.butSendChat.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.butSendChat.Location = new System.Drawing.Point(604, 108);
             this.butSendChat.Name = "butSendChat";
             this.butSendChat.Size = new System.Drawing.Size(75, 23);
@@ -64,6 +66,7 @@
             // 
             // ChatShowBox
             // 
+            this.ChatShowBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ChatShowBox.Location = new System.Drawing.Point(469, 12);
             this.ChatShowBox.Multiline = true;
             this.ChatShowBox.Name = "ChatShowBox";
@@ -75,6 +78,7 @@
             // 
             // CurrPlayerLabel
             // 
+            this.CurrPlayerLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.CurrPlayerLabel.AutoSize = true;
             this.CurrPlayerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CurrPlayerLabel.Location = new System.Drawing.Point(43, 13);
@@ -84,6 +88,7 @@
             // 
             // ErrorLabel
             // 
+            this.ErrorLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ErrorLabel.AutoSize = true;
             this.ErrorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ErrorLabel.ForeColor = System.Drawing.Color.Red;
@@ -94,6 +99,7 @@
             // 
             // butEndTurn
             // 
+            this.butEndTurn.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.butEndTurn.Font = new System.Drawing.Font("Comic Sans MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butEndTurn.Location = new System.Drawing.Point(353, 13);
             this.butEndTurn.Name = "butEndTurn";
@@ -106,6 +112,7 @@
             // 
             // pbTopCard
             // 
+            this.pbTopCard.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbTopCard.Location = new System.Drawing.Point(154, 108);
             this.pbTopCard.Name = "pbTopCard";
             this.pbTopCard.Size = new System.Drawing.Size(100, 135);
@@ -115,7 +122,7 @@
             // 
             // pbBankCards
             // 
-            this.pbBankCards.Image = global::newGUI_Taki.Properties.Resources.backCard;
+            this.pbBankCards.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbBankCards.Location = new System.Drawing.Point(318, 108);
             this.pbBankCards.Name = "pbBankCards";
             this.pbBankCards.Size = new System.Drawing.Size(106, 135);
@@ -127,6 +134,7 @@
             // 
             // butStartGame
             // 
+            this.butStartGame.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.butStartGame.BackColor = System.Drawing.Color.Blue;
             this.butStartGame.Font = new System.Drawing.Font("Comic Sans MS", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butStartGame.ForeColor = System.Drawing.Color.Cornsilk;
@@ -140,6 +148,7 @@
             // 
             // butSurrender
             // 
+            this.butSurrender.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.butSurrender.Location = new System.Drawing.Point(265, 13);
             this.butSurrender.Name = "butSurrender";
             this.butSurrender.Size = new System.Drawing.Size(66, 29);
@@ -151,6 +160,7 @@
             // 
             // butLeaveRoom
             // 
+            this.butLeaveRoom.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.butLeaveRoom.BackColor = System.Drawing.Color.Red;
             this.butLeaveRoom.Font = new System.Drawing.Font("Comic Sans MS", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butLeaveRoom.ForeColor = System.Drawing.Color.PaleGreen;
@@ -181,6 +191,7 @@
             this.Controls.Add(this.ChatShowBox);
             this.Name = "RoomScreen";
             this.Text = "RoomScreen";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.pbTopCard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBankCards)).EndInit();
             this.ResumeLayout(false);

@@ -51,6 +51,7 @@
             this.dgvRoomList.AllowUserToDeleteRows = false;
             this.dgvRoomList.AllowUserToResizeColumns = false;
             this.dgvRoomList.AllowUserToResizeRows = false;
+            this.dgvRoomList.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.dgvRoomList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvRoomList.BackgroundColor = System.Drawing.Color.GreenYellow;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
@@ -125,6 +126,7 @@
             // 
             // ExitBut
             // 
+            this.ExitBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ExitBut.BackColor = System.Drawing.Color.MediumVioletRed;
             this.ExitBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ExitBut.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -139,6 +141,7 @@
             // 
             // BackBut
             // 
+            this.BackBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.BackBut.BackColor = System.Drawing.Color.CornflowerBlue;
             this.BackBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BackBut.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -153,6 +156,7 @@
             // 
             // RefreshBut
             // 
+            this.RefreshBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.RefreshBut.BackColor = System.Drawing.Color.MidnightBlue;
             this.RefreshBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.RefreshBut.Font = new System.Drawing.Font("Comic Sans MS", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -167,6 +171,7 @@
             // 
             // JoinBut
             // 
+            this.JoinBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.JoinBut.BackColor = System.Drawing.Color.ForestGreen;
             this.JoinBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.JoinBut.Font = new System.Drawing.Font("Comic Sans MS", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -181,6 +186,7 @@
             // 
             // CreateRoomBut
             // 
+            this.CreateRoomBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.CreateRoomBut.BackColor = System.Drawing.Color.Magenta;
             this.CreateRoomBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.CreateRoomBut.Font = new System.Drawing.Font("Comic Sans MS", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -207,6 +213,7 @@
             this.Controls.Add(this.dgvRoomList);
             this.Name = "LobbyScreen";
             this.Text = "LobbyScreen";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.dgvRoomList)).EndInit();
             this.ResumeLayout(false);
 

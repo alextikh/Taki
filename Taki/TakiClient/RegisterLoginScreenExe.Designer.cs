@@ -42,6 +42,7 @@
             // 
             // UsernameBox
             // 
+            this.UsernameBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.UsernameBox.BackColor = System.Drawing.Color.Gold;
             this.UsernameBox.Font = new System.Drawing.Font("Comic Sans MS", 24F);
             this.UsernameBox.ForeColor = System.Drawing.Color.Indigo;
@@ -49,13 +50,14 @@
             this.UsernameBox.Name = "UsernameBox";
             this.UsernameBox.Size = new System.Drawing.Size(215, 52);
             this.UsernameBox.TabIndex = 1;
-            this.UsernameBox.Text = "username";
+            this.UsernameBox.Text = "username ";
             this.UsernameBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.UsernameBox.GotFocus += new System.EventHandler(this.UsernameBox_GotFocus);
             this.UsernameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_keyDown);
             // 
             // PasswordBox
             // 
+            this.PasswordBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.PasswordBox.BackColor = System.Drawing.Color.Gold;
             this.PasswordBox.Font = new System.Drawing.Font("Comic Sans MS", 24F);
             this.PasswordBox.ForeColor = System.Drawing.Color.Indigo;
@@ -63,13 +65,14 @@
             this.PasswordBox.Name = "PasswordBox";
             this.PasswordBox.Size = new System.Drawing.Size(215, 52);
             this.PasswordBox.TabIndex = 2;
-            this.PasswordBox.Text = "password";
+            this.PasswordBox.Text = "password ";
             this.PasswordBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.PasswordBox.GotFocus += new System.EventHandler(this.PasswordBox_GotFocus);
             this.PasswordBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_keyDown);
             // 
             // BackBut
             // 
+            this.BackBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.BackBut.BackColor = System.Drawing.Color.Crimson;
             this.BackBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BackBut.Font = new System.Drawing.Font("Comic Sans MS", 24F);
@@ -84,6 +87,7 @@
             // 
             // ProveHumanBox
             // 
+            this.ProveHumanBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ProveHumanBox.BackColor = System.Drawing.Color.Gold;
             this.ProveHumanBox.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ProveHumanBox.ForeColor = System.Drawing.Color.Indigo;
@@ -99,6 +103,7 @@
             // 
             // ExitBut
             // 
+            this.ExitBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ExitBut.BackColor = System.Drawing.Color.Orchid;
             this.ExitBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ExitBut.Font = new System.Drawing.Font("Comic Sans MS", 24F);
@@ -113,6 +118,7 @@
             // 
             // CaptchaPBox
             // 
+            this.CaptchaPBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.CaptchaPBox.Location = new System.Drawing.Point(181, 108);
             this.CaptchaPBox.Name = "CaptchaPBox";
             this.CaptchaPBox.Size = new System.Drawing.Size(185, 62);
@@ -123,6 +129,7 @@
             // 
             // ErrorLabel
             // 
+            this.ErrorLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ErrorLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ErrorLabel.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.ErrorLabel.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -136,6 +143,7 @@
             // 
             // EnterBut
             // 
+            this.EnterBut.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.EnterBut.BackColor = System.Drawing.Color.OliveDrab;
             this.EnterBut.Cursor = System.Windows.Forms.Cursors.Hand;
             this.EnterBut.Font = new System.Drawing.Font("Comic Sans MS", 24F);
@@ -150,6 +158,7 @@
             // 
             // checkBox1
             // 
+            this.checkBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.checkBox1.AutoSize = true;
             this.checkBox1.BackColor = System.Drawing.Color.LightPink;
             this.checkBox1.Font = new System.Drawing.Font("Comic Sans MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -178,6 +187,7 @@
             this.Controls.Add(this.UsernameBox);
             this.Name = "RegisterLoginScreenExe";
             this.Text = "RegisterLoginScreenExe";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.CaptchaPBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
