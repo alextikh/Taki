@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.ChatSendBox = new System.Windows.Forms.TextBox();
-            this.butSendChat = new System.Windows.Forms.Button();
+            this.SendChatBut = new System.Windows.Forms.Button();
             this.CurrPlayerLabel = new System.Windows.Forms.Label();
             this.ErrorLabel = new System.Windows.Forms.Label();
             this.butEndTurn = new System.Windows.Forms.Button();
@@ -54,16 +54,16 @@
             this.ChatSendBox.TabIndex = 23;
             this.ChatSendBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChatSendBox_KeyDown);
             // 
-            // butSendChat
+            // SendChatBut
             // 
-            this.butSendChat.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.butSendChat.Location = new System.Drawing.Point(604, 286);
-            this.butSendChat.Name = "butSendChat";
-            this.butSendChat.Size = new System.Drawing.Size(75, 23);
-            this.butSendChat.TabIndex = 22;
-            this.butSendChat.Text = "send";
-            this.butSendChat.UseVisualStyleBackColor = true;
-            this.butSendChat.Click += new System.EventHandler(this.butSendChat_Click);
+            this.SendChatBut.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.SendChatBut.Location = new System.Drawing.Point(604, 286);
+            this.SendChatBut.Name = "SendChatBut";
+            this.SendChatBut.Size = new System.Drawing.Size(75, 23);
+            this.SendChatBut.TabIndex = 22;
+            this.SendChatBut.Text = "send";
+            this.SendChatBut.UseVisualStyleBackColor = true;
+            this.SendChatBut.Click += new System.EventHandler(this.SendChatBut_Click);
             // 
             // CurrPlayerLabel
             // 
@@ -185,7 +185,7 @@
             this.Controls.Add(this.ErrorLabel);
             this.Controls.Add(this.CurrPlayerLabel);
             this.Controls.Add(this.ChatSendBox);
-            this.Controls.Add(this.butSendChat);
+            this.Controls.Add(this.SendChatBut);
             this.Name = "RoomScreen";
             this.Text = "RoomScreen";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -199,7 +199,7 @@
         #endregion
 
         private System.Windows.Forms.TextBox ChatSendBox;
-        private System.Windows.Forms.Button butSendChat;
+        private System.Windows.Forms.Button SendChatBut;
         private System.Windows.Forms.Label CurrPlayerLabel;
         private System.Windows.Forms.Label ErrorLabel;
         private System.Windows.Forms.Button butEndTurn;

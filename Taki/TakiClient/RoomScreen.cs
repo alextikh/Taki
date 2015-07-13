@@ -391,7 +391,7 @@ namespace newGUI_Taki
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                this.butSendChat.PerformClick();
+                this.SendChatBut.PerformClick();
             }
         }
 
@@ -558,7 +558,7 @@ namespace newGUI_Taki
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
         }
-        private void butSendChat_Click(object sender, EventArgs e)
+        private void SendChatBut_Click(object sender, EventArgs e)
         {
             byte[] buffer;
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}|{1}||", status_code.CH_SEND, ChatSendBox.Text));
@@ -608,7 +608,7 @@ namespace newGUI_Taki
             butEndTurn.Visible = false;
             ChatShowBox.Visible = false;
             ChatSendBox.Visible = false;
-            butSendChat.Visible = false;
+            SendChatBut.Visible = false;
             this.parent.Show();
             this.Close();
         }
