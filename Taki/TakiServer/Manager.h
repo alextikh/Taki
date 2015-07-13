@@ -6,6 +6,7 @@
 #endif
 
 #include <WinSock2.h>
+#include <mutex>
 #include <algorithm>
 #include <map>
 #include "sqlite3.h"
@@ -13,10 +14,12 @@
 #include <string>
 #include <vector>
 #include <cctype>
+#include "DataBase.h"
 #include "User.h"
 #include "Room.h"
 #include "Card.h"
 
+using std::mutex;
 using std::map;
 using std::vector;
 using std::pair;
@@ -46,18 +49,32 @@ class Manager
 public:
 	Manager();
 	~Manager();
-	void client_requests_thread(const SOCKET& sock);
+	void client_requests_thread(SOCKET& sock);
 
 private:
-	User *register_user(const string &username, const string &password, const SOCKET& sock);
-	User *login_user(const string &username, const string &password, const SOCKET& sock);
+
+	void register_user(SOCKET &sock, User *&user, vector<string> &argv);
+	void login_user(SOCKET &sock, User *&user, vector<string> &argv);
+	void logout(SOCKET &sock, User *&user, vector<string> &argv);
+	void room_list(SOCKET &sock, User *&user, vector<string> &argv);
+	void create_room(SOCKET &sock, User *&user, vector<string> &argv);
+	void close_game(SOCKET &sock, User *&user, vector<string> &argv);
+	void join_game(SOCKET &sock, User *&user, vector<string> &argv);
+	void leave_game(SOCKET &sock, User *&user, vector<string> &argv);
+	void start_game(SOCKET &sock, User *&user, vector<string> &argv);
+	void play_card(SOCKET &sock, User *&user, vector<string> &argv);
+	void draw_card(SOCKET &sock, User *&user, vector<string> &argv);
+	void end_turn(SOCKET &sock, User *&user, vector<string> &argv);
+	void send_chat(SOCKET &sock, User *&user, vector<string> &argv);
+
 	int get_args(const string &msg, vector<string> &argv) const;
 	int get_cards(const string &msg, vector<Card> &cards);
 	string createRoomList() const;
 
 	map<SOCKET, User *> _user_map;
 	vector<Room *> _room_vector;
-	sqlite3 *_db;
+	DataBase _db;
+	mutex mut;
 };
 
 #endif

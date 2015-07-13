@@ -7,11 +7,7 @@
 #include <string>
 #include <thread>
 #include <vector>
-#include "status_code.h"
-#include "Card.h"
-#include "Room.h"
 #include "Manager.h"
-#include "User.h"
 
 #pragma comment (lib, "Ws2_32.lib")
 

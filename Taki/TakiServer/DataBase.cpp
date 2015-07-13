@@ -3,18 +3,29 @@
 
 DataBase::DataBase()
 {
+	int rc;
+	string err;
+
+	rc = sqlite3_open("Taki.db", &_db);
+
+	if (rc)
+	{
+		err = "Can't open database: ";
+		err += sqlite3_errmsg(_db);
+		throw err;
+	}
 }
 
 
 DataBase::~DataBase()
 {
+	sqlite3_close(_db);
 }
 
 
 bool DataBase::register_user(const string &username, const string &password)
 {
 	int rc;
-	User *user;
 	char sql_command[SQL_COMMAND_LEN] = "INSERT INTO users(username, password_hash) VALUES('";
 	char *err = NULL;
 	const char * const unique_err = "UNIQUE constraint failed: users.username";
@@ -34,7 +45,6 @@ bool DataBase::register_user(const string &username, const string &password)
 bool DataBase::login_user(const string &username, const string &password)
 {
 	int rc;
-	User *user;
 	char sql_command[SQL_COMMAND_LEN] = "UPDATE users SET username='";
 	strcat(sql_command, username.c_str());
 	strcat(sql_command, "' WHERE username='");
