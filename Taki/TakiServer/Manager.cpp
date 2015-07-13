@@ -105,15 +105,18 @@ void Manager::client_requests_thread(SOCKET &sock)
 	}
 }
 
+
 void Manager::register_user(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
+	mut.lock();
 	if (argv.size() == 3)
 	{
 		if (argv[1].length() <= MAX_USERNAME_LEN && argv[2].length() <= MAX_PASSWORD_LEN)
 		{
 			if (_db.register_user(argv[1], argv[2]))
 			{
+				user = new User(argv[1], nullptr, false, sock);
 				msg = "@" + to_string(PGM_SCC_REGISTER) + "|" + createRoomList() + "|";
 				if (send(sock, msg.c_str(), msg.length() + 1, 0) == SOCKET_ERROR)
 				{
@@ -144,26 +147,23 @@ void Manager::register_user(SOCKET &sock, User *&user, vector<string> &argv)
 	}
 	else
 	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
+		sendAccessError(sock);
 	}
+	mut.unlock();
 }
 
 void Manager::login_user(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
+	mut.lock();
 	if (argv.size() == 3)
 	{
 		if (argv[1].length() <= MAX_USERNAME_LEN && argv[2].length() <= MAX_USERNAME_LEN)
 		{
-			map<SOCKET, User *>::iterator it = find_if(_user_map.begin(), _user_map.end(),
-				[argv](pair<SOCKET, User *> currPair){ return argv[1] == currPair.second->getUserName(); });
-			if (it == _user_map.end() && _db.login_user(argv[1], argv[2]))
+
+			if (!userInMap(argv[1]) && _db.login_user(argv[1], argv[2]))
 			{
+				user = new User(argv[1], nullptr, false, sock);
 				msg = "@" + to_string(PGM_SCC_LOGIN) + "|" + createRoomList() + "|";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
@@ -193,67 +193,44 @@ void Manager::login_user(SOCKET &sock, User *&user, vector<string> &argv)
 	}
 	else
 	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
+		sendProtocolError(sock);
 	}
+	mut.unlock();
 }
 
 void Manager::logout(SOCKET &sock, User *&user, vector<string> &argv)
 {
+	mut.lock();
 	string msg;
 	if (argv.size() == 1)
 	{
-		delete user;
-		_user_map.erase(sock);
-		closesocket(sock);
+		if (user != nullptr)
+		{
+			delete user;
+			_user_map.erase(sock);
+			closesocket(sock);
+		}
+		else
+		{
+			sendAccessError(sock);
+		}
 	}
 	else
 	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
+		sendProtocolError(sock);
 	}
+	mut.unlock();
 }
 
 void Manager::room_list(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
+	mut.lock();
 	if (argv.size() == 1)
 	{
-		msg = "@" + to_string(PGM_CTR_ROOM_LIST) + "|" + createRoomList() + "|";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+		if (user != nullptr)
 		{
-			closesocket(sock);
-			ExitThread(1);
-		}
-	}
-	else
-	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
-	}
-}
-
-void Manager::create_room(SOCKET &sock, User *&user, vector<string> &argv)
-{
-	string msg;
-	if (argv.size() == 2)
-	{
-		if (argv[1].length() <= MAX_ROOMNAME_LEN)
-		{
-			_room_vector.push_back(new Room(argv[1], *user));
-			msg = "@" + to_string(PGM_SCC_GAME_CREATED) + "||";
+			msg = "@" + to_string(PGM_CTR_ROOM_LIST) + "|" + createRoomList() + "|";
 			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 			{
 				closesocket(sock);
@@ -262,31 +239,63 @@ void Manager::create_room(SOCKET &sock, User *&user, vector<string> &argv)
 		}
 		else
 		{
-			msg = "@" + to_string(PGM_ERR_INFO_TOO_LONG) + "||";
-			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-			{
-				closesocket(sock);
-				ExitThread(1);
-			}
+			sendAccessError(sock);
 		}
 	}
 	else
 	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+		sendProtocolError(sock);
+	}
+	mut.unlock();
+}
+
+void Manager::create_room(SOCKET &sock, User *&user, vector<string> &argv)
+{
+	string msg;
+	mut.lock();
+	if (argv.size() == 2)
+	{
+		if (user != nullptr && user->getRoom() != nullptr)
 		{
-			closesocket(sock);
-			ExitThread(1);
+			if (argv[1].length() <= MAX_ROOMNAME_LEN)
+			{
+				_room_vector.push_back(new Room(argv[1], *user));
+				msg = "@" + to_string(PGM_SCC_GAME_CREATED) + "||";
+				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+				{
+					closesocket(sock);
+					ExitThread(1);
+				}
+			}
+			else
+			{
+				msg = "@" + to_string(PGM_ERR_INFO_TOO_LONG) + "||";
+				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+				{
+					closesocket(sock);
+					ExitThread(1);
+				}
+			}
+		}
+		else
+		{
+			sendAccessError(sock);
 		}
 	}
+	else
+	{
+		sendProtocolError(sock);
+	}
+	mut.unlock();
 }
 
 void Manager::close_game(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
+	mut.lock();
 	if (argv.size() == 1)
 	{
-		if (user->isAdmin())
+		if (user != nullptr && user->getRoom() != nullptr && user->isAdmin())
 		{
 			Room *room = user->getRoom();
 			vector<Room *>::iterator it = find_if(_room_vector.begin(), _room_vector.end(),
@@ -308,48 +317,61 @@ void Manager::close_game(SOCKET &sock, User *&user, vector<string> &argv)
 				ExitThread(1);
 			}
 		}
+		else
+		{
+			sendAccessError(sock);
+		}
 	}
 	else
 	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
+		sendProtocolError(sock);
 	}
+	mut.unlock();
 }
 
 void Manager::join_game(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
+	mut.lock();
 	if (argv.size() == 2)
 	{
-		vector<Room *>::iterator it;
-		if ((it = find_if(_room_vector.begin(), _room_vector.end(),
-			[argv](Room *currRoom){ return currRoom->get_admin()->getUserName() == argv[1]; })) != _room_vector.end())
+		if (user != nullptr && user->getRoom() == nullptr)
 		{
-			if ((*it)->is_open() && (*it)->get_num_players() < MAX_PLAYERS)
+			vector<Room *>::iterator it;
+			if ((it = find_if(_room_vector.begin(), _room_vector.end(),
+				[argv](Room *currRoom){ return currRoom->get_admin()->getUserName() == argv[1]; })) != _room_vector.end())
 			{
-				msg = "@" + to_string(PGM_SCC_GAME_JOIN) + "|";
-				vector<User *> players = (*it)->get_players();
-				string userAddedMsg = "@" + to_string(PGM_CTR_NEW_USER) + "|" + user->getUserName() + "||";
-				for (vector<User *>::iterator it2 = players.begin(); it2 != players.end(); ++it2)
+				if ((*it)->is_open() && (*it)->get_num_players() < MAX_PLAYERS)
 				{
-					msg += (*it2)->getUserName() + "|";
-					send((*it2)->getUserSocket(), userAddedMsg.c_str(), userAddedMsg.length(), 0);
+					msg = "@" + to_string(PGM_SCC_GAME_JOIN) + "|";
+					vector<User *> players = (*it)->get_players();
+					string userAddedMsg = "@" + to_string(PGM_CTR_NEW_USER) + "|" + user->getUserName() + "||";
+					for (vector<User *>::iterator it2 = players.begin(); it2 != players.end(); ++it2)
+					{
+						msg += (*it2)->getUserName() + "|";
+						send((*it2)->getUserSocket(), userAddedMsg.c_str(), userAddedMsg.length(), 0);
+					}
+					msg += "|";
+					(*it)->add_user(*user);
+					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+					{
+						closesocket(sock);
+						ExitThread(1);
+					}
 				}
-				msg += "|";
-				(*it)->add_user(*user);
-				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+				else
 				{
-					closesocket(sock);
-					ExitThread(1);
+					msg = "@" + to_string(PGM_ERR_ROOM_FULL) + "|" + argv[1] + "||";
+					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+					{
+						closesocket(sock);
+						ExitThread(1);
+					}
 				}
 			}
 			else
 			{
-				msg = "@" + to_string(PGM_ERR_ROOM_FULL) + "|" + argv[1] + "||";
+				msg = "@" + to_string(PGM_ERR_ROOM_NOT_FOUND) + "|" + argv[1] + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					closesocket(sock);
@@ -359,65 +381,61 @@ void Manager::join_game(SOCKET &sock, User *&user, vector<string> &argv)
 		}
 		else
 		{
-			msg = "@" + to_string(PGM_ERR_ROOM_NOT_FOUND) + "|" + argv[1] + "||";
-			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-			{
-				closesocket(sock);
-				ExitThread(1);
-			}
+			sendAccessError(sock);
 		}
 	}
 	else
 	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
+		sendProtocolError(sock);
 	}
+	mut.unlock();
 }
 
 void Manager::leave_game(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
+	mut.lock();
 	if (argv.size() == 1)
 	{
-		Room *room = user->getRoom();
-		room->delete_user(*user);
-		vector<User *> players = room->get_players();
-		if (room->get_num_players() >= MIN_PLAYERS_FOR_GAME)
+		if (user != nullptr && user->getRoom() != nullptr)
 		{
-			msg = "@" + to_string(PGM_CTR_REMOVE_USER) + "|" + user->getUserName() + "||";
-			for (vector<User *>::iterator it = players.begin(); it != players.end(); ++it)
+			Room *room = user->getRoom();
+			room->delete_user(*user);
+			vector<User *> players = room->get_players();
+			if (room->get_num_players() >= MIN_PLAYERS_FOR_GAME)
 			{
-				send((*it)->getUserSocket(), msg.c_str(), msg.length(), 0);
+				msg = "@" + to_string(PGM_CTR_REMOVE_USER) + "|" + user->getUserName() + "||";
+				for (vector<User *>::iterator it = players.begin(); it != players.end(); ++it)
+				{
+					send((*it)->getUserSocket(), msg.c_str(), msg.length(), 0);
+				}
+			}
+			else
+			{
+				msg = "@" + to_string(GAM_CTR_GAME_ENDED) + "|" + (*players.begin())->getUserName() + "||";
+				send((*players.begin())->getUserSocket(), msg.c_str(), msg.length(), 0);
+				room->end_game();
 			}
 		}
 		else
 		{
-			msg = "@" + to_string(GAM_CTR_GAME_ENDED) + "|" + (*players.begin())->getUserName() + "||";
-			send((*players.begin())->getUserSocket(), msg.c_str(), msg.length(), 0);
-			room->end_game();
+			sendAccessError(sock);
 		}
 	}
 	else
 	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
+		sendProtocolError(sock);
 	}
+	mut.unlock();
 }
 
 void Manager::start_game(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
+	mut.lock();
 	if (argv.size() == 1)
 	{
-		if (user->isAdmin())
+		if (user != nullptr && user->getRoom() != nullptr && user->isAdmin())
 		{
 			Room *room = user->getRoom();
 			if (room->get_num_players() >= MIN_PLAYERS_FOR_GAME)
@@ -458,33 +476,25 @@ void Manager::start_game(SOCKET &sock, User *&user, vector<string> &argv)
 		}
 		else
 		{
-			msg = "@" + to_string(PGM_MER_ACCESS) + "||";
-			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-			{
-				closesocket(sock);
-				ExitThread(1);
-			}
+			sendAccessError(sock);
 		}
 	}
 	else
 	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
+		sendProtocolError(sock);
 	}
+	mut.unlock();
 }
 
 void Manager::play_card(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
+	mut.lock();
 	if (argv.size() == 2)
 	{
-		Room *room = user->getRoom();
-		if (room != nullptr)
+		if (user != nullptr && user->getRoom() != nullptr)
 		{
+			Room *room = user->getRoom();
 			vector<Card> played_cards;
 			if (get_cards(argv[1], played_cards) != INVALID_MSG_SYNTAX)
 			{
@@ -528,53 +538,35 @@ void Manager::play_card(SOCKET &sock, User *&user, vector<string> &argv)
 				}
 				else if (status == PGM_MER_ACCESS)
 				{
-					msg = "@" + to_string(PGM_MER_ACCESS) + "||";
-					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-					{
-						closesocket(sock);
-						ExitThread(1);
-					}
+					sendAccessError(sock);
 				}
 			}
 			else
 			{
-				msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-				{
-					closesocket(sock);
-					ExitThread(1);
-				}
+				sendProtocolError(sock);
 			}
 		}
 		else
 		{
-			msg = "@" + to_string(PGM_MER_ACCESS) + "||";
-			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-			{
-				closesocket(sock);
-				ExitThread(1);
-			}
+			sendAccessError(sock);
 		}
 	}
 	else
 	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
+		sendProtocolError(sock);
 	}
+	mut.unlock();
 }
 
 void Manager::draw_card(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
+	mut.lock();
 	if (argv.size() == 1)
 	{
-		Room *room = user->getRoom();
-		if (room != nullptr && !room->is_open())
+		if (user != nullptr && user->getRoom() != nullptr)
 		{
+			Room *room = user->getRoom();
 			vector<Card> drawn_cards;
 			if (room->draw_cards(user, drawn_cards))
 			{
@@ -616,33 +608,25 @@ void Manager::draw_card(SOCKET &sock, User *&user, vector<string> &argv)
 		}
 		else
 		{
-			msg = "@" + to_string(PGM_MER_ACCESS) + "||";
-			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-			{
-				closesocket(sock);
-				ExitThread(1);
-			}
+			sendAccessError(sock);
 		}
 	}
 	else
 	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
+		sendProtocolError(sock);
 	}
+	mut.unlock();
 }
 
 void Manager::end_turn(SOCKET &sock, User *&user, vector<string> &argv)
 {
 	string msg;
+	mut.lock();
 	if (argv.size() == 1)
 	{
-		Room *room = user->getRoom();
-		if (room != nullptr)
+		if (user != nullptr && user->getRoom() != nullptr)
 		{
+			Room *room = user->getRoom();
 			int status = room->end_turn(user);
 			if (status == GAM_SCC_TURN)
 			{
@@ -673,7 +657,50 @@ void Manager::end_turn(SOCKET &sock, User *&user, vector<string> &argv)
 			}
 			else if (status == PGM_MER_ACCESS)
 			{
-				msg = "@" + to_string(PGM_MER_ACCESS) + "||";
+				sendAccessError(sock);
+			}
+		}
+		else
+		{
+			sendAccessError(sock);
+		}
+	}
+	else
+	{
+		sendProtocolError(sock);
+	}
+	mut.unlock();
+}
+
+void Manager::send_chat(SOCKET &sock, User *&user, vector<string> &argv)
+{
+	string msg;
+	mut.lock();
+	if (argv.size() == 2)
+	{
+		if (user != nullptr && user->getRoom() != nullptr)
+		{
+			if (argv[1].length() <= MAX_CHAT_LEN)
+			{
+				vector<User *> players = user->getRoom()->get_players();
+				msg = "@" + to_string(CH_SEND) + "|" + user->getUserName() + "|" + argv[1] + "||";
+				for (vector<User *>::iterator it = players.begin(); it != players.end(); ++it)
+				{
+					if (!(**it == *user))
+					{
+						send((*it)->getUserSocket(), msg.c_str(), msg.length(), 0);
+					}
+				}
+				msg = "@" + to_string(CHA_SCC) + "||";
+				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+				{
+					closesocket(sock);
+					ExitThread(1);
+				}
+			}
+			else
+			{
+				msg = "@" + to_string(PGM_ERR_INFO_TOO_LONG) + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					closesocket(sock);
@@ -683,67 +710,43 @@ void Manager::end_turn(SOCKET &sock, User *&user, vector<string> &argv)
 		}
 		else
 		{
-			msg = "@" + to_string(PGM_MER_ACCESS) + "||";
-			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-			{
-				closesocket(sock);
-				ExitThread(1);
-			}
+			sendAccessError(sock);
 		}
 	}
 	else
 	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
+		sendProtocolError(sock);
+	}
+	mut.unlock();
+}
+
+
+void Manager::sendProtocolError(SOCKET &sock)
+{
+	string msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
+	if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
+	{
+		closesocket(sock);
+		ExitThread(1);
 	}
 }
 
-void Manager::send_chat(SOCKET &sock, User *&user, vector<string> &argv)
+void Manager::sendAccessError(SOCKET &sock)
 {
-	string msg;
-	if (argv.size() == 2)
+	string msg = "@" + to_string(PGM_MER_ACCESS) + "||";
+	if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 	{
-		if (argv[1].length() <= MAX_CHAT_LEN)
-		{
-			vector<User *> players = user->getRoom()->get_players();
-			msg = "@" + to_string(CH_SEND) + "|" + user->getUserName() + "|" + argv[1] + "||";
-			for (vector<User *>::iterator it = players.begin(); it != players.end(); ++it)
-			{
-				if (!(**it == *user))
-				{
-					send((*it)->getUserSocket(), msg.c_str(), msg.length(), 0);
-				}
-			}
-			msg = "@" + to_string(CHA_SCC) + "||";
-			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-			{
-				closesocket(sock);
-				ExitThread(1);
-			}
-		}
-		else
-		{
-			msg = "@" + to_string(PGM_ERR_INFO_TOO_LONG) + "||";
-			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-			{
-				closesocket(sock);
-				ExitThread(1);
-			}
-		}
+		closesocket(sock);
+		ExitThread(1);
 	}
-	else
-	{
-		msg = "@" + to_string(PGM_MER_MESSAGE) + "||";
-		if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-		{
-			closesocket(sock);
-			ExitThread(1);
-		}
-	}
+}
+
+
+bool Manager::userInMap(const string &username)
+{
+	map<SOCKET, User *>::iterator it = find_if(_user_map.begin(), _user_map.end(),
+		[username](pair<SOCKET, User *> currPair){ return username == currPair.second->getUserName(); });
+	return it != _user_map.end();
 }
 
 int Manager::get_args(const string &msg, vector<string> &argv) const
