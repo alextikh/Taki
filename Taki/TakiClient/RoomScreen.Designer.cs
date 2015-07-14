@@ -172,14 +172,15 @@
             // 
             // CardsPanel
             // 
-            this.CardsPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.CardsPanel.AutoScroll = true;
             this.CardsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.CardsPanel.Location = new System.Drawing.Point(0, 367);
+            this.CardsPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.CardsPanel.Location = new System.Drawing.Point(0, 339);
             this.CardsPanel.Name = "CardsPanel";
-            this.CardsPanel.Size = new System.Drawing.Size(691, 120);
+            this.CardsPanel.Size = new System.Drawing.Size(691, 140);
             this.CardsPanel.TabIndex = 33;
             this.CardsPanel.Visible = false;
+            this.CardsPanel.WrapContents = false;
             // 
             // RoomScreen
             // 
