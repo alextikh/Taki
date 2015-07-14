@@ -58,6 +58,7 @@ namespace newGUI_Taki
                 this.playerCards = new List<string>();
                 this.Shapes = new List<PictureBox>();
                 this.butEndTurn.Visible = true;
+                this.ErrorLabel.Visible = true;
                 this.butStartGame.Visible = false;
                 this.pbTopCard.Visible = true;
                 this.pbBankCards.Visible = true;
