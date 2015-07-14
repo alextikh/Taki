@@ -15,6 +15,7 @@ namespace newGUI_Taki
 {
     public partial class RoomScreen : Form
     {
+
         private Form parent;
         private NetworkStream sock;
         private Thread thread;
@@ -22,9 +23,10 @@ namespace newGUI_Taki
         private int numOfPlayers = 1;
         private Dictionary<string, Image> map;
         private List<string> playerCards;
-        private PictureBox[] Shapes;
+        private List<PictureBox> Shapes;
         private bool is_admin;
         private string top_card;
+        private string currPlayer;
 
         public RoomScreen(Form parent, NetworkStream sock, bool is_admin, string username)
         {
@@ -39,6 +41,60 @@ namespace newGUI_Taki
             if (!is_admin)
             {
                 butStartGame.Visible = false;
+            }
+        }
+
+        delegate void RoomScreenViewCallback(string msg);
+
+        public void RoomScreenView(string msg)
+        {
+            if (this.InvokeRequired)
+            {
+                RoomScreenViewCallback d = new RoomScreenViewCallback(RoomScreenView);
+                this.Invoke(d, new object[] { msg });
+            }
+            else
+            {
+                this.playerCards = new List<string>();
+                this.Shapes = new List<PictureBox>();
+                this.butEndTurn.Visible = true;
+                this.butStartGame.Visible = false;
+                this.pbTopCard.Visible = true;
+                this.pbBankCards.Visible = true;
+                this.CurrPlayerLabel.Visible = true;
+                this.CardsPanel.Visible = true;
+                this.pbBankCards.Visible = true;
+                this.CurrPlayerLabel.Text = "";
+
+                int i = msg.IndexOf("|");
+                int j = msg.IndexOf("|", i + 1);
+                this.numOfPlayers = int.Parse(msg.Substring(i + 1, j - i - 1));
+
+                i = j;
+                j = msg.IndexOf(",", i + 1);
+                while (j != -1)
+                {
+                    this.playerCards.Add(msg.Substring(i + 1, j - i - 1));
+                    i = j;
+                    j = msg.IndexOf(",", i + 1);
+                }
+                j = msg.IndexOf("|", i + 1);
+                this.playerCards.Add(msg.Substring(i + 1, j - i - 1));
+                updateCards();
+
+                i = j;
+                j = msg.IndexOf("|", i + 1);
+                this.top_card = msg.Substring(i + 1, j - i - 1);
+
+                updateTopCard();
+
+                i = j;
+                j = msg.IndexOf("|", i + 1);
+                this.currPlayer = msg.Substring(i + 1, j - i - 1);
+                updateCurrPlayer();
+
+                string txt = string.Format("[{0}] Admin started the game:\r\n", DateTime.Now.ToShortTimeString());
+                updateChatBox(txt, Color.Blue);
             }
         }
 
@@ -95,17 +151,7 @@ namespace newGUI_Taki
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
                 {
-                    updateStringCards(msg);
-                    int i = 0, j;
-                    for (j = 0; j < 4; ++j)
-                    {
-                        i = msg.IndexOf("|", i + 1);
-                    }
-                    j = msg.IndexOf("|", i + 1);
-                    string player = msg.Substring(i + 1, j - i - 1);
-                    updateCurrPlayer(player);
-                    string txt = string.Format("[{0}] Admin started the game:\r\n", DateTime.Now.ToShortTimeString());
-                    updateChatBox(txt, Color.Blue);
+                    RoomScreenView(msg);
                 }
 
 
@@ -140,20 +186,14 @@ namespace newGUI_Taki
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_SCC_TURN)))
                 {
                     updateChatBox("Turn completed\r\n", Color.Black);
-                    updateCards(this.top_card);
-                }
-
-                else if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
-                {
-                    updateStringCards(msg);
-                    int i = 0, j;
-                    for (j = 0; j < 4; ++j)
+                    if (top_card[0].ToString() == status_code.CARD_CHANGE_COLOR ||
+                        top_card[0].ToString() == status_code.CARD_SUPER_TAKI)
                     {
-                        i = msg.IndexOf("|", i + 1);
+                        top_card = top_card[0] + " ";
                     }
-                    j = msg.IndexOf("|", i + 1);
-                    string player = msg.Substring(i + 1, j - i - 1);
-                    updateCurrPlayer(player);
+                    this.playerCards.Remove(top_card);
+                    updateCards();
+                    updateTopCard();
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_CTR_TURN_COMPLETE)))
@@ -188,7 +228,7 @@ namespace newGUI_Taki
                             }
                             this.top_card = this.top_card[0] + " ";
                         }
-                        updateTopCard(this.top_card);
+                        updateTopCard();
                     }
                 }
 
@@ -204,14 +244,15 @@ namespace newGUI_Taki
                 {
                     int i = msg.IndexOf("|");
                     int j = msg.IndexOf("||");
-                    updateCurrPlayer(msg.Substring(i + 1, j - i - 1));
+                    this.currPlayer = msg.Substring(i + 1, j - i - 1);
+                    updateCurrPlayer();
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_CTR_GAME_ENDED)))
                 {
                     int i = msg.IndexOf("|");
                     int j = msg.IndexOf("||");
-                    updateCurrPlayer("Winner: " + msg.Substring(i + 1, j - i - 1));
+                    updateErrorLabel("Winner: " + msg.Substring(i + 1, j - i - 1));
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_ERR_TOO_FEW_USERS)))
@@ -247,41 +288,34 @@ namespace newGUI_Taki
             }
         }
 
-        delegate void updateCardsCallback(string card);
+        delegate void updateCardsCallback();
 
-        private void updateCards(string card)
+        private void updateCards()
         {
             if (this.ErrorLabel.InvokeRequired)
             {
                 updateCardsCallback d = new updateCardsCallback(updateCards);
-                this.Invoke(d, new object[] { card });
+                this.Invoke(d, new object[] { });
             }
             else
             {
-                int x = 10, y = 250;
-                pbTopCard.Image = this.map[card];
-                for (int i = 0; i < this.playerCards.Count; i++)
+                this.Shapes.Clear();
+                this.CardsPanel.Controls.Clear();
+                int i = 0, x = 0;
+                PictureBox currPB;  
+                foreach (string str in this.playerCards)
                 {
-                    this.Shapes[i].Visible = false;
-                }
-                this.playerCards.Remove(card);
-                this.Shapes = new PictureBox[this.playerCards.Count];
-                for (int i = 0; i < this.playerCards.Count; i++)
-                {
-                    Shapes[i] = new PictureBox();
-                    Shapes[i].Name = "ItemNum_" + i.ToString();
-                    x += 50;
-                    Shapes[i].Location = new Point(x, y);
-                    Shapes[i].Size = new Size(100, 100);
-                    Shapes[i].BackColor = Color.Yellow;
-                    Shapes[i].SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                    this.Shapes[i].Click += new System.EventHandler(this.pbCard_Click);
-                    this.Controls.Add(Shapes[i]);
-                }
-                for (int i = 0; i < this.playerCards.Count; i++)
-                {
-                    Shapes[i].Image = this.map[this.playerCards[i]];
-                    Shapes[i].Visible = true;
+                    currPB = new PictureBox();
+                    currPB.Name = "ItemNum_" + i.ToString();
+                    currPB.Location = new Point(x, 0);
+                    currPB.Size = new Size(100, 100);
+                    currPB.BackColor = Color.Yellow;
+                    currPB.Click += new System.EventHandler(this.pbCard_Click);
+                    currPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                    currPB.Visible = true;
+                    currPB.Image = map[str];
+                    this.CardsPanel.Controls.Add(currPB);
+                    this.Shapes.Add(currPB);
                 }
             }
         }
@@ -301,33 +335,33 @@ namespace newGUI_Taki
             }
         }
 
-        delegate void updateTopCardCallback(string msg);
+        delegate void updateTopCardCallback();
 
-        private void updateTopCard(string top_card)
+        private void updateTopCard()
         {
             if (this.ErrorLabel.InvokeRequired)
             {
                 updateTopCardCallback d = new updateTopCardCallback(updateTopCard);
-                this.Invoke(d, new object[] { top_card });
+                this.Invoke(d, new object[] { });
             }
             else
             {
-                pbTopCard.Image = this.map[top_card];
+                pbTopCard.Image = this.map[this.top_card];
             }
         }
 
-        delegate void updateCurrPlayerCallback(string player);
+        delegate void updateCurrPlayerCallback();
 
-        private void updateCurrPlayer(string player)
+        private void updateCurrPlayer()
         {
             if (this.CurrPlayerLabel.InvokeRequired)
             {
                 updateCurrPlayerCallback d = new updateCurrPlayerCallback(updateCurrPlayer);
-                this.Invoke(d, new object[] { player });
+                this.Invoke(d, new object[] { });
             }
             else
             {
-                CurrPlayerLabel.Text = player;
+                CurrPlayerLabel.Text = "Curr player: " + this.currPlayer;
             }
         }
 
@@ -352,7 +386,7 @@ namespace newGUI_Taki
             i = j;
             k++;
             this.top_card = msg.Substring(i + 1, 2);
-            printCardsInPB();
+            //printCardsInPB();
         }
 
         private void pbCard_Click(object sender, EventArgs e)
@@ -454,92 +488,18 @@ namespace newGUI_Taki
             }
             else
             {
-                List<string> drawn_cards = new List<string>();
-                int i, j, x = 10, y = 250;
-                for (i = 0; i < this.playerCards.Count; i++)
+                int i = msg.IndexOf("|");
+                int j = msg.IndexOf(",");
+                while (j != -1)
                 {
-                    this.Shapes[i].Visible = false;
+                    this.playerCards.Add(msg.Substring(i + 1, j - i - 1));
+                    i = j;
+                    j = msg.IndexOf(",", i + 1);
                 }
-
-                if (msg.Contains(String.Format("{0}", status_code.GAM_SCC_DRAW)))
-                {
-                    i = msg.IndexOf("|");
-                    j = msg.IndexOf(',', i + 1);
-                    while (j != -1)
-                    {
-                        drawn_cards.Add(msg[i + 1].ToString() + msg[i + 2].ToString());
-                        i = j;
-                        j = msg.IndexOf(',', i + 1);
-                    }
-                    drawn_cards.Add(msg[i + 1].ToString() + msg[i + 2].ToString());
-                    for (int k = 0; k < drawn_cards.Count; k++)
-                    {
-                        this.playerCards.Add(drawn_cards[k]);
-                    }
-
-                    this.Shapes = new PictureBox[this.playerCards.Count];
-                    for (i = 0; i < this.playerCards.Count; i++)
-                    {
-                        Shapes[i] = new PictureBox();
-                        Shapes[i].Name = "ItemNum_" + i.ToString();
-                        x += 50;
-                        Shapes[i].Location = new Point(x, y);
-                        Shapes[i].Size = new Size(100, 100);
-                        Shapes[i].BackColor = Color.Yellow;
-                        Shapes[i].SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                        this.Shapes[i].Click += new System.EventHandler(this.pbCard_Click);
-                        Shapes[i].Visible = true;
-
-                        this.Controls.Add(Shapes[i]);
-                    }
-                    for (i = 0; i < this.playerCards.Count; i++)
-                    {
-                        Shapes[i].Image = this.map[this.playerCards[i]];
-                    }
-                }
-                else if (msg.Contains(String.Format("{0}", status_code.GAM_ERROR_WRONG_DRAW)))
-                {
-                    ErrorLabel.Visible = true;
-                    ErrorLabel.Text = "Wrong draw";
-                }
-                else if (msg.Contains(String.Format("{0}", status_code.PGM_MER_ACCESS)))
-                {
-                    ErrorLabel.Visible = true;
-                    ErrorLabel.Text = "Access error";
-                }
+                j = msg.IndexOf("|", i + 1);
+                this.playerCards.Add(msg.Substring(i + 1, j - i - 1));
+                updateCards();
             }
-        }
-
-        private void printCardsInPB()
-        {
-            butEndTurn.Visible = true;
-            butStartGame.Visible = false;
-            pbTopCard.Visible = true;
-            pbBankCards.Visible = true;
-            int j, x = 10, y = 250;
-            CurrPlayerLabel.Visible = true;
-            pbBankCards.Visible = true;
-            CurrPlayerLabel.Text = "";
-
-            this.Shapes = new PictureBox[this.playerCards.Count];
-            for (int i = 0; i < this.playerCards.Count; i++)
-            {
-                Shapes[i] = new PictureBox();
-                Shapes[i].Name = "ItemNum_" + i.ToString();
-                x += 50;
-                Shapes[i].Location = new Point(x, y);
-                Shapes[i].Size = new Size(100, 100);
-                Shapes[i].BackColor = Color.Yellow;
-                this.Shapes[i].Click += new System.EventHandler(this.pbCard_Click);
-                Shapes[i].SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                Shapes[i].Visible = true;
-                this.Controls.Add(Shapes[i]);
-            }
-            for (j = 0; j < this.playerCards.Count; j++)
-            {
-                Shapes[j].Image = map[this.playerCards[j]];
-            }
-            pbTopCard.Image = map[this.top_card];
         }
 
         private void initMap()
@@ -615,7 +575,7 @@ namespace newGUI_Taki
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}|{1}||", status_code.CH_SEND, ChatSendBox.Text));
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
-            updateChatBox(string.Format("[{0}] {1}\r\n", DateTime.Now.ToShortTimeString() , ChatSendBox.Text), Color.Black);
+            updateChatBox(string.Format("[{0}] {1}\r\n", DateTime.Now.ToShortTimeString(), ChatSendBox.Text), Color.Black);
             ChatSendBox.Text = "";
         }
 
@@ -635,28 +595,8 @@ namespace newGUI_Taki
             exitRoom();
         }
 
-        private void butSurrender_Click(object sender, EventArgs e)
-        {
-            StopThreads();
-            byte[] buffer;
-            buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||\0", status_code.RM_LEAVE_GAME));
-            this.sock.Write(buffer, 0, buffer.Length);
-            for (int i = 0; i < this.playerCards.Count; i++)
-            {
-                this.Shapes[i].Visible = false;
-            }
-            this.thread.Abort();
-            this.pbTopCard.Visible = false;
-            this.pbBankCards.Visible = false;
-            butEndTurn.Visible = false;
-            ChatShowBox.Visible = false;
-            ChatSendBox.Visible = false;
-            SendChatBut.Visible = false;
-            this.parent.Show();
-            this.Close();
-        }
-
         delegate void exitRoomCallback();
+
         private void exitRoom()
         {
             if (this.parent.InvokeRequired)

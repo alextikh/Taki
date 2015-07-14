@@ -327,7 +327,7 @@ int Room::end_turn(User *player)
 						}
 						else if (--_curr_player_index < 0)
 						{
-							_curr_player_index = get_num_players();
+							_curr_player_index = get_num_players() - 1;
 						}
 						_curr_player_index %= get_num_players();
 					} while (_players[_curr_player_index] == nullptr);

@@ -39,6 +39,7 @@
             this.butStartGame = new System.Windows.Forms.Button();
             this.butLeaveRoom = new System.Windows.Forms.Button();
             this.ChatShowBox = new System.Windows.Forms.RichTextBox();
+            this.CardsPanel = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopCard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBankCards)).BeginInit();
             this.SuspendLayout();
@@ -47,11 +48,11 @@
             // 
             this.ChatSendBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ChatSendBox.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ChatSendBox.Location = new System.Drawing.Point(395, 352);
+            this.ChatSendBox.Location = new System.Drawing.Point(403, 352);
             this.ChatSendBox.Multiline = true;
             this.ChatSendBox.Name = "ChatSendBox";
             this.ChatSendBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.ChatSendBox.Size = new System.Drawing.Size(288, 56);
+            this.ChatSendBox.Size = new System.Drawing.Size(280, 56);
             this.ChatSendBox.TabIndex = 23;
             this.ChatSendBox.TextChanged += new System.EventHandler(this.ChatSendBox_TextChanged);
             this.ChatSendBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChatSendBox_KeyDown);
@@ -162,12 +163,23 @@
             // 
             this.ChatShowBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ChatShowBox.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ChatShowBox.Location = new System.Drawing.Point(406, 5);
+            this.ChatShowBox.Location = new System.Drawing.Point(403, 6);
             this.ChatShowBox.Name = "ChatShowBox";
-            this.ChatShowBox.Size = new System.Drawing.Size(291, 341);
+            this.ChatShowBox.Size = new System.Drawing.Size(280, 340);
             this.ChatShowBox.TabIndex = 32;
             this.ChatShowBox.Text = "";
             this.ChatShowBox.TextChanged += new System.EventHandler(this.ChatShowBox_TextChanged);
+            // 
+            // CardsPanel
+            // 
+            this.CardsPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.CardsPanel.AutoScroll = true;
+            this.CardsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.CardsPanel.Location = new System.Drawing.Point(0, 367);
+            this.CardsPanel.Name = "CardsPanel";
+            this.CardsPanel.Size = new System.Drawing.Size(691, 120);
+            this.CardsPanel.TabIndex = 33;
+            this.CardsPanel.Visible = false;
             // 
             // RoomScreen
             // 
@@ -175,6 +187,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(691, 479);
+            this.Controls.Add(this.CardsPanel);
             this.Controls.Add(this.ChatShowBox);
             this.Controls.Add(this.butLeaveRoom);
             this.Controls.Add(this.butStartGame);
@@ -208,5 +221,6 @@
         private System.Windows.Forms.Button butStartGame;
         private System.Windows.Forms.Button butLeaveRoom;
         private System.Windows.Forms.RichTextBox ChatShowBox;
+        private System.Windows.Forms.FlowLayoutPanel CardsPanel;
     }
 }
