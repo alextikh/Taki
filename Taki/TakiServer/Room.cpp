@@ -31,6 +31,11 @@ vector<User *> Room::get_players() const
 	return players;
 }
 
+vector<string> Room::get_players_participated() const
+{
+	return _players_participated;
+}
+
 User *Room::get_admin() const
 {
 	return _admin;
@@ -62,6 +67,21 @@ bool Room::is_open() const
 bool Room::in_game() const
 {
 	return _in_game;
+}
+
+long long int Room::get_start_time() const
+{
+	return _start_time;
+}
+
+long long int Room::get_end_time() const
+{
+	return _end_time;
+}
+
+int Room::get_turns() const
+{
+	return _turns;
 }
 
 bool Room::get_player_deck(User *player, vector<Card> &player_deck)
@@ -140,7 +160,7 @@ bool Room::operator==(const Room &other) const
 
 
 
-void Room::start_game()
+void Room::start_game()	
 {
 	_in_game = true;
 	_game_ended = true;
@@ -152,12 +172,21 @@ void Room::start_game()
 	_draw_made = false;
 	_game_dir = DIR_NORMAL;
 	shuffle_cards_start_game();
+	_start_time = time(NULL);
+	for (int i = 0; i < MAX_PLAYERS; ++i)
+	{
+		if (_players[i] != nullptr)
+		{
+			_players_participated.push_back(_players[i]->getUserName());
+		}
+	}
 }
 
 void Room::end_game()
 {
 	_in_game = false;
 	_game_ended = true;
+	_end_time = time(NULL);
 }
 
 int Room::play_turn(User *player, const Card &move)
@@ -527,7 +556,7 @@ void Room::shuffle_cards()
 
 void Room::shuffle_cards_start_game()
 {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	init_bank();
 

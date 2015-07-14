@@ -22,13 +22,18 @@ namespace newGUI_Taki
             this.Text = "Enter IP windows";
         }
 
-        private void keyPressed(object sender, KeyEventArgs e)
+        private void EnterIPBox_KeyPressed(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
                 this.EnterBut.PerformClick();
             }
+        }
+
+        private void EnterIPBox_Click(object sender, EventArgs e)
+        {
+            this.EnterIPBox.Text = "";
         }
 
         private void connect()

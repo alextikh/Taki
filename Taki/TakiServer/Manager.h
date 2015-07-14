@@ -72,6 +72,8 @@ private:
 	void sendProtocolError(SOCKET &sock);
 	void sendAccessError(SOCKET &sock);
 
+	void add_game_db(Room *&room);
+
 	bool userInMap(const string &username);
 	int get_args(const string &msg, vector<string> &argv) const;
 	int get_cards(const string &msg, vector<Card> &cards);

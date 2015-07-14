@@ -12,17 +12,22 @@
 
 #define SQL_COMMAND_LEN 512
 
+#include <string>
+
 using std::string;
-using std::vector;
+using std::to_string;
 
 class DataBase
 {
 public:
 	DataBase();
 	~DataBase();
-	bool addGame(int startTime, int endTime, std::vector<string> players,string winner);
+
 	bool register_user(const string &username, const string &password);
 	bool login_user(const string &username, const string &password);
+	bool add_game(const long long int startTime, const long long int endTime, const int turns);
+	bool add_user_game(const string username, const bool is_winner);
+
 private:
 	
 	sqlite3 *_db;

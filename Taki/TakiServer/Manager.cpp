@@ -420,6 +420,7 @@ void Manager::leave_game(SOCKET &sock, User *&user, vector<string> &argv)
 				msg = "@" + to_string(GAM_CTR_GAME_ENDED) + "|" + (*players.begin())->getUserName() + "||";
 				send((*players.begin())->getUserSocket(), msg.c_str(), msg.length(), 0);
 				room->end_game();
+				add_game_db(room);
 			}
 			else
 			{
@@ -643,6 +644,7 @@ void Manager::end_turn(SOCKET &sock, User *&user, vector<string> &argv)
 				{
 					send((*it)->getUserSocket(), msg.c_str(), msg.length(), 0);
 				}
+				add_game_db(room);
 			}
 			else if (status == GAM_ERR_ILLEGAL_CARD)
 			{
@@ -736,6 +738,10 @@ void Manager::sendAccessError(SOCKET &sock)
 	}
 }
 
+void Manager::add_game_db(Room *&room)
+{
+	_db.add_game(room->get_start_time(), room->get_end_time(), room->get_turns());
+}
 
 bool Manager::userInMap(const string &username)
 {

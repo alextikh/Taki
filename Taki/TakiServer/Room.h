@@ -31,11 +31,15 @@ public:
 	~Room();
 
 	vector<User *> get_players() const;
+	vector<string> get_players_participated() const;
 	User *get_admin() const;
 	string get_room_name() const;
 	int get_num_players() const;
 	bool is_open() const;
 	bool in_game() const;
+	long long int get_start_time() const;
+	long long int get_end_time() const;
+	int get_turns() const;
 
 	bool get_player_deck(User *player, vector<Card> &player_deck);
 	User *get_curr_player() const;
@@ -75,6 +79,10 @@ private:
 	bool _game_ended;
 	bool _draw_made;
 	Card _top_card;
+	long long int _start_time;
+	long long int _end_time;
+	int _turns;
+	vector<string> _players_participated;
 };
 
 #endif

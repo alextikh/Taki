@@ -36,7 +36,6 @@ bool DataBase::register_user(const string &username, const string &password)
 	rc = sqlite3_exec(_db, sql_command, NULL, NULL, &err);
 	if (rc != SQLITE_OK && strcmp(err, unique_err) == 0)
 	{
-		std::cout << err;
 		return false;
 	}
 	return true;
@@ -60,3 +59,25 @@ bool DataBase::login_user(const string &username, const string &password)
 	return true;
 }
 
+bool DataBase::add_game(const long long int startTime, const long long int endTime, const int turns)
+{
+	int rc;
+	char sql_command[SQL_COMMAND_LEN] = "INSERT INTO games (game_start, game_end, turns_number) VALUES(";
+	strcat(sql_command, to_string(startTime).c_str());
+	strcat(sql_command, ", ");
+	strcat(sql_command, to_string(endTime).c_str());
+	strcat(sql_command, ", ");
+	strcat(sql_command, to_string(turns).c_str());
+	strcat(sql_command, ");");
+	rc = sqlite3_exec(_db, sql_command, NULL, NULL, NULL);
+	if (rc != SQLITE_OK)
+	{
+		return false;
+	}
+	return true;
+}
+
+bool DataBase::add_user_game(const string username, const bool is_winner)
+{
+	return true;
+}

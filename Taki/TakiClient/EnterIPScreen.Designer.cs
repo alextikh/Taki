@@ -29,25 +29,11 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EnterIPScreen));
-            this.EnterIPLabel = new System.Windows.Forms.Label();
             this.EnterIPBox = new System.Windows.Forms.TextBox();
             this.ErrorLabel = new System.Windows.Forms.Label();
             this.ExitBut = new System.Windows.Forms.Button();
             this.EnterBut = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // EnterIPLabel
-            // 
-            this.EnterIPLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.EnterIPLabel.AutoSize = true;
-            this.EnterIPLabel.BackColor = System.Drawing.Color.GreenYellow;
-            this.EnterIPLabel.Font = new System.Drawing.Font("Comic Sans MS", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EnterIPLabel.ForeColor = System.Drawing.Color.Indigo;
-            this.EnterIPLabel.Location = new System.Drawing.Point(55, 9);
-            this.EnterIPLabel.Name = "EnterIPLabel";
-            this.EnterIPLabel.Size = new System.Drawing.Size(485, 45);
-            this.EnterIPLabel.TabIndex = 0;
-            this.EnterIPLabel.Text = "Enter the server\'s IP address:";
             // 
             // EnterIPBox
             // 
@@ -55,13 +41,15 @@
             this.EnterIPBox.BackColor = System.Drawing.Color.GreenYellow;
             this.EnterIPBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.EnterIPBox.Font = new System.Drawing.Font("Comic Sans MS", 24F);
-            this.EnterIPBox.ForeColor = System.Drawing.Color.Fuchsia;
-            this.EnterIPBox.Location = new System.Drawing.Point(98, 63);
+            this.EnterIPBox.ForeColor = System.Drawing.Color.Indigo;
+            this.EnterIPBox.Location = new System.Drawing.Point(31, 50);
             this.EnterIPBox.Name = "EnterIPBox";
-            this.EnterIPBox.Size = new System.Drawing.Size(367, 52);
+            this.EnterIPBox.Size = new System.Drawing.Size(518, 52);
             this.EnterIPBox.TabIndex = 1;
+            this.EnterIPBox.Text = "Enter the server\'s IP address:";
             this.EnterIPBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.EnterIPBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyPressed);
+            this.EnterIPBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EnterIPBox_KeyPressed);
+            this.EnterIPBox.Click += new System.EventHandler(this.EnterIPBox_Click);
             // 
             // ErrorLabel
             // 
@@ -69,7 +57,7 @@
             this.ErrorLabel.AutoSize = true;
             this.ErrorLabel.Font = new System.Drawing.Font("Comic Sans MS", 24F);
             this.ErrorLabel.ForeColor = System.Drawing.Color.Red;
-            this.ErrorLabel.Location = new System.Drawing.Point(43, 123);
+            this.ErrorLabel.Location = new System.Drawing.Point(43, 118);
             this.ErrorLabel.Name = "ErrorLabel";
             this.ErrorLabel.Size = new System.Drawing.Size(497, 45);
             this.ErrorLabel.TabIndex = 2;
@@ -86,7 +74,7 @@
             this.ExitBut.Location = new System.Drawing.Point(88, 186);
             this.ExitBut.Name = "ExitBut";
             this.ExitBut.Size = new System.Drawing.Size(180, 55);
-            this.ExitBut.TabIndex = 3;
+            this.ExitBut.TabIndex = 0;
             this.ExitBut.Text = "Exit";
             this.ExitBut.UseVisualStyleBackColor = false;
             this.ExitBut.Click += new System.EventHandler(this.ExitBut_Click);
@@ -101,7 +89,7 @@
             this.EnterBut.Location = new System.Drawing.Point(295, 186);
             this.EnterBut.Name = "EnterBut";
             this.EnterBut.Size = new System.Drawing.Size(180, 55);
-            this.EnterBut.TabIndex = 4;
+            this.EnterBut.TabIndex = 2;
             this.EnterBut.Text = "Enter";
             this.EnterBut.UseVisualStyleBackColor = false;
             this.EnterBut.Click += new System.EventHandler(this.EnterBut_Click);
@@ -117,7 +105,6 @@
             this.Controls.Add(this.ExitBut);
             this.Controls.Add(this.ErrorLabel);
             this.Controls.Add(this.EnterIPBox);
-            this.Controls.Add(this.EnterIPLabel);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "EnterIPScreen";
@@ -130,7 +117,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Label EnterIPLabel;
         private System.Windows.Forms.TextBox EnterIPBox;
         private System.Windows.Forms.Label ErrorLabel;
         private System.Windows.Forms.Button ExitBut;
