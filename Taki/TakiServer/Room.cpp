@@ -180,15 +180,15 @@ int Room::play_turn(User *player, const Card &move)
 	}
 	if (_draw_made)
 	{
-		return GAM_ERR_ILLEGAL_ORDER;
+		return GAM_ERR_ILLEGAL_CARD;
 	}
 	if (_draw_counter > 0 && move.getType() != CARD_PLUS_2 && !_open_taki)
 	{
-		return GAM_ERR_ILLEGAL_ORDER;
+		return GAM_ERR_ILLEGAL_CARD;
 	}
 	if (_curr_player_order.size() > 0 && !_open_taki && !_plus)
 	{
-		return GAM_ERR_ILLEGAL_ORDER;
+		return GAM_ERR_ILLEGAL_CARD;
 	}
 	if (move.getColor() != _top_card.getColor())
 	{
@@ -308,11 +308,11 @@ int Room::end_turn(User *player)
 			}
 			if (_plus && _draw_counter == 0)
 			{
-				return GAM_ERR_LAST_CARD;
+				return GAM_ERR_ILLEGAL_CARD;
 			}
 			if (_curr_player_order.empty() && !_draw_made)
 			{
-				return GAM_ERR_LAST_CARD;
+				return GAM_ERR_ILLEGAL_CARD;
 			}
 			if (_draw_counter == 0 || _curr_player_order.back().getType() == CARD_PLUS_2)
 			{
@@ -347,7 +347,7 @@ int Room::end_turn(User *player)
 			}
 			else
 			{
-				return GAM_ERR_LAST_CARD;
+				return GAM_ERR_ILLEGAL_CARD;
 			}
 		}
 		else

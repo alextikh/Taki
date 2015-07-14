@@ -59,9 +59,7 @@ namespace newGUI_Taki
         public const string GAM_CTR_TURN_ENDED = "213";
 
         public const string GAM_ERR_ILLEGAL_CARD = "220";
-        public const string GAM_ERR_ILLEGAL_ORDER = "221";
-        public const string GAM_ERR_LAST_CARD = "222";
-        public const string GAM_ERROR_WRONG_DRAW = "223";
+        public const string GAM_ERROR_WRONG_DRAW = "221";
 
         public const string CHA_SCC = "300";
         public const string CHA_ERR = "310";

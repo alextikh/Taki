@@ -23,6 +23,17 @@ void Manager::client_requests_thread(SOCKET &sock)
 		if (recv(sock, buf, BUF_LEN, 0) == SOCKET_ERROR)
 		{
 			cout << WSAGetLastError() << endl;
+			if (user != nullptr)
+			{
+				if (user->getRoom() != nullptr && user->isAdmin())
+				{
+					argv.clear();
+					argv[0] = to_string(RM_CLOSE_GAME);
+					close_game(sock, user, argv);
+				}
+				delete user;
+				_user_map.erase(sock);
+			}
 			closesocket(sock);
 			ExitThread(1);
 		}
@@ -494,7 +505,7 @@ void Manager::play_card(SOCKET &sock, User *&user, vector<string> &argv)
 	string msg;
 	if (argv.size() == 2)
 	{
-		if (user != nullptr && user->getRoom() != nullptr)
+		if (user != nullptr && user->getRoom() != nullptr && user->getRoom()->in_game())
 		{
 			Room *room = user->getRoom();
 			vector<Card> played_cards;
@@ -531,16 +542,7 @@ void Manager::play_card(SOCKET &sock, User *&user, vector<string> &argv)
 						ExitThread(1);
 					}
 				}
-				else if (status == GAM_ERR_ILLEGAL_ORDER)
-				{
-					msg = "@" + to_string(GAM_ERR_ILLEGAL_ORDER) + "||";
-					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
-					{
-						cout << WSAGetLastError() << endl;
-						closesocket(sock);
-						ExitThread(1);
-					}
-				}
+				
 				else if (status == PGM_MER_ACCESS)
 				{
 					sendAccessError(sock);
@@ -567,7 +569,7 @@ void Manager::draw_card(SOCKET &sock, User *&user, vector<string> &argv)
 	string msg;
 	if (argv.size() == 1)
 	{
-		if (user != nullptr && user->getRoom() != nullptr)
+		if (user != nullptr && user->getRoom() != nullptr && user->getRoom()->in_game())
 		{
 			Room *room = user->getRoom();
 			vector<Card> drawn_cards;
@@ -627,7 +629,7 @@ void Manager::end_turn(SOCKET &sock, User *&user, vector<string> &argv)
 	string msg;
 	if (argv.size() == 1)
 	{
-		if (user != nullptr && user->getRoom() != nullptr)
+		if (user != nullptr && user->getRoom() != nullptr && user->getRoom()->in_game())
 		{
 			Room *room = user->getRoom();
 			int status = room->end_turn(user);
@@ -649,9 +651,9 @@ void Manager::end_turn(SOCKET &sock, User *&user, vector<string> &argv)
 					send((*it)->getUserSocket(), msg.c_str(), msg.length(), 0);
 				}
 			}
-			else if (status == GAM_ERR_LAST_CARD)
+			else if (status == GAM_ERR_ILLEGAL_CARD)
 			{
-				msg = "@" + to_string(GAM_ERR_LAST_CARD) + "||";
+				msg = "@" + to_string(GAM_ERR_ILLEGAL_CARD) + "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;

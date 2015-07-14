@@ -47,6 +47,7 @@
             // ChatSendBox
             // 
             this.ChatSendBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ChatSendBox.BackColor = System.Drawing.Color.Khaki;
             this.ChatSendBox.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ChatSendBox.Location = new System.Drawing.Point(403, 352);
             this.ChatSendBox.Multiline = true;
@@ -80,6 +81,7 @@
             this.CurrPlayerLabel.Name = "CurrPlayerLabel";
             this.CurrPlayerLabel.Size = new System.Drawing.Size(0, 20);
             this.CurrPlayerLabel.TabIndex = 24;
+            this.CurrPlayerLabel.Visible = false;
             // 
             // ErrorLabel
             // 
@@ -91,6 +93,7 @@
             this.ErrorLabel.Name = "ErrorLabel";
             this.ErrorLabel.Size = new System.Drawing.Size(0, 20);
             this.ErrorLabel.TabIndex = 25;
+            this.ErrorLabel.Visible = false;
             // 
             // butEndTurn
             // 
@@ -98,7 +101,7 @@
             this.butEndTurn.BackColor = System.Drawing.Color.LightPink;
             this.butEndTurn.Font = new System.Drawing.Font("Comic Sans MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butEndTurn.ForeColor = System.Drawing.Color.DarkRed;
-            this.butEndTurn.Location = new System.Drawing.Point(200, 128);
+            this.butEndTurn.Location = new System.Drawing.Point(222, 222);
             this.butEndTurn.Name = "butEndTurn";
             this.butEndTurn.Size = new System.Drawing.Size(88, 45);
             this.butEndTurn.TabIndex = 26;
@@ -110,7 +113,7 @@
             // pbTopCard
             // 
             this.pbTopCard.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbTopCard.Location = new System.Drawing.Point(300, 258);
+            this.pbTopCard.Location = new System.Drawing.Point(140, 39);
             this.pbTopCard.Name = "pbTopCard";
             this.pbTopCard.Size = new System.Drawing.Size(100, 135);
             this.pbTopCard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -122,7 +125,7 @@
             // 
             this.pbBankCards.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbBankCards.Image = global::newGUI_Taki.Properties.Resources.backCard;
-            this.pbBankCards.Location = new System.Drawing.Point(294, 38);
+            this.pbBankCards.Location = new System.Drawing.Point(291, 39);
             this.pbBankCards.Name = "pbBankCards";
             this.pbBankCards.Size = new System.Drawing.Size(106, 135);
             this.pbBankCards.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -151,9 +154,9 @@
             this.butLeaveRoom.BackColor = System.Drawing.Color.Red;
             this.butLeaveRoom.Font = new System.Drawing.Font("Comic Sans MS", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.butLeaveRoom.ForeColor = System.Drawing.Color.PaleGreen;
-            this.butLeaveRoom.Location = new System.Drawing.Point(395, 414);
+            this.butLeaveRoom.Location = new System.Drawing.Point(402, 414);
             this.butLeaveRoom.Name = "butLeaveRoom";
-            this.butLeaveRoom.Size = new System.Drawing.Size(175, 56);
+            this.butLeaveRoom.Size = new System.Drawing.Size(170, 56);
             this.butLeaveRoom.TabIndex = 31;
             this.butLeaveRoom.Text = "Leave room";
             this.butLeaveRoom.UseVisualStyleBackColor = false;
@@ -162,6 +165,7 @@
             // ChatShowBox
             // 
             this.ChatShowBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ChatShowBox.BackColor = System.Drawing.Color.MistyRose;
             this.ChatShowBox.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ChatShowBox.Location = new System.Drawing.Point(403, 6);
             this.ChatShowBox.Name = "ChatShowBox";
@@ -188,10 +192,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(691, 479);
-            this.Controls.Add(this.CardsPanel);
-            this.Controls.Add(this.ChatShowBox);
             this.Controls.Add(this.butLeaveRoom);
-            this.Controls.Add(this.butStartGame);
             this.Controls.Add(this.pbBankCards);
             this.Controls.Add(this.pbTopCard);
             this.Controls.Add(this.butEndTurn);
@@ -199,6 +200,9 @@
             this.Controls.Add(this.CurrPlayerLabel);
             this.Controls.Add(this.ChatSendBox);
             this.Controls.Add(this.SendChatBut);
+            this.Controls.Add(this.CardsPanel);
+            this.Controls.Add(this.ChatShowBox);
+            this.Controls.Add(this.butStartGame);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RoomScreen";
             this.Text = "RoomScreen";

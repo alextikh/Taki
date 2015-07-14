@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Timers;
 
 namespace newGUI_Taki
 {
@@ -19,7 +20,6 @@ namespace newGUI_Taki
         private Form parent;
         private NetworkStream sock;
         private Thread thread;
-        private bool shutdown = false;
         private int numOfPlayers = 1;
         private Dictionary<string, Image> map;
         private List<string> playerCards;
@@ -27,6 +27,9 @@ namespace newGUI_Taki
         private bool is_admin;
         private string top_card;
         private string currPlayer;
+        private Tuple<PictureBox, Image> blinkCard;
+        private System.Timers.Timer blinkTimer;
+        private PictureBox lastClick;
 
         public RoomScreen(Form parent, NetworkStream sock, bool is_admin, string username)
         {
@@ -44,7 +47,7 @@ namespace newGUI_Taki
             }
         }
 
-        delegate void RoomScreenViewCallback(string msg);
+        private delegate void RoomScreenViewCallback(string msg);
 
         public void RoomScreenView(string msg)
         {
@@ -115,20 +118,14 @@ namespace newGUI_Taki
             this.sock.Flush();
         }
 
-        private void StopThreads()
-        {
-            this.thread.Abort();
-            shutdown = true;
-        }
 
         private void recvHandlingThread(object obj)
         {
             byte[] buffer;
-            while (!shutdown)
+            while (true)
             {
                 this.sock.Flush();
                 buffer = new byte[status_code.MSG_LEN];
-                updateErrorLabel("");
                 int bytesRead = this.sock.Read(buffer, 0, status_code.MSG_LEN);
                 string msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
                 this.sock.Flush();
@@ -158,15 +155,22 @@ namespace newGUI_Taki
 
                 else if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_ROOM_CLOSED)))
                 {
-                    Thread.CurrentThread.Abort();
+                    this.thread.Abort();
                     exitRoom();
                 }
 
-                else if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_ROOM_CLOSED)))
+                else if (msg.Contains(String.Format("@{0}|", status_code.PGM_SCC_GAME_LEAVE)))
                 {
-                    Thread.CurrentThread.Abort();
+                    this.thread.Abort();
                     exitRoom();
                 }
+
+                else if (msg.Contains(String.Format("@{0}|", status_code.PGM_SCC_GAME_CLOSE)))
+                {
+                    this.thread.Abort();
+                    exitRoom();
+                }
+
 
                 else if (msg.Contains(String.Format("@{0}|", status_code.CH_SEND)))
                 {
@@ -263,22 +267,17 @@ namespace newGUI_Taki
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERR_ILLEGAL_CARD)))
                 {
-                    updateErrorLabel("Illegal card");
+                    blinkBegin(this.lastClick);
                 }
 
-                else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERR_ILLEGAL_ORDER)))
+                else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERROR_WRONG_DRAW)))
                 {
-                    updateErrorLabel("Illegal order");
-                }
-
-                else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERR_LAST_CARD)))
-                {
-                    updateErrorLabel("Cant end a turn with this card");
+                    blinkBegin(this.lastClick);
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_MER_ACCESS)))
                 {
-                    updateErrorLabel("No access");
+                    blinkBegin(this.lastClick);
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_MER_MESSAGE)))
@@ -289,7 +288,7 @@ namespace newGUI_Taki
             }
         }
 
-        delegate void updateCardsCallback();
+        private delegate void updateCardsCallback();
 
         private void updateCards()
         {
@@ -303,7 +302,7 @@ namespace newGUI_Taki
                 this.Shapes.Clear();
                 this.CardsPanel.Controls.Clear();
                 int i = 0, x = 0;
-                PictureBox currPB;  
+                PictureBox currPB;
                 foreach (string str in this.playerCards)
                 {
                     currPB = new PictureBox();
@@ -321,7 +320,7 @@ namespace newGUI_Taki
             }
         }
 
-        delegate void updateErrorLabelCallback(string msg);
+        private delegate void updateErrorLabelCallback(string msg);
 
         private void updateErrorLabel(string msg)
         {
@@ -332,11 +331,11 @@ namespace newGUI_Taki
             }
             else
             {
-                ErrorLabel.Text = msg;
+                this.ErrorLabel.Text = msg;
             }
         }
 
-        delegate void updateTopCardCallback();
+        private delegate void updateTopCardCallback();
 
         private void updateTopCard()
         {
@@ -351,7 +350,7 @@ namespace newGUI_Taki
             }
         }
 
-        delegate void updateCurrPlayerCallback();
+        private delegate void updateCurrPlayerCallback();
 
         private void updateCurrPlayer()
         {
@@ -416,6 +415,7 @@ namespace newGUI_Taki
                 card = card[0] + " ";
             }
             this.top_card = card;
+            this.lastClick = p;
         }
 
         private void pbBankCards_Click(object sender, EventArgs e)
@@ -424,9 +424,10 @@ namespace newGUI_Taki
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.GM_DRAW));
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
+            this.lastClick = pbBankCards;
         }
 
-        delegate void updateStringCardsCallback(string msg);
+        private delegate void updateStringCardsCallback(string msg);
 
         private void updateStringCards(string msg)
         {
@@ -441,7 +442,7 @@ namespace newGUI_Taki
             }
         }
 
-        delegate void updateChatBoxCallback(string msg, Color color);
+        private delegate void updateChatBoxCallback(string msg, Color color);
 
         private void updateChatBox(string txt, Color color)
         {
@@ -607,10 +608,7 @@ namespace newGUI_Taki
             }
             else
             {
-                if (this.thread.IsAlive)
-                {
-                    StopThreads();
-                }
+                this.thread.Abort();
                 this.parent.Show();
                 this.Close();
             }
@@ -620,5 +618,44 @@ namespace newGUI_Taki
         {
 
         }
+
+
+        private delegate void blinkBeginCallback(PictureBox blinkCard);
+
+        private void blinkBegin(PictureBox blinkCard)
+        {
+            if (this.InvokeRequired)
+            {
+                blinkBeginCallback d = new blinkBeginCallback(blinkBegin);
+                this.Invoke(d, new object[] { blinkCard });
+            }
+            else
+            {
+                Image img = blinkCard.Image;
+                blinkCard.Image = newGUI_Taki.Properties.Resources.redBlink;
+                this.blinkTimer = new System.Timers.Timer(200);
+                this.blinkTimer.Enabled = true;
+                this.blinkTimer.Elapsed += new ElapsedEventHandler(blinkEnd);
+                this.blinkCard = new Tuple<PictureBox, Image>(blinkCard, img);
+            }
+        }
+
+        private delegate void blinkEndCallback(object sender, ElapsedEventArgs e);
+
+        private void blinkEnd(object sender, ElapsedEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                blinkEndCallback d = new blinkEndCallback(blinkEnd);
+                this.Invoke(d, new object[] { sender, e } );
+            }
+            else
+            {
+                this.blinkTimer.Close();
+                this.blinkCard.Item1.Image = this.blinkCard.Item2;
+            }
+        }
+
+        private delegate void activateBlinkCallback(string blinkCard);
     }
 }
