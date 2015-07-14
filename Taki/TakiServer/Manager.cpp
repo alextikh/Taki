@@ -14,7 +14,7 @@ void Manager::client_requests_thread(SOCKET &sock)
 {
 	vector<string> argv;
 	string arg, msg;
-	User *user;
+	User *user = nullptr;
 	int code;
 	char buf[BUF_LEN];
 	bool communicate = true;

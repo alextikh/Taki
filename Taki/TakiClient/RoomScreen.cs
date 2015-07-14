@@ -17,13 +17,14 @@ namespace newGUI_Taki
     public partial class RoomScreen : Form
     {
 
-        private Form parent;
+        private LobbyScreen parent;
         private NetworkStream sock;
         private Thread thread;
         private int numOfPlayers = 1;
         private Dictionary<string, Image> map;
         private List<string> playerCards;
         private List<PictureBox> Shapes;
+        private bool shutdown;
         private bool is_admin;
         private string top_card;
         private string currPlayer;
@@ -31,11 +32,12 @@ namespace newGUI_Taki
         private System.Timers.Timer blinkTimer;
         private PictureBox lastClick;
 
-        public RoomScreen(Form parent, NetworkStream sock, bool is_admin, string username)
+        public RoomScreen(LobbyScreen parent, NetworkStream sock, bool is_admin, string username)
         {
             this.parent = parent;
             this.sock = sock;
             this.is_admin = is_admin;
+            this.shutdown = false;
             InitializeComponent();
             initMap();
             this.thread = new Thread(recvHandlingThread);
@@ -108,6 +110,7 @@ namespace newGUI_Taki
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.GAM_SCC_TURN));
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
+            this.lastClick = null;
         }
 
         private void butStartGame_Click(object sender, EventArgs e)
@@ -122,7 +125,7 @@ namespace newGUI_Taki
         private void recvHandlingThread(object obj)
         {
             byte[] buffer;
-            while (true)
+            while (!shutdown)
             {
                 this.sock.Flush();
                 buffer = new byte[status_code.MSG_LEN];
@@ -152,23 +155,20 @@ namespace newGUI_Taki
                     RoomScreenView(msg);
                 }
 
-
                 else if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_ROOM_CLOSED)))
                 {
-                    this.thread.Abort();
+                    shutdown = true;
                     exitRoom();
                 }
 
                 else if (msg.Contains(String.Format("@{0}|", status_code.PGM_SCC_GAME_LEAVE)))
                 {
-                    this.thread.Abort();
-                    exitRoom();
+                    shutdown = true;
                 }
 
                 else if (msg.Contains(String.Format("@{0}|", status_code.PGM_SCC_GAME_CLOSE)))
                 {
-                    this.thread.Abort();
-                    exitRoom();
+                    shutdown = true;
                 }
 
 
@@ -268,16 +268,22 @@ namespace newGUI_Taki
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERR_ILLEGAL_CARD)))
                 {
                     blinkBegin(this.lastClick);
+                    this.lastClick = null;
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_ERROR_WRONG_DRAW)))
                 {
                     blinkBegin(this.lastClick);
+                    this.lastClick = null;
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_MER_ACCESS)))
                 {
-                    blinkBegin(this.lastClick);
+                    if (this.lastClick != null)
+                    {
+                        blinkBegin(this.lastClick);
+                        this.lastClick = null;
+                    }
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_MER_MESSAGE)))
@@ -286,6 +292,7 @@ namespace newGUI_Taki
                 }
                 msg = "";
             }
+            this.thread.Abort();
         }
 
         private delegate void updateCardsCallback();
@@ -608,8 +615,7 @@ namespace newGUI_Taki
             }
             else
             {
-                this.thread.Abort();
-                this.parent.Show();
+                this.parent.showAndRefresh();
                 this.Close();
             }
         }

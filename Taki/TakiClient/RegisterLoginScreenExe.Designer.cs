@@ -81,7 +81,7 @@
             this.BackBut.Location = new System.Drawing.Point(30, 215);
             this.BackBut.Name = "BackBut";
             this.BackBut.Size = new System.Drawing.Size(150, 70);
-            this.BackBut.TabIndex = 4;
+            this.BackBut.TabIndex = 0;
             this.BackBut.Text = "Back";
             this.BackBut.UseVisualStyleBackColor = false;
             this.BackBut.Click += new System.EventHandler(this.BackBut_Click);
@@ -112,7 +112,7 @@
             this.ExitBut.Location = new System.Drawing.Point(205, 215);
             this.ExitBut.Name = "ExitBut";
             this.ExitBut.Size = new System.Drawing.Size(150, 70);
-            this.ExitBut.TabIndex = 5;
+            this.ExitBut.TabIndex = 4;
             this.ExitBut.Text = "Exit";
             this.ExitBut.UseVisualStyleBackColor = false;
             this.ExitBut.Click += new System.EventHandler(this.ExitBut_Click);
@@ -152,7 +152,7 @@
             this.EnterBut.Location = new System.Drawing.Point(384, 215);
             this.EnterBut.Name = "EnterBut";
             this.EnterBut.Size = new System.Drawing.Size(150, 70);
-            this.EnterBut.TabIndex = 6;
+            this.EnterBut.TabIndex = 5;
             this.EnterBut.Text = "Enter";
             this.EnterBut.UseVisualStyleBackColor = false;
             this.EnterBut.Click += new System.EventHandler(this.EnterBut_Click);

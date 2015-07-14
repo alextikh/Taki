@@ -279,12 +279,12 @@ bool Room::draw_cards(User *player, vector<Card> &drawn_cards)
 				{
 					_bank = _used_cards;
 					_used_cards.clear();
-					draw_cards(player, drawn_cards);
 				}
 				else
 				{
 					init_bank();
 				}
+				draw_cards(player, drawn_cards);
 			}
 			_draw_made = true;
 			return true;

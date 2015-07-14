@@ -26,6 +26,12 @@ namespace newGUI_Taki
             this.Text = username;
         }
 
+        public void showAndRefresh()
+        {
+            this.Show();
+            RefreshBut.PerformClick();
+        }
+
         private void updateRoomList(string msg)
         {
             int i = msg.IndexOf('|'), j, num_players, row_index;
