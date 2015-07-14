@@ -25,11 +25,20 @@ void Manager::client_requests_thread(SOCKET &sock)
 			cout << WSAGetLastError() << endl;
 			if (user != nullptr)
 			{
-				if (user->getRoom() != nullptr && user->isAdmin())
+				if (user->getRoom() != nullptr)
 				{
-					argv.clear();
-					argv[0] = to_string(RM_CLOSE_GAME);
-					close_game(sock, user, argv);
+					if (user->isAdmin())
+					{
+						argv.clear();
+						argv.push_back(to_string(RM_CLOSE_GAME));
+						close_game(sock, user, argv);
+					}
+					else
+					{
+						argv.clear();
+						argv.push_back(to_string(RM_LEAVE_GAME));
+						leave_game(sock, user, argv);
+					}
 				}
 				delete user;
 				_user_map.erase(sock);
@@ -132,7 +141,6 @@ void Manager::register_user(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length() + 1, 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -142,7 +150,6 @@ void Manager::register_user(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -153,7 +160,6 @@ void Manager::register_user(SOCKET &sock, User *&user, vector<string> &argv)
 			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 			{
 				cout << WSAGetLastError() << endl;
-				closesocket(sock);
 				ExitThread(1);
 			}
 		}
@@ -180,7 +186,6 @@ void Manager::login_user(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -190,7 +195,6 @@ void Manager::login_user(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -201,7 +205,6 @@ void Manager::login_user(SOCKET &sock, User *&user, vector<string> &argv)
 			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 			{
 				cout << WSAGetLastError() << endl;
-				closesocket(sock);
 				ExitThread(1);
 			}
 		}
@@ -244,7 +247,6 @@ void Manager::room_list(SOCKET &sock, User *&user, vector<string> &argv)
 			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 			{
 				cout << WSAGetLastError() << endl;
-				closesocket(sock);
 				ExitThread(1);
 			}
 		}
@@ -323,7 +325,6 @@ void Manager::close_game(SOCKET &sock, User *&user, vector<string> &argv)
 			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 			{
 				cout << WSAGetLastError() << endl;
-				closesocket(sock);
 				ExitThread(1);
 			}
 		}
@@ -364,7 +365,6 @@ void Manager::join_game(SOCKET &sock, User *&user, vector<string> &argv)
 					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 					{
 						cout << WSAGetLastError() << endl;
-						closesocket(sock);
 						ExitThread(1);
 					}
 				}
@@ -374,7 +374,6 @@ void Manager::join_game(SOCKET &sock, User *&user, vector<string> &argv)
 					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 					{
 						cout << WSAGetLastError() << endl;
-						closesocket(sock);
 						ExitThread(1);
 					}
 				}
@@ -385,7 +384,6 @@ void Manager::join_game(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -414,7 +412,6 @@ void Manager::leave_game(SOCKET &sock, User *&user, vector<string> &argv)
 			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 			{
 				cout << WSAGetLastError() << endl;
-				closesocket(sock);
 				ExitThread(1);
 			}
 			vector<User *> players = room->get_players();
@@ -484,7 +481,6 @@ void Manager::start_game(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -538,7 +534,6 @@ void Manager::play_card(SOCKET &sock, User *&user, vector<string> &argv)
 					if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 					{
 						cout << WSAGetLastError() << endl;
-						closesocket(sock);
 						ExitThread(1);
 					}
 				}
@@ -588,7 +583,6 @@ void Manager::draw_card(SOCKET &sock, User *&user, vector<string> &argv)
 				msg += "||";
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
-					closesocket(sock);
 					cout << WSAGetLastError() << endl;
 					ExitThread(1);
 				}
@@ -608,7 +602,6 @@ void Manager::draw_card(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -657,7 +650,6 @@ void Manager::end_turn(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -699,7 +691,6 @@ void Manager::send_chat(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -709,7 +700,6 @@ void Manager::send_chat(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -732,7 +722,6 @@ void Manager::sendProtocolError(SOCKET &sock)
 	if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 	{
 		cout << WSAGetLastError() << endl;
-		closesocket(sock);
 		ExitThread(1);
 	}
 }
@@ -743,7 +732,6 @@ void Manager::sendAccessError(SOCKET &sock)
 	if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 	{
 		cout << WSAGetLastError() << endl;
-		closesocket(sock);
 		ExitThread(1);
 	}
 }

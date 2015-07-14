@@ -275,9 +275,16 @@ bool Room::draw_cards(User *player, vector<Card> &drawn_cards)
 			}
 			if (_draw_counter > 0)
 			{
-				_bank = _used_cards;
-				_used_cards.clear();
-				draw_cards(player, drawn_cards);
+				if (!_used_cards.empty())
+				{
+					_bank = _used_cards;
+					_used_cards.clear();
+					draw_cards(player, drawn_cards);
+				}
+				else
+				{
+					init_bank();
+				}
 			}
 			_draw_made = true;
 			return true;
