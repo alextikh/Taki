@@ -35,8 +35,6 @@ namespace newGUI_Taki
         private List<EnemyPanel> enemyPanels;
         private List<Label> names;
         private List<Label> cardsNum;
-        private GraphicsState state;
-        private Graphics graph;
 
         private int CARD_WIDTH = 100;
         private int CARD_HEIGHT = 100;
@@ -100,7 +98,7 @@ namespace newGUI_Taki
 
             this.CardsPanel.Location = new Point(this.CARD_HEIGHT + this.CARD_DISTANCE + this.PANEL_DISTANCE,
                 screenSize.Height - this.CARD_HEIGHT - this.PANEL_DISTANCE);
-            this.CardsPanel.Size = new Size(screenSize.Width * CARDS_IN_HORIZONTAL_PANEL, CARD_HEIGHT + CARD_DISTANCE);
+            this.CardsPanel.Size = new Size(CARD_WIDTH * CARDS_IN_HORIZONTAL_PANEL, CARD_HEIGHT + CARD_DISTANCE);
 
             this.enemyPanelTop.Location = new Point(this.CARD_HEIGHT + this.PANEL_DISTANCE, this.PANEL_DISTANCE);
             this.enemyPanelTop.Size = new Size(CARD_WIDTH * CARDS_IN_HORIZONTAL_PANEL, CARD_HEIGHT + CARD_DISTANCE);
@@ -129,13 +127,13 @@ namespace newGUI_Taki
                 this.cardsNumLabelRight.Location.Y);
         }
 
-        private delegate void RoomScreenViewCallback(string msg);
+        private delegate void playScreenViewCallback(string msg);
 
-        public void RoomScreenView(string msg)
+        public void playScreenView(string msg)
         {
             if (this.InvokeRequired)
             {
-                RoomScreenViewCallback d = new RoomScreenViewCallback(RoomScreenView);
+                playScreenViewCallback d = new playScreenViewCallback(playScreenView);
                 this.Invoke(d, new object[] { msg });
             }
             else
@@ -147,10 +145,8 @@ namespace newGUI_Taki
                 this.butStartGame.Visible = false;
                 this.pbTopCard.Visible = true;
                 this.pbBankCards.Visible = true;
-                this.CurrPlayerLabel.Visible = true;
                 this.CardsPanel.Visible = true;
                 this.pbBankCards.Visible = true;
-                this.CurrPlayerLabel.Text = "";
 
                 int i = msg.IndexOf("|");
                 int j = msg.IndexOf("|", i + 1);
@@ -167,7 +163,8 @@ namespace newGUI_Taki
                 j = msg.IndexOf("|", i + 1);
                 this.playerCards.Add(msg.Substring(i + 1, j - i - 1));
                 updateCards();
-
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(newGUI_Taki.Properties.Resources.startGame);
+                player.Play();
                 i = j;
                 j = msg.IndexOf("|", i + 1);
                 this.top_card = msg.Substring(i + 1, j - i - 1);
@@ -207,21 +204,55 @@ namespace newGUI_Taki
                             break;
                         }
                     }
+                }
 
-                    this.graph = this.CreateGraphics();
-                    this.state = this.graph.Save();
-                    updateCurrPlayer();
+                updateCurrPlayer();
+            }
+        }
+
+        private delegate void RoomScreenViewCallback();
+        private void RoomScreenView()
+        {
+            if (this.InvokeRequired)
+            {
+                RoomScreenViewCallback d = new RoomScreenViewCallback(RoomScreenView);
+                this.Invoke(d, new object[] { });
+            }
+            else
+            {
+                this.butEndTurn.Visible = false;
+                if (is_admin)
+                {
+                    this.butStartGame.Visible = true;
+                }
+                this.pbTopCard.Visible = false;
+                this.pbBankCards.Visible = false;
+                this.CardsPanel.Visible = false;
+                this.pbBankCards.Visible = false;
+
+                int index = 1;
+                foreach (EnemyPanel p in this.enemyPanels)
+                {
+                    removeEnemyPanel(index);
+                    p.Panel.Visible = false;
+                    p.NameLabel.Visible = false;
+                    p.NumCardsLabel.Visible = false;
+                    ++index;
                 }
             }
         }
 
+
         private void tbEndTurn_Click(object sender, EventArgs e)
         {
-            byte[] buffer;
-            buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.GAM_SCC_TURN));
-            this.sock.Write(buffer, 0, buffer.Length);
-            this.sock.Flush();
-            this.lastClick = null;
+            if (this.currPlayer == this.Name)
+            {
+                byte[] buffer;
+                buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.GAM_SCC_TURN));
+                this.sock.Write(buffer, 0, buffer.Length);
+                this.sock.Flush();
+                this.lastClick = null;
+            }
         }
 
         private void butStartGame_Click(object sender, EventArgs e)
@@ -266,7 +297,7 @@ namespace newGUI_Taki
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
                 {
-                    RoomScreenView(msg);
+                    playScreenView(msg);
                 }
 
                 else if (msg.Contains(String.Format("@{0}|", status_code.PGM_CTR_ROOM_CLOSED)))
@@ -382,6 +413,7 @@ namespace newGUI_Taki
                     int j = msg.IndexOf("||");
                     this.currPlayer = msg.Substring(i + 1, j - i - 1);
                     updateCurrPlayer();
+                    //RoomScreenView();   
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_CTR_GAME_ENDED)))
@@ -392,10 +424,14 @@ namespace newGUI_Taki
                     if (winner == this.Name)
                     {
                         updateCurrPlayerLabel("You win!");
+                        System.Media.SoundPlayer player = new System.Media.SoundPlayer(newGUI_Taki.Properties.Resources.winner);
+                        player.Play();
                     }
                     else
                     {
                         updateCurrPlayerLabel(string.Format("Winner: {0}", msg.Substring(i + 1, j - i - 1)));
+                        System.Media.SoundPlayer player = new System.Media.SoundPlayer(newGUI_Taki.Properties.Resources.loser);
+                        player.Play();
                     }
                 }
 
@@ -427,7 +463,15 @@ namespace newGUI_Taki
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_MER_MESSAGE)))
                 {
-                    updateErrorLabel("Message compatibility");
+                    if (this.lastClick == null)
+                    {
+                        updateErrorLabel("Message compatibility");
+                    }
+                    else
+                    {
+                        blinkBegin(this.lastClick);
+                        this.lastClick = null;
+                    }
                 }
                 msg = "";
             }
@@ -453,7 +497,7 @@ namespace newGUI_Taki
                 {
                     currPB = new PictureBox();
                     currPB.Name = "ItemNum_" + i.ToString();
-                    currPB.Size = new Size(100, 100);
+                    currPB.Size = new Size(this.CARD_WIDTH, this.CARD_HEIGHT);
                     currPB.BackColor = Color.Yellow;
                     currPB.Click += new System.EventHandler(this.pbCard_Click);
                     currPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -462,6 +506,9 @@ namespace newGUI_Taki
                     this.CardsPanel.Controls.Add(currPB);
                     this.Shapes.Add(currPB);
                 }
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(newGUI_Taki.Properties.Resources.draw);
+                player.Play();
+                player.Dispose();
             }
         }
 
@@ -796,6 +843,9 @@ namespace newGUI_Taki
                 this.blinkTimer.Enabled = true;
                 this.blinkTimer.Elapsed += new ElapsedEventHandler(blinkEnd);
                 this.blinkCard = new Tuple<PictureBox, Image>(blinkCard, img);
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(newGUI_Taki.Properties.Resources.error);
+                player.Play();
+                player.Dispose();
             }
         }
 
@@ -813,16 +863,6 @@ namespace newGUI_Taki
                 this.blinkTimer.Close();
                 this.blinkCard.Item1.Image = this.blinkCard.Item2;
             }
-        }
-
-        private void enemyPanelRight_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void enemyPanelTop_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private delegate void addEnemyPanelCallback(int index, string str);
@@ -876,7 +916,7 @@ namespace newGUI_Taki
                 for (int i = 0; i < numCards; ++i)
                 {
                     PictureBox p = new PictureBox();
-                    p.Size = new Size(100, 100);
+                    p.Size = new Size(this.CARD_WIDTH, this.CARD_HEIGHT);
                     p.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
                     p.Image = newGUI_Taki.Properties.Resources.backCard;
                     if (panel.Panel.Name == "enemyPanelRight" || panel.Panel.Name == "enemyPanelRight")
@@ -920,6 +960,8 @@ namespace newGUI_Taki
                     if (p.Panel.Name == name)
                     {
                         p.Panel.Visible = false;
+                        p.NumCardsLabel.Visible = false;
+                        p.NameLabel.Visible = false;
                         break;
                     }
                 }

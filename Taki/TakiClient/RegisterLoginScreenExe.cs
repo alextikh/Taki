@@ -141,6 +141,8 @@ namespace newGUI_Taki
             {
                 if (this.ProveHumanBox.Text != captcha_value)
                 {
+                    System.Media.SoundPlayer player = new System.Media.SoundPlayer(newGUI_Taki.Properties.Resources.robot);
+                    player.Play();
                     this.ErrorLabel.Text = "Are you a fucking robot?";
                     this.ErrorLabel.Visible = true;
                     return;

@@ -414,6 +414,15 @@
   <ItemGroup>
     <None Include="CardsImage\redBlink.jpg" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Sound\draw.wav" />
+    <Content Include="Sound\error.wav" />
+    <Content Include="Sound\loser.wav" />
+    <Content Include="Sound\robot.wav" />
+    <Content Include="Sound\startGame.wav" />
+    <Content Include="Sound\winner.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
