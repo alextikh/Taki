@@ -52,7 +52,6 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopCard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBankCards)).BeginInit();
-            this.CardsPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // ChatSendBox
@@ -89,11 +88,11 @@
             this.CurrPlayerLabel.AutoSize = true;
             this.CurrPlayerLabel.Font = new System.Drawing.Font("Comic Sans MS", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CurrPlayerLabel.ForeColor = System.Drawing.Color.Green;
-            this.CurrPlayerLabel.Location = new System.Drawing.Point(3, 0);
+            this.CurrPlayerLabel.Location = new System.Drawing.Point(196, 345);
             this.CurrPlayerLabel.Name = "CurrPlayerLabel";
-            this.CurrPlayerLabel.Text = "Your turn!";
-            this.CurrPlayerLabel.Size = new System.Drawing.Size(0, 38);
+            this.CurrPlayerLabel.Size = new System.Drawing.Size(147, 38);
             this.CurrPlayerLabel.TabIndex = 24;
+            this.CurrPlayerLabel.Text = "Your turn!";
             this.CurrPlayerLabel.Visible = false;
             // 
             // ErrorLabel
@@ -190,7 +189,6 @@
             // 
             this.CardsPanel.AutoScroll = true;
             this.CardsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.CardsPanel.Controls.Add(this.CurrPlayerLabel);
             this.CardsPanel.Location = new System.Drawing.Point(12, 403);
             this.CardsPanel.Name = "CardsPanel";
             this.CardsPanel.Size = new System.Drawing.Size(691, 67);
@@ -315,6 +313,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(691, 479);
+            this.Controls.Add(this.CurrPlayerLabel);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.enemyPanelTop);
             this.Controls.Add(this.pbTopCard);
@@ -341,8 +340,6 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.pbTopCard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBankCards)).EndInit();
-            this.CardsPanel.ResumeLayout(false);
-            this.CardsPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

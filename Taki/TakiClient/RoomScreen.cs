@@ -127,9 +127,6 @@ namespace newGUI_Taki
             this.nameLabelLeft.Location = new Point(this.enemyPanelLeft.Location.X, this.nameLabelRight.Location.Y);
             this.cardsNumLabelLeft.Location = new Point(this.enemyPanelLeft.Location.X + this.enemyPanelRight.Width + 20,
                 this.cardsNumLabelRight.Location.Y);
-
-            this.CurrPlayerLabel.Location = new Point(this.butEndTurn.Location.X + this.butEndTurn.Width / 2,
-                this.butEndTurn.Location.Y + this.butEndTurn.Height + 10);
         }
 
         private delegate void RoomScreenViewCallback(string msg);
@@ -781,7 +778,6 @@ namespace newGUI_Taki
                 this.Close();
             }
         }
-
 
         private delegate void blinkBeginCallback(PictureBox blinkCard);
 
