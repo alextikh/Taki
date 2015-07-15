@@ -33,7 +33,11 @@ namespace newGUI_Taki
 
         private void EnterIPBox_Click(object sender, EventArgs e)
         {
-            this.EnterIPBox.Text = "";
+
+            if (this.Text != "Enter the server\'s IP address:")
+            {
+                this.EnterIPBox.Text = "";
+            }
         }
 
         private void connect()

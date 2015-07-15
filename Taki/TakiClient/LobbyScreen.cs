@@ -81,6 +81,11 @@ namespace newGUI_Taki
             }
         }
 
+        private void thisdgvRoomList_DoubleClick(object sender, EventArgs e)
+        {
+            this.JoinBut.PerformClick();
+        }
+
         private void ExitBut_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -122,7 +127,16 @@ namespace newGUI_Taki
             string msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
             if (msg.Contains(String.Format("@{0}|", status_code.PGM_SCC_GAME_JOIN)))
             {
-                RoomScreen form = new RoomScreen(this, this.sock, false, this.Text);
+                int i = msg.IndexOf("|");
+                int j = msg.IndexOf("|", i + 1);
+                List<string> players = new List<string>();
+                while (j != -1 && j < msg.Length - 1)
+                {
+                    players.Add(msg.Substring(i + 1, j - i - 1));
+                    i = j;
+                    j = msg.IndexOf("|", i + 1);
+                }
+                RoomScreen form = new RoomScreen(this, this.sock, false, this.Text, players);
                 form.Show();
                 this.Hide();
             }
@@ -144,7 +158,7 @@ namespace newGUI_Taki
                 string msg = new ASCIIEncoding().GetString(buffer, 0, bytesRead);
                 if (msg.Contains(String.Format("@{0}|", status_code.PGM_SCC_GAME_CREATED)))
                 {
-                    RoomScreen form = new RoomScreen(this, sock, true, this.Text);
+                    RoomScreen form = new RoomScreen(this, sock, true, this.Text, null);
                     form.Show();
                     this.Hide();
                 }

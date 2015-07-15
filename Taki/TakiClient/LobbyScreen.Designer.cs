@@ -99,6 +99,7 @@
             this.dgvRoomList.Size = new System.Drawing.Size(474, 187);
             this.dgvRoomList.TabIndex = 0;
             this.dgvRoomList.SelectionChanged += new System.EventHandler(this.dgvRoomList_selectionChanged);
+            this.dgvRoomList.DoubleClick += new System.EventHandler(thisdgvRoomList_DoubleClick);
             // 
             // name
             // 

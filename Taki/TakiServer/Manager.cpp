@@ -55,6 +55,7 @@ void Manager::client_requests_thread(SOCKET &sock)
 				{
 					code = stoi(arg);
 				}
+				mut.lock();
 				switch (code)
 				{
 				case EN_REGISTER:
@@ -121,6 +122,7 @@ void Manager::client_requests_thread(SOCKET &sock)
 					send_chat(sock, user, argv);
 					break;
 				}
+				mut.unlock();
 			}
 		}
 	}
@@ -224,6 +226,7 @@ void Manager::logout(SOCKET &sock, User *&user, vector<string> &argv)
 		{
 			delete user;
 			_user_map.erase(sock);
+			user = nullptr;
 		}
 		else
 		{
@@ -275,7 +278,6 @@ void Manager::create_room(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -285,7 +287,6 @@ void Manager::create_room(SOCKET &sock, User *&user, vector<string> &argv)
 				if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
 				{
 					cout << WSAGetLastError() << endl;
-					closesocket(sock);
 					ExitThread(1);
 				}
 			}
@@ -407,6 +408,12 @@ void Manager::leave_game(SOCKET &sock, User *&user, vector<string> &argv)
 		if (user != nullptr && user->getRoom() != nullptr)
 		{
 			Room *room = user->getRoom();
+			if (*(room->get_curr_player()) == *user)
+			{
+				argv.clear();
+				argv.push_back(to_string(GAM_SCC_TURN));
+				end_turn(sock, user, argv);
+			}
 			room->delete_user(*user);
 			msg = "@" + to_string(PGM_SCC_GAME_LEAVE) + "||";
 			if (send(sock, msg.c_str(), msg.length(), 0) == SOCKET_ERROR)
@@ -741,6 +748,12 @@ void Manager::sendAccessError(SOCKET &sock)
 void Manager::add_game_db(Room *&room)
 {
 	_db.add_game(room->get_start_time(), room->get_end_time(), room->get_turns());
+	int game_id = _db.get_last_game_id();
+	vector<string> players = room->get_players_participated();
+	for (vector<string>::iterator it = players.begin(); it != players.end(); ++it)
+	{
+		_db.add_user_game(*it, game_id, *it == room->get_winner()->getUserName() ? 1 : 0);
+	}
 }
 
 bool Manager::userInMap(const string &username)

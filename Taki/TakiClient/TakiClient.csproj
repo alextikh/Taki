@@ -51,7 +51,7 @@
     <Compile Include="ChangeColor.Designer.cs">
       <DependentUpon>ChangeColor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Card.cs" />
+    <Compile Include="EnemyPanel.cs" />
     <Compile Include="EnterIPScreen.cs">
       <SubType>Form</SubType>
     </Compile>
