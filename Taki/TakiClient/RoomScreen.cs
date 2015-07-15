@@ -29,9 +29,9 @@ namespace newGUI_Taki
         private bool is_admin;
         private string top_card;
         private string currPlayer;
-        private Tuple<PictureBox, Image> blinkCard;
+        private Tuple<object, Image> blinkObj;
         private System.Timers.Timer blinkTimer;
-        private PictureBox lastClick;
+        private object lastClick;
         private List<EnemyPanel> enemyPanels;
         private List<Label> names;
         private List<Label> cardsNum;
@@ -782,6 +782,7 @@ namespace newGUI_Taki
             buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}||", status_code.GAM_SCC_TURN));
             this.sock.Write(buffer, 0, buffer.Length);
             this.sock.Flush();
+            this.lastClick = butEndTurn;
         }
 
         private void SendChatBut_Click(object sender, EventArgs e)
@@ -826,26 +827,43 @@ namespace newGUI_Taki
             }
         }
 
-        private delegate void blinkBeginCallback(PictureBox blinkCard);
+        private delegate void blinkBeginCallback(object blinkObject);
 
-        private void blinkBegin(PictureBox blinkCard)
+        private void blinkBegin(object blinkObject)
         {
             if (this.InvokeRequired)
             {
                 blinkBeginCallback d = new blinkBeginCallback(blinkBegin);
-                this.Invoke(d, new object[] { blinkCard });
+                this.Invoke(d, new object[] { blinkObject });
             }
             else
             {
-                Image img = blinkCard.Image;
-                blinkCard.Image = newGUI_Taki.Properties.Resources.redBlink;
-                this.blinkTimer = new System.Timers.Timer(200);
-                this.blinkTimer.Enabled = true;
-                this.blinkTimer.Elapsed += new ElapsedEventHandler(blinkEnd);
-                this.blinkCard = new Tuple<PictureBox, Image>(blinkCard, img);
-                System.Media.SoundPlayer player = new System.Media.SoundPlayer(newGUI_Taki.Properties.Resources.error);
-                player.Play();
-                player.Dispose();
+                if (blinkObject is PictureBox)
+                {
+                    PictureBox blinkCard = (PictureBox)blinkObject;
+                    Image img = blinkCard.Image;
+                    blinkCard.Image = newGUI_Taki.Properties.Resources.redBlink;
+                    this.blinkTimer = new System.Timers.Timer(200);
+                    this.blinkTimer.Enabled = true;
+                    this.blinkTimer.Elapsed += new ElapsedEventHandler(blinkEnd);
+                    this.blinkObj = new Tuple<object, Image>(blinkCard, img);
+                    System.Media.SoundPlayer player = new System.Media.SoundPlayer(newGUI_Taki.Properties.Resources.error);
+                    player.Play();
+                    player.Dispose();
+                }
+                else if (blinkObject is Button)
+                {
+                    Button blinkButton = (Button)blinkObject;
+                    Image img = blinkButton.Image;
+                    blinkButton.Image = newGUI_Taki.Properties.Resources.redBlink;
+                    this.blinkTimer = new System.Timers.Timer(200);
+                    this.blinkTimer.Enabled = true;
+                    this.blinkTimer.Elapsed += new ElapsedEventHandler(blinkEnd);
+                    this.blinkObj = new Tuple<object, Image>(blinkButton, img);
+                    System.Media.SoundPlayer player = new System.Media.SoundPlayer(newGUI_Taki.Properties.Resources.error);
+                    player.Play();
+                    player.Dispose();
+                }
             }
         }
 
@@ -861,7 +879,16 @@ namespace newGUI_Taki
             else
             {
                 this.blinkTimer.Close();
-                this.blinkCard.Item1.Image = this.blinkCard.Item2;
+                if (this.blinkObj.Item1 is PictureBox)
+                {
+                    PictureBox blinkCard = (PictureBox)this.blinkObj.Item1;
+                    blinkCard.Image = this.blinkObj.Item2;
+                }
+                else if (this.blinkObj.Item1 is Button)
+                {
+                    Button but = (Button)this.blinkObj.Item1;
+                    but.Image = this.blinkObj.Item2;
+                }
             }
         }
 
