@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -886,8 +886,8 @@ namespace newGUI_Taki
                 }
                 else if (this.blinkObj.Item1 is Button)
                 {
-                    Button but = (Button)this.blinkObj.Item1;
-                    but.Image = this.blinkObj.Item2;
+                    this.butEndTurn = (Button)this.blinkObj.Item1;
+                    this.butEndTurn.Image = newGUI_Taki.Properties.Resources.lightpink;
                 }
             }
         }
