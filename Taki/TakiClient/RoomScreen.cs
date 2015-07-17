@@ -31,6 +31,7 @@ namespace newGUI_Taki
         private string currPlayer;
         private Tuple<object, Image> blinkObj;
         private System.Timers.Timer blinkTimer;
+        private System.Timers.Timer roomScreenTimer;
         private object lastClick;
         private List<EnemyPanel> enemyPanels;
         private List<Label> names;
@@ -42,6 +43,24 @@ namespace newGUI_Taki
         private int CARD_DISTANCE = 30;
         private int CARDS_IN_HORIZONTAL_PANEL = 9;
         private int CARDS_IN_VERTICAL_PANEL = 3;
+
+        private delegate void playScreenViewCallback(string msg);
+        private delegate void RoomScreenViewCallback();
+        private delegate void switchToRoomScreenViewCallback(object sender, ElapsedEventArgs e);
+        private delegate void updateCardsCallback();
+        private delegate void updateErrorLabelCallback(string msg);
+        private delegate void updateTopCardCallback();
+        private delegate void updateCurrPlayerCallback();
+        private delegate void updateStringCardsCallback(string msg);
+        private delegate void updateChatBoxCallback(string msg, Color color);
+        private delegate void updateDrawCallback(string msg);
+        private delegate void exitRoomCallback();
+        private delegate void blinkBeginCallback(object blinkBegin);
+        private delegate void blinkEndCallback(object sender, ElapsedEventArgs e);
+        private delegate void addEnemyPanelCallback(int index, string str);
+        private delegate void fillEnemyPanelsCallback(EnemyPanel panel, int numCards);
+        private delegate void removeEnemyPanelCallback(string str);
+        private delegate void updateCurrPlayerLabelCallback(string txt);
 
         public RoomScreen(LobbyScreen parent, NetworkStream sock, bool is_admin, string username, List<string> players)
         {
@@ -127,8 +146,6 @@ namespace newGUI_Taki
                 this.cardsNumLabelRight.Location.Y);
         }
 
-        private delegate void playScreenViewCallback(string msg);
-
         public void playScreenView(string msg)
         {
             if (this.InvokeRequired)
@@ -209,8 +226,6 @@ namespace newGUI_Taki
                 updateCurrPlayer();
             }
         }
-
-        private delegate void RoomScreenViewCallback();
         private void RoomScreenView()
         {
             if (this.InvokeRequired)
@@ -233,15 +248,14 @@ namespace newGUI_Taki
                 int index = 1;
                 foreach (EnemyPanel p in this.enemyPanels)
                 {
-                    removeEnemyPanel(index);
                     p.Panel.Visible = false;
+                    p.Panel.Controls.Clear();
                     p.NameLabel.Visible = false;
                     p.NumCardsLabel.Visible = false;
                     ++index;
                 }
             }
         }
-
 
         private void tbEndTurn_Click(object sender, EventArgs e)
         {
@@ -288,11 +302,11 @@ namespace newGUI_Taki
                 {
                     int i = msg.IndexOf("|");
                     int j = msg.IndexOf("||");
-                    string txt = string.Format("[{0}] User left: {1}\r\n", DateTime.Now.ToShortTimeString(),
-                        msg.Substring(i + 1, j - i - 1));
+                    string name = msg.Substring(i + 1, j - i - 1);
+                    string txt = string.Format("[{0}] User left: {1}\r\n", DateTime.Now.ToShortTimeString(), name);
                     updateChatBox(txt, Color.Red);
                     --this.numOfPlayers;
-                    removeEnemyPanel(this.numOfPlayers);
+                    removeEnemyPanel(name);
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
@@ -478,8 +492,6 @@ namespace newGUI_Taki
             this.thread.Abort();
         }
 
-        private delegate void updateCardsCallback();
-
         private void updateCards()
         {
             if (this.ErrorLabel.InvokeRequired)
@@ -512,8 +524,6 @@ namespace newGUI_Taki
             }
         }
 
-        private delegate void updateErrorLabelCallback(string msg);
-
         private void updateErrorLabel(string msg)
         {
             if (this.ErrorLabel.InvokeRequired)
@@ -527,8 +537,6 @@ namespace newGUI_Taki
             }
         }
 
-        private delegate void updateTopCardCallback();
-
         private void updateTopCard()
         {
             if (this.ErrorLabel.InvokeRequired)
@@ -541,8 +549,6 @@ namespace newGUI_Taki
                 pbTopCard.Image = this.map[this.top_card];
             }
         }
-
-        private delegate void updateCurrPlayerCallback();
 
         private void updateCurrPlayer()
         {
@@ -604,31 +610,34 @@ namespace newGUI_Taki
             byte[] buffer;
             PictureBox p = (PictureBox)sender;
             string card = this.map.FirstOrDefault(x => x.Value == p.Image).Key;
-            if (currPlayer == this.Text)
+            if (card != null)
             {
-                if (card[0].ToString() == status_code.CARD_CHANGE_COLOR || card[0].ToString() == status_code.CARD_SUPER_TAKI)
+                if (currPlayer == this.Text)
                 {
-                    ChangeColor ChangeColorForm = new ChangeColor();
-                    if (ChangeColorForm.ShowDialog() == DialogResult.OK)
+                    if (card[0].ToString() == status_code.CARD_CHANGE_COLOR || card[0].ToString() == status_code.CARD_SUPER_TAKI)
                     {
-                        string color = ChangeColorForm.returnVal;
-                        card = card[0] + color;
-                    }
-                    else
-                    {
-                        return;
+                        ChangeColor ChangeColorForm = new ChangeColor();
+                        if (ChangeColorForm.ShowDialog() == DialogResult.OK)
+                        {
+                            string color = ChangeColorForm.returnVal;
+                            card = card[0] + color;
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
                 }
+                buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}|{1}||", status_code.GM_PLAY, card));
+                this.sock.Write(buffer, 0, buffer.Length);
+                this.sock.Flush();
+                if (card[0].ToString() == status_code.CARD_CHANGE_COLOR || card[0].ToString() == status_code.CARD_SUPER_TAKI)
+                {
+                    card = card[0] + " ";
+                }
+                this.top_card = card;
+                this.lastClick = p;
             }
-            buffer = new ASCIIEncoding().GetBytes(String.Format("@{0}|{1}||", status_code.GM_PLAY, card));
-            this.sock.Write(buffer, 0, buffer.Length);
-            this.sock.Flush();
-            if (card[0].ToString() == status_code.CARD_CHANGE_COLOR || card[0].ToString() == status_code.CARD_SUPER_TAKI)
-            {
-                card = card[0] + " ";
-            }
-            this.top_card = card;
-            this.lastClick = p;
         }
 
         private void pbBankCards_Click(object sender, EventArgs e)
@@ -639,8 +648,6 @@ namespace newGUI_Taki
             this.sock.Flush();
             this.lastClick = pbBankCards;
         }
-
-        private delegate void updateStringCardsCallback(string msg);
 
         private void updateStringCards(string msg)
         {
@@ -654,8 +661,6 @@ namespace newGUI_Taki
                 parseInfo(msg);
             }
         }
-
-        private delegate void updateChatBoxCallback(string msg, Color color);
 
         private void updateChatBox(string txt, Color color)
         {
@@ -691,8 +696,6 @@ namespace newGUI_Taki
                 this.SendChatBut.PerformClick();
             }
         }
-
-        delegate void updateDrawCallback(string msg);
 
         private void updateDraw(string msg)
         {
@@ -811,8 +814,6 @@ namespace newGUI_Taki
             exitRoom();
         }
 
-        delegate void exitRoomCallback();
-
         private void exitRoom()
         {
             if (this.parent.InvokeRequired)
@@ -826,8 +827,6 @@ namespace newGUI_Taki
                 this.Close();
             }
         }
-
-        private delegate void blinkBeginCallback(object blinkObject);
 
         private void blinkBegin(object blinkObject)
         {
@@ -867,8 +866,6 @@ namespace newGUI_Taki
             }
         }
 
-        private delegate void blinkEndCallback(object sender, ElapsedEventArgs e);
-
         private void blinkEnd(object sender, ElapsedEventArgs e)
         {
             if (this.InvokeRequired)
@@ -886,13 +883,11 @@ namespace newGUI_Taki
                 }
                 else if (this.blinkObj.Item1 is Button)
                 {
-                    Button but = (Button)this.blinkObj.Item1;
-                    but.Image = this.blinkObj.Item2;
+                    this.butEndTurn = (Button)this.blinkObj.Item1;
+                    this.butEndTurn.Image = newGUI_Taki.Properties.Resources.lightpink;
                 }
             }
         }
-
-        private delegate void addEnemyPanelCallback(int index, string str);
 
         private void addEnemyPanel(int index, string str)
         {
@@ -928,8 +923,6 @@ namespace newGUI_Taki
             }
         }
 
-        private delegate void fillEnemyPanelsCallback(EnemyPanel panel, int numCards);
-
         private void fillEnemyPanel(EnemyPanel panel, int numCards)
         {
             if (panel.Panel.InvokeRequired)
@@ -958,33 +951,18 @@ namespace newGUI_Taki
             }
         }
 
-        private delegate void removeEnemyPanelCallback(int index);
-
-        private void removeEnemyPanel(int index)
+        private void removeEnemyPanel(string str)
         {
             if (this.InvokeRequired)
             {
                 removeEnemyPanelCallback d = new removeEnemyPanelCallback(removeEnemyPanel);
-                this.Invoke(d, new object[] { index });
+                this.Invoke(d, new object[] { str });
             }
             else
             {
-                string name = "";
-                switch (index)
-                {
-                    case 1:
-                        name = "enemyPanelTop";
-                        break;
-                    case 2:
-                        name = "enemyPanelRight";
-                        break;
-                    case 3:
-                        name = "enemyPanelLeft";
-                        break;
-                }
                 foreach (EnemyPanel p in enemyPanels)
                 {
-                    if (p.Panel.Name == name)
+                    if (p.Player == str)
                     {
                         p.Panel.Visible = false;
                         p.NumCardsLabel.Visible = false;
@@ -994,8 +972,6 @@ namespace newGUI_Taki
                 }
             }
         }
-
-        private delegate void updateCurrPlayerLabelCallback(string txt);
 
         private void updateCurrPlayerLabel(string txt)
         {

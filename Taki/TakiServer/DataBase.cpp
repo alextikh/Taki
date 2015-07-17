@@ -59,7 +59,8 @@ bool DataBase::login_user(const string &username, const string &password)
 	return true;
 }
 
-bool DataBase::add_game(const long long int startTime, const long long int endTime, const int turns)
+bool DataBase::add_game(const long long int startTime, const long long int endTime, const int turns,
+	vector<string> players, string winner)
 {
 	int rc;
 	char sql_command[SQL_COMMAND_LEN] = "INSERT INTO games (game_start, game_end, turns_number) VALUES(";
@@ -73,6 +74,23 @@ bool DataBase::add_game(const long long int startTime, const long long int endTi
 	if (rc != SQLITE_OK)
 	{
 		return false;
+	}
+	int game_id = sqlite3_last_insert_rowid(_db);
+	for (vector<string>::iterator it = players.begin(); it != players.end(); ++it)
+	{
+
+		char sql_command[SQL_COMMAND_LEN] = "INSERT INTO user_game (username, game_id, is_winner) VALUES('";
+		strcat(sql_command, (*it).c_str());
+		strcat(sql_command, "', ");
+		strcat(sql_command, to_string(game_id).c_str());
+		strcat(sql_command, ", ");
+		strcat(sql_command, winner == *it ? to_string(1).c_str() : to_string(0).c_str());
+		strcat(sql_command, ");");
+		rc = sqlite3_exec(_db, sql_command, NULL, NULL, NULL);
+		if (rc != SQLITE_OK)
+		{
+			return false;
+		}
 	}
 	return true;
 }

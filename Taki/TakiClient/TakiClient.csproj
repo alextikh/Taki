@@ -416,6 +416,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="CardsImage\lightpink.jpg" />
     <Content Include="Sound\draw.wav" />
     <Content Include="Sound\error.wav" />
     <Content Include="Sound\loser.wav" />

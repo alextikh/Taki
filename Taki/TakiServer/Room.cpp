@@ -171,6 +171,7 @@ void Room::start_game()
 	_stop = false;
 	_draw_made = false;
 	_game_dir = DIR_NORMAL;
+	_turns = 0;
 	shuffle_cards_start_game();
 	_start_time = time(NULL);
 	for (int i = 0; i < MAX_PLAYERS; ++i)
@@ -379,6 +380,7 @@ int Room::end_turn(User *player)
 				_curr_player_order.clear();
 				_open_taki = false;
 				_draw_made = false;
+				++_turns;
 				return GAM_SCC_TURN;
 			}
 			else

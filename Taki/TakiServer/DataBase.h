@@ -25,7 +25,8 @@ public:
 
 	bool register_user(const string &username, const string &password);
 	bool login_user(const string &username, const string &password);
-	bool add_game(const long long int startTime, const long long int endTime, const int turns);
+	bool DataBase::add_game(const long long int startTime, const long long int endTime, const int turns,
+		vector<string> players, string winner);
 	bool add_user_game(const string username, const int game_id, const bool is_winner);
 	int get_last_game_id();
 
