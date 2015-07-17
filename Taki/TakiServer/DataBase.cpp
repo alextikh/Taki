@@ -94,27 +94,3 @@ bool DataBase::add_game(const long long int startTime, const long long int endTi
 	}
 	return true;
 }
-
-bool DataBase::add_user_game(const string username, const int game_id, const bool is_winner)
-{
-	int rc;
-	char sql_command[SQL_COMMAND_LEN] = "INSERT INTO user_game (username, game_id, is_winner) VALUES(";
-	strcat(sql_command, username.c_str());
-	strcat(sql_command, ", ");
-	strcat(sql_command, to_string(game_id).c_str());
-	strcat(sql_command, ", ");
-	strcat(sql_command, to_string(is_winner).c_str());
-	strcat(sql_command, ");");
-	rc = sqlite3_exec(_db, sql_command, NULL, NULL, NULL);
-	if (rc != SQLITE_OK)
-	{
-		return false;
-	}
-	return true;
-}
-
-
-int DataBase::get_last_game_id()
-{
-	return sqlite3_last_insert_rowid(_db);
-}
