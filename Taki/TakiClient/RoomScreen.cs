@@ -130,7 +130,6 @@ namespace newGUI_Taki
 
         private delegate void playScreenViewCallback(string msg);
 
-        private delegate void RoomScreenViewCallback();
         public void playScreenView(string msg)
         {
             if (this.InvokeRequired)
@@ -209,36 +208,6 @@ namespace newGUI_Taki
                 }
 
                 updateCurrPlayer();
-            }
-        }
-        private void RoomScreenView()
-        {
-            if (this.InvokeRequired)
-            {
-                RoomScreenViewCallback d = new RoomScreenViewCallback(RoomScreenView);
-                this.Invoke(d, new object[] { });
-            }
-            else
-            {
-                this.butEndTurn.Visible = false;
-                if (is_admin)
-                {
-                    this.butStartGame.Visible = true;
-                }
-                this.pbTopCard.Visible = false;
-                this.pbBankCards.Visible = false;
-                this.CardsPanel.Visible = false;
-                this.pbBankCards.Visible = false;
-
-                int index = 1;
-                foreach (EnemyPanel p in this.enemyPanels)
-                {
-                    p.Panel.Visible = false;
-                    p.Panel.Controls.Clear();
-                    p.NameLabel.Visible = false;
-                    p.NumCardsLabel.Visible = false;
-                    ++index;
-                }
             }
         }
 
@@ -424,7 +393,6 @@ namespace newGUI_Taki
                         updateCurrPlayerLabel("You win!");
                         System.Media.SoundPlayer player = new System.Media.SoundPlayer(newGUI_Taki.Properties.Resources.winner);
                         player.Play();
-                        RoomScreenView();
                     }
                     else
                     {
