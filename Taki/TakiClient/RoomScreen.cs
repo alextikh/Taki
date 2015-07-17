@@ -31,7 +31,6 @@ namespace newGUI_Taki
         private string currPlayer;
         private Tuple<object, Image> blinkObj;
         private System.Timers.Timer blinkTimer;
-        private System.Timers.Timer roomScreenTimer;
         private object lastClick;
         private List<EnemyPanel> enemyPanels;
         private List<Label> names;
