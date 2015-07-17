@@ -242,7 +242,6 @@ namespace newGUI_Taki
             }
         }
 
-
         private void tbEndTurn_Click(object sender, EventArgs e)
         {
             if (this.currPlayer == this.Name)
@@ -413,7 +412,6 @@ namespace newGUI_Taki
                     int j = msg.IndexOf("||");
                     this.currPlayer = msg.Substring(i + 1, j - i - 1);
                     updateCurrPlayer();
-                    //RoomScreenView();   
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.GAM_CTR_GAME_ENDED)))
@@ -426,6 +424,7 @@ namespace newGUI_Taki
                         updateCurrPlayerLabel("You win!");
                         System.Media.SoundPlayer player = new System.Media.SoundPlayer(newGUI_Taki.Properties.Resources.winner);
                         player.Play();
+                        RoomScreenView();
                     }
                     else
                     {
