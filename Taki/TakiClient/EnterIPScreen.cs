@@ -34,7 +34,7 @@ namespace newGUI_Taki
         private void EnterIPBox_Click(object sender, EventArgs e)
         {
 
-            if (this.Text != "Enter the server\'s IP address:")
+            if (this.EnterIPBox.Text == "Enter the server\'s IP address:")
             {
                 this.EnterIPBox.Text = "";
             }

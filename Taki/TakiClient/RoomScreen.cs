@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -43,24 +43,6 @@ namespace newGUI_Taki
         private int CARD_DISTANCE = 30;
         private int CARDS_IN_HORIZONTAL_PANEL = 9;
         private int CARDS_IN_VERTICAL_PANEL = 3;
-
-        private delegate void playScreenViewCallback(string msg);
-        private delegate void RoomScreenViewCallback();
-        private delegate void switchToRoomScreenViewCallback(object sender, ElapsedEventArgs e);
-        private delegate void updateCardsCallback();
-        private delegate void updateErrorLabelCallback(string msg);
-        private delegate void updateTopCardCallback();
-        private delegate void updateCurrPlayerCallback();
-        private delegate void updateStringCardsCallback(string msg);
-        private delegate void updateChatBoxCallback(string msg, Color color);
-        private delegate void updateDrawCallback(string msg);
-        private delegate void exitRoomCallback();
-        private delegate void blinkBeginCallback(object blinkBegin);
-        private delegate void blinkEndCallback(object sender, ElapsedEventArgs e);
-        private delegate void addEnemyPanelCallback(int index, string str);
-        private delegate void fillEnemyPanelsCallback(EnemyPanel panel, int numCards);
-        private delegate void removeEnemyPanelCallback(string str);
-        private delegate void updateCurrPlayerLabelCallback(string txt);
 
         public RoomScreen(LobbyScreen parent, NetworkStream sock, bool is_admin, string username, List<string> players)
         {
@@ -146,6 +128,9 @@ namespace newGUI_Taki
                 this.cardsNumLabelRight.Location.Y);
         }
 
+        private delegate void playScreenViewCallback(string msg);
+
+        private delegate void RoomScreenViewCallback();
         public void playScreenView(string msg)
         {
             if (this.InvokeRequired)
@@ -257,6 +242,7 @@ namespace newGUI_Taki
             }
         }
 
+
         private void tbEndTurn_Click(object sender, EventArgs e)
         {
             if (this.currPlayer == this.Name)
@@ -302,11 +288,11 @@ namespace newGUI_Taki
                 {
                     int i = msg.IndexOf("|");
                     int j = msg.IndexOf("||");
-                    string name = msg.Substring(i + 1, j - i - 1);
-                    string txt = string.Format("[{0}] User left: {1}\r\n", DateTime.Now.ToShortTimeString(), name);
+                    string txt = string.Format("[{0}] User left: {1}\r\n", DateTime.Now.ToShortTimeString(),
+                        msg.Substring(i + 1, j - i - 1));
                     updateChatBox(txt, Color.Red);
                     --this.numOfPlayers;
-                    removeEnemyPanel(name);
+                    removeEnemyPanel(this.numOfPlayers);
                 }
 
                 else if (msg.Contains(String.Format("@{0}", status_code.PGM_CTR_GAME_STARTED)))
@@ -492,6 +478,8 @@ namespace newGUI_Taki
             this.thread.Abort();
         }
 
+        private delegate void updateCardsCallback();
+
         private void updateCards()
         {
             if (this.ErrorLabel.InvokeRequired)
@@ -524,6 +512,8 @@ namespace newGUI_Taki
             }
         }
 
+        private delegate void updateErrorLabelCallback(string msg);
+
         private void updateErrorLabel(string msg)
         {
             if (this.ErrorLabel.InvokeRequired)
@@ -537,6 +527,8 @@ namespace newGUI_Taki
             }
         }
 
+        private delegate void updateTopCardCallback();
+
         private void updateTopCard()
         {
             if (this.ErrorLabel.InvokeRequired)
@@ -549,6 +541,8 @@ namespace newGUI_Taki
                 pbTopCard.Image = this.map[this.top_card];
             }
         }
+
+        private delegate void updateCurrPlayerCallback();
 
         private void updateCurrPlayer()
         {
@@ -649,6 +643,8 @@ namespace newGUI_Taki
             this.lastClick = pbBankCards;
         }
 
+        private delegate void updateStringCardsCallback(string msg);
+
         private void updateStringCards(string msg)
         {
             if (this.InvokeRequired)
@@ -661,6 +657,8 @@ namespace newGUI_Taki
                 parseInfo(msg);
             }
         }
+
+        private delegate void updateChatBoxCallback(string msg, Color color);
 
         private void updateChatBox(string txt, Color color)
         {
@@ -696,6 +694,8 @@ namespace newGUI_Taki
                 this.SendChatBut.PerformClick();
             }
         }
+
+        delegate void updateDrawCallback(string msg);
 
         private void updateDraw(string msg)
         {
@@ -814,6 +814,8 @@ namespace newGUI_Taki
             exitRoom();
         }
 
+        delegate void exitRoomCallback();
+
         private void exitRoom()
         {
             if (this.parent.InvokeRequired)
@@ -827,6 +829,8 @@ namespace newGUI_Taki
                 this.Close();
             }
         }
+
+        private delegate void blinkBeginCallback(object blinkObject);
 
         private void blinkBegin(object blinkObject)
         {
@@ -866,6 +870,8 @@ namespace newGUI_Taki
             }
         }
 
+        private delegate void blinkEndCallback(object sender, ElapsedEventArgs e);
+
         private void blinkEnd(object sender, ElapsedEventArgs e)
         {
             if (this.InvokeRequired)
@@ -888,6 +894,8 @@ namespace newGUI_Taki
                 }
             }
         }
+
+        private delegate void addEnemyPanelCallback(int index, string str);
 
         private void addEnemyPanel(int index, string str)
         {
@@ -923,6 +931,8 @@ namespace newGUI_Taki
             }
         }
 
+        private delegate void fillEnemyPanelsCallback(EnemyPanel panel, int numCards);
+
         private void fillEnemyPanel(EnemyPanel panel, int numCards)
         {
             if (panel.Panel.InvokeRequired)
@@ -951,18 +961,33 @@ namespace newGUI_Taki
             }
         }
 
-        private void removeEnemyPanel(string str)
+        private delegate void removeEnemyPanelCallback(int index);
+
+        private void removeEnemyPanel(int index)
         {
             if (this.InvokeRequired)
             {
                 removeEnemyPanelCallback d = new removeEnemyPanelCallback(removeEnemyPanel);
-                this.Invoke(d, new object[] { str });
+                this.Invoke(d, new object[] { index });
             }
             else
             {
+                string name = "";
+                switch (index)
+                {
+                    case 1:
+                        name = "enemyPanelTop";
+                        break;
+                    case 2:
+                        name = "enemyPanelRight";
+                        break;
+                    case 3:
+                        name = "enemyPanelLeft";
+                        break;
+                }
                 foreach (EnemyPanel p in enemyPanels)
                 {
-                    if (p.Player == str)
+                    if (p.Panel.Name == name)
                     {
                         p.Panel.Visible = false;
                         p.NumCardsLabel.Visible = false;
@@ -972,6 +997,8 @@ namespace newGUI_Taki
                 }
             }
         }
+
+        private delegate void updateCurrPlayerLabelCallback(string txt);
 
         private void updateCurrPlayerLabel(string txt)
         {
